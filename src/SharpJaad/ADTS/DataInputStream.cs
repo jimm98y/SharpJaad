@@ -27,7 +27,7 @@ namespace SharpJaad
         * @param  in   the specified input stream
         */
 
-        public DataInputStream(MemoryStream @in)
+        public DataInputStream(Stream @in)
         {
             _in = new BinaryReader(@in);
         }

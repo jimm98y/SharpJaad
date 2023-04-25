@@ -219,7 +219,7 @@ namespace SharpJaad.MP4.Boxes
             BOX_CLASSES.Add(BoxTypes.OMA_RIGHTS_OBJECT_BOX, typeof(OMARightsObjectBox));
             BOX_CLASSES.Add(BoxTypes.OMA_TRANSACTION_TRACKING_BOX, typeof(OMATransactionTrackingBox));
             BOX_CLASSES.Add(BoxTypes.FAIRPLAY_USER_ID_BOX, typeof(FairPlayDataBox));
-            BOX_CLASSES.Add(BoxTypes.FAIRPLAY_USER_NAME_BOX, typeof(FairPlayDataBox));
+            //BOX_CLASSES.Add(BoxTypes.FAIRPLAY_USER_NAME_BOX, typeof(FairPlayDataBox)); // Duplicate key - ITUNES_METADATA_NAME_BOX
             BOX_CLASSES.Add(BoxTypes.FAIRPLAY_USER_KEY_BOX, typeof(FairPlayDataBox));
             BOX_CLASSES.Add(BoxTypes.FAIRPLAY_IV_BOX, typeof(FairPlayDataBox));
             BOX_CLASSES.Add(BoxTypes.FAIRPLAY_PRIVATE_KEY_BOX, typeof(FairPlayDataBox));

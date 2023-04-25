@@ -5,12 +5,12 @@ namespace SharpJaad.ADTS
     public class ADTSDemultiplexer 
 	{
 		private const int MAXIMUM_FRAME_SIZE = 6144;
-		private MemoryStream _input;
+		private Stream _input;
 		private DataInputStream _din;
 		private bool _first;
 		private ADTSFrame _frame;
 
-		public ADTSDemultiplexer(MemoryStream input) 
+		public ADTSDemultiplexer(Stream input) 
 		{
 			this._input = input;
 			_din = new DataInputStream(this._input);

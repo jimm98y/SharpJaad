@@ -3,7 +3,8 @@ using System.Linq;
 
 namespace SharpJaad.MP4.Boxes
 {
-    public abstract class BoxImpl : Box
+    // Note: BoxImpl is instantiated using Activator in the BoxFactory
+    public class BoxImpl : Box
     {
         private readonly string _name;
         protected long _size, _type, _offset;
@@ -37,7 +38,7 @@ namespace SharpJaad.MP4.Boxes
          * @param in an input stream
          * @throws IOException if an error occurs while reading
          */
-        public abstract void Decode(MP4InputStream input);
+        public virtual void Decode(MP4InputStream input) { }
 
         // formerly GetType
         public long GetBoxType()

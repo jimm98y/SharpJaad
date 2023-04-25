@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace SharpJaad.WAV
 {
@@ -79,32 +80,41 @@ namespace SharpJaad.WAV
 
             using (BinaryWriter bw = new BinaryWriter(_output))
             {
-                bw.Write(RIFF); //wave label
-                bw.Write(IntegerReverseBytes(_bytesWritten + 36)); //length in bytes without header
-                bw.Write(WAVE_FMT);
-                bw.Write(IntegerReverseBytes(16)); //length of pcm format declaration area
-                bw.Write(ShortReverseBytes(1)); //is PCM
-                bw.Write(ShortReverseBytes((short)_channels)); //number of channels
-                bw.Write(IntegerReverseBytes(_sampleRate)); //sample rate
-                bw.Write(IntegerReverseBytes(_sampleRate * _channels * bytesPerSec)); //bytes per second
-                bw.Write(ShortReverseBytes((short)(_channels * bytesPerSec))); //bytes per sample time
-                bw.Write(ShortReverseBytes((short)_bitsPerSample)); //bits per sample
-                bw.Write(DATA); //data section label
-                bw.Write(IntegerReverseBytes(_bytesWritten)); //length of raw pcm data in bytes
+                // Java is Big Endian, C# is Little Endian -> invert the original behavior
+                bw.Write(IntegerReverseBytes(RIFF)); //wave label
+                bw.Write(_bytesWritten + 36); //length in bytes without header
+                bw.Write(LongReverseBytes(WAVE_FMT));
+                bw.Write((int)16); //length of pcm format declaration area
+                bw.Write((short)1); //is PCM
+                bw.Write((short)_channels); //number of channels
+                bw.Write(_sampleRate); //sample rate
+                bw.Write(_sampleRate * _channels * bytesPerSec); //bytes per second
+                bw.Write((short)(_channels * bytesPerSec)); //bytes per sample time
+                bw.Write((short)_bitsPerSample); //bits per sample
+                bw.Write(IntegerReverseBytes(DATA)); //data section label
+                bw.Write(_bytesWritten); //length of raw pcm data in bytes
             }
         }
 
         // TODO: fix inefficient bitconverter
+        private static long LongReverseBytes(long i)
+        {
+            byte[] buf = BitConverter.GetBytes(i);
+            return BitConverter.ToInt64(buf.Reverse().ToArray(), 0);
+        }
+
         private static int IntegerReverseBytes(int i)
         {
             byte[] buf = BitConverter.GetBytes(i);
             return (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
         }
 
+        /*
         private static short ShortReverseBytes(short i)
         {
             byte[] buf = BitConverter.GetBytes(i);
             return (short)((buf[0] << 8) | buf[1]);
         }
+        */
     }
 }
