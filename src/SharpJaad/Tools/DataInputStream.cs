@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace SharpJaad
+namespace SharpJaad.Tools
 {
     /**
    * A data input stream lets an application read primitive Java data
