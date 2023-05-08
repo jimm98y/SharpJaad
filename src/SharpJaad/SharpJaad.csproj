@@ -16,11 +16,11 @@
 	<RepositoryType>git</RepositoryType>
 	<Copyright>MIT</Copyright>
 	<NeutralLanguage>en-US</NeutralLanguage>
-	<Version>0.0.1</Version>
+	<Version>0.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\SharpMp4Parser\README.md">
+    <None Include="..\..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
