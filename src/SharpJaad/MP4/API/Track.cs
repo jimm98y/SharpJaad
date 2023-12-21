@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 namespace SharpJaad.MP4.API
 {
@@ -25,7 +26,7 @@ namespace SharpJaad.MP4.API
         private readonly MediaHeaderBox _mdhd;
         private readonly bool _inFile;
         private readonly List<Frame> _frames;
-        private Uri _location;
+        private readonly Uri _location;
         private int _currentFrame;
         //info structures
         protected DecoderSpecificInfo _decoderSpecificInfo;
@@ -186,56 +187,38 @@ namespace SharpJaad.MP4.API
          * it were not present.
          * @return true if the track is enabled
          */
-        public bool IsEnabled()
-        {
-            return _tkhd.IsTrackEnabled();
-        }
+        public bool IsEnabled() => _tkhd.IsTrackEnabled();
 
         /**
          * Returns true if the track is used in the presentation.
          * @return true if the track is used
          */
-        public bool IsUsed()
-        {
-            return _tkhd.IsTrackInMovie();
-        }
+        public bool IsUsed() => _tkhd.IsTrackInMovie();
 
         /**
          * Returns true if the track is used in previews.
          * @return true if the track is used in previews
          */
-        public bool IsUsedForPreview()
-        {
-            return _tkhd.IsTrackInPreview();
-        }
+        public bool IsUsedForPreview() => _tkhd.IsTrackInPreview();
 
         /**
          * Returns the time this track was created.
          * @return the creation time
          */
-        public DateTime GetCreationTime()
-        {
-            return Utils.GetDate(_tkhd.GetCreationTime());
-        }
+        public DateTime GetCreationTime() => Utils.GetDate(_tkhd.GetCreationTime());
 
         /**
          * Returns the last time this track was modified.
          * @return the modification time
          */
-        public DateTime GetModificationTime()
-        {
-            return Utils.GetDate(_tkhd.GetModificationTime());
-        }
+        public DateTime GetModificationTime() => Utils.GetDate(_tkhd.GetModificationTime());
 
         //mdhd
         /**
          * Returns the language for this media.
          * @return the language
          */
-        public CultureInfo GetLanguage()
-        {
-            return new CultureInfo(_mdhd.GetLanguage());
-        }
+        public CultureInfo GetLanguage() => new CultureInfo(_mdhd.GetLanguage());
 
         /**
          * Returns true if the data for this track is present in this file (stream).
@@ -243,10 +226,7 @@ namespace SharpJaad.MP4.API
          * found.
          * @return true if the data is in this file (stream), false otherwise
          */
-        public bool IsInFile()
-        {
-            return _inFile;
-        }
+        public bool IsInFile() => _inFile;
 
         /**
          * If the data for this track is not present in this file (if
@@ -254,10 +234,7 @@ namespace SharpJaad.MP4.API
          * location. Else null is returned.
          * @return the data's location or null if the data is in this file
          */
-        public Uri GetLocation()
-        {
-            return _location;
-        }
+        public Uri GetLocation() => _location;
 
         //info structures
         /**
@@ -268,10 +245,7 @@ namespace SharpJaad.MP4.API
          * @see #getDecoderInfo() 
          * @return the decoder specific info
          */
-        public byte[] GetDecoderSpecificInfo()
-        {
-            return _decoderSpecificInfo.GetData();
-        }
+        public byte[] GetDecoderSpecificInfo() => _decoderSpecificInfo.GetData();
 
         /**
          * Returns the <code>DecoderInfo</code>, if present. It contains 
@@ -281,10 +255,7 @@ namespace SharpJaad.MP4.API
          * @see #getDecoderSpecificInfo()
          * @return the codec specific structure
          */
-        public DecoderInfo GetDecoderInfo()
-        {
-            return _decoderInfo;
-        }
+        public DecoderInfo GetDecoderInfo() => _decoderInfo;
 
         /**
          * Returns the <code>ProtectionInformation</code> object that contains 
@@ -294,10 +265,7 @@ namespace SharpJaad.MP4.API
          * @return a <code>ProtectionInformation</code> object or null if no 
          * protection is used
          */
-        public Protection GetProtection()
-        {
-            return _protection;
-        }
+        public Protection GetProtection() => _protection;
 
         //reading
         /**
@@ -305,10 +273,7 @@ namespace SharpJaad.MP4.API
          * 
          * @return true if there is at least one more frame to read.
          */
-        public bool HasMoreFrames()
-        {
-            return _currentFrame < _frames.Count;
-        }
+        public bool HasMoreFrames() => _currentFrame < _frames.Count;
 
         /**
          * Reads the next frame from this track. If it contains no more frames to
@@ -350,7 +315,7 @@ namespace SharpJaad.MP4.API
         }
 
         /**
-         * This method tries to seek to the frame that is nearest to the given
+         * This method tries to seek to the frame that is nearest or equal to the given
          * timestamp. It returns the timestamp of the frame it seeked to or -1 if
          * none was found.
          * 
@@ -359,18 +324,11 @@ namespace SharpJaad.MP4.API
          */
         public double Seek(double timestamp)
         {
-            //find first frame > timestamp
-            Frame frame = null;
-            for (int i = 0; i < _frames.Count; i++)
-            {
-                frame = _frames[i++];
-                if (frame.GetTime() > timestamp)
-                {
-                    _currentFrame = i;
-                    break;
-                }
-            }
-            return (frame == null) ? -1 : frame.GetTime();
+            var frame = _frames.FirstOrDefault(f => f.GetTime() >= timestamp);
+            if (frame != null)
+                _currentFrame = _frames.IndexOf(frame);
+
+            return frame?.GetTime() ?? -1;
         }
 
         /**
@@ -379,9 +337,6 @@ namespace SharpJaad.MP4.API
          *
          * @return the next frame's timestamp
          */
-        public double GetNextTimeStamp()
-        {
-            return _frames[_currentFrame].GetTime();
-        }
+        public double GetNextTimeStamp() => _frames[_currentFrame].GetTime();
     }
 }
