@@ -94,7 +94,15 @@ namespace SharpJaad
 
                     while (true)
                     {
-                        b = adts.ReadNextFrame();
+                        try
+                        {
+                            b = adts.ReadNextFrame();
+                        }
+                        catch(EndOfStreamException)
+                        {
+                            break;
+                        }
+
                         dec.DecodeFrame(b, buf);
 
                         if (wav == null)

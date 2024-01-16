@@ -49,7 +49,7 @@ namespace SharpJaad.ADTS
 				{
 					i = _input.ReadByte();
 					if(((i>>4)&0xF)==0xF) found = true;
-                    _input.Seek(i, SeekOrigin.Current);
+                    _input.Seek(-1, SeekOrigin.Current); // input.unread(i)
 				}
 			}
 

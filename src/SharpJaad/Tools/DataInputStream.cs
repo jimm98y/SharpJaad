@@ -188,8 +188,8 @@ namespace SharpJaad.Tools
             while (n < len)
             {
                 int count = _in.Read(b, off + n, len - n);
-                if (count < 0)
-                    break;
+                if (count == 0)
+                    throw new EndOfStreamException("EOF");
                 n += count;
             }
         }
