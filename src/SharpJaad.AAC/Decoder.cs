@@ -101,7 +101,8 @@ namespace SharpJaad.AAC
             }
             catch (AACException e)
             {
-                if (!e.IsEndOfStream) throw e;
+                if (!e.IsEndOfStream) 
+                    throw;
                 //else LOGGER.warning("unexpected end of frame");
             }
         }
@@ -130,10 +131,10 @@ namespace SharpJaad.AAC
                 //3: send to output buffer
                 _syntacticElements.SendToOutput(buffer);
             }
-            catch (AACException e)
+            catch (AACException)
             {
                 buffer.SetData(new byte[0], 0, 0, 0, 0);
-                throw e;
+                throw;
             }
             catch (Exception e)
             {

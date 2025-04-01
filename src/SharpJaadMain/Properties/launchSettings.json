@@ -2,7 +2,7 @@
   "profiles": {
     "SharpJaadMain": {
       "commandName": "Project",
-      "commandLineArgs": " -mp4 C:\\Temp\\big_buck_bunny_1080p_h264.mp4 C:\\Temp\\out.wav"
+      "commandLineArgs": " -mp4 aac-sample.mp4 out.wav"
     }
   }
 }

@@ -299,15 +299,7 @@ namespace SharpJaad.MP4.API
                 }
 
                 byte[] b = new byte[(int)frame.GetSize()];
-                try
-                {
-                    _input.ReadBytes(b);
-                }
-                catch (Exception e)
-                {
-                    //Logger.getLogger("MP4 API").log(Level.WARNING, "readNextFrame failed: tried to read {0} bytes at {1}", new long[] { frame.getSize(), input.getOffset() });
-                    throw e;
-                }
+                _input.ReadBytes(b);
                 frame.SetData(b);
                 _currentFrame++;
             }
