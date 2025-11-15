@@ -309,7 +309,7 @@ namespace SharpJaad.AAC.Syntax
             float[] iqData2 = ics2.GetInvQuantData();
 
             //MS
-            if (cpe.IsCommonWindow() && cpe.IsMSMaskPresent()) MS.Process(cpe, iqData1, iqData2);
+            if (cpe.IsCommonWindow() && cpe.IsMSMaskPresent()) SharpJaad.AAC.Tools.MS.Process(cpe, iqData1, iqData2);
             //main prediction
             if (profile.Equals(Profile.AAC_MAIN))
             {

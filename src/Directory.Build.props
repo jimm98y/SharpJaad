@@ -4,20 +4,21 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<Nullable>disable</Nullable>
 		<Title>$(ProjectName)</Title>
-		<Version>0.0.6</Version>
+		<Version>0.1.0</Version>
 		<Authors>Lukas Volf</Authors>
 		<Copyright>MIT</Copyright>
 		<PackageProjectUrl>https://github.com/jimm98y/SharpJaad</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/jimm98y/SharpJaad</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>aac;codec;audio-processing;netstandard</PackageTags>
+		<PackageTags>aac;codec;audio-processing;netstandard2.0;net10</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>SharpJaad is an AAC decoder and MP4 demultiplexer library written completely in C#. It uses no native libraries, is platform-independent and portable. It can decode AAC-LC (Low Complexity) and HE-AAC (High Efficiency/AAC+). Ported into C# from: sourceforge.net/projects/jaadec</Description>
 	</PropertyGroup>
+	
 	<ItemGroup>
 		<None Include="..\..\README.md">
 			<Pack>True</Pack>
