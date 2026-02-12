@@ -11,7 +11,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/jimm98y/SharpJaad</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>aac;codec;audio-processing;netstandard2.0;net10</PackageTags>
+		<PackageTags>aac;codec;audio-processing;netstandard2.0;net8;net10</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
