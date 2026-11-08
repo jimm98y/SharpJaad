@@ -10,6 +10,7 @@ namespace SharpJaad.AAC.Syntax
     {
         private const int SF_DELTA = 60;
         private const int SF_OFFSET = 200;
+        private const int MAX_PULSES = 4; //pulse_count is 2 bits + 1
         private static int randomState = 0x1F2E3D4C;
         private int _frameLength;
         //always needed
@@ -32,6 +33,7 @@ namespace SharpJaad.AAC.Syntax
 #pragma warning restore CS0649 // Field 'ICStream._noiseUsed' is never assigned to, and will always have its default value false
         private int _reorderedSpectralDataLen, _longestCodewordLen;
         private RVLC _rvlc;
+        private readonly int[] _huffBuf = new int[4];
 
         public ICStream(DecoderConfig config)
         {
@@ -41,6 +43,10 @@ namespace SharpJaad.AAC.Syntax
             _sectEnd = new int[Constants.MAX_SECTIONS];
             _data = new float[_frameLength];
             _scaleFactors = new float[Constants.MAX_SECTIONS];
+            //allocated up front, so that decoding allocates nothing when the stream first uses them
+            _tns = new TNS();
+            _pulseOffset = new int[MAX_PULSES];
+            _pulseAmp = new int[MAX_PULSES];
         }
 
         /* ========= decoding ========== */
@@ -137,12 +143,6 @@ namespace SharpJaad.AAC.Syntax
             _pulseStartSWB = input.ReadBits(6);
             if (_pulseStartSWB >= _info.GetSWBCount()) throw new AACException("pulse SWB out of range: " + _pulseStartSWB + " > " + _info.GetSWBCount());
 
-            if (_pulseOffset == null || _pulseCount != _pulseOffset.Length)
-            {
-                //only reallocate if needed
-                _pulseOffset = new int[_pulseCount];
-                _pulseAmp = new int[_pulseCount];
-            }
 
             _pulseOffset[0] = _info.GetSWBOffsets()[_pulseStartSWB];
             _pulseOffset[0] += input.ReadBits(5);
@@ -160,7 +160,7 @@ namespace SharpJaad.AAC.Syntax
             int windowGroups = _info.GetWindowGroupCount();
             int maxSFB = _info.GetMaxSFB();
             //0: spectrum, 1: noise, 2: intensity
-            int[] offset = { _globalGain, _globalGain - 90, 0 };
+            int offset0 = _globalGain, offset1 = _globalGain - 90, offset2 = 0;
 
             int tmp;
             bool noiseFlag = true;
@@ -183,8 +183,8 @@ namespace SharpJaad.AAC.Syntax
                         case HCB.INTENSITY_HCB2:
                             for (; sfb < end; sfb++, idx++)
                             {
-                                offset[2] += HuffmanDec.DecodeScaleFactor(input) - SF_DELTA;
-                                tmp = Math.Min(Math.Max(offset[2], -155), 100);
+                                offset2 += HuffmanDec.DecodeScaleFactor(input) - SF_DELTA;
+                                tmp = Math.Min(Math.Max(offset2, -155), 100);
                                 _scaleFactors[idx] = ScaleFactorTable.SCALEFACTOR_TABLE[-tmp + SF_OFFSET];
                             }
                             break;
@@ -193,20 +193,20 @@ namespace SharpJaad.AAC.Syntax
                             {
                                 if (noiseFlag)
                                 {
-                                    offset[1] += input.ReadBits(9) - 256;
+                                    offset1 += input.ReadBits(9) - 256;
                                     noiseFlag = false;
                                 }
-                                else offset[1] += HuffmanDec.DecodeScaleFactor(input) - SF_DELTA;
-                                tmp = Math.Min(Math.Max(offset[1], -100), 155);
+                                else offset1 += HuffmanDec.DecodeScaleFactor(input) - SF_DELTA;
+                                tmp = Math.Min(Math.Max(offset1, -100), 155);
                                 _scaleFactors[idx] = -ScaleFactorTable.SCALEFACTOR_TABLE[tmp + SF_OFFSET];
                             }
                             break;
                         default:
                             for (; sfb < end; sfb++, idx++)
                             {
-                                offset[0] += HuffmanDec.DecodeScaleFactor(input) - SF_DELTA;
-                                if (offset[0] > 255) throw new AACException("scalefactor out of range: " + offset[0]);
-                                _scaleFactors[idx] = ScaleFactorTable.SCALEFACTOR_TABLE[offset[0] - 100 + SF_OFFSET];
+                                offset0 += HuffmanDec.DecodeScaleFactor(input) - SF_DELTA;
+                                if (offset0 > 255) throw new AACException("scalefactor out of range: " + offset0);
+                                _scaleFactors[idx] = ScaleFactorTable.SCALEFACTOR_TABLE[offset0 - 100 + SF_OFFSET];
                             }
                             break;
                     }
@@ -220,7 +220,7 @@ namespace SharpJaad.AAC.Syntax
             int maxSFB = _info.GetMaxSFB();
             int windowGroups = _info.GetWindowGroupCount();
             int[] offsets = _info.GetSWBOffsets();
-            int[] buf = new int[4];
+            int[] buf = _huffBuf;
 
             int sfb, j, k, w, hcb, off, width, num;
             int groupOff = 0, idx = 0;

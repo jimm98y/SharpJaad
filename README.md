@@ -42,8 +42,15 @@ short[] pcm = new short[buffer.Data.Length / sizeof(short)];
 Buffer.BlockCopy(buffer.Data, 0, pcm, 0, buffer.Data.Length);
 ```
 
+### Allocations
+After the first frame, `DecodeFrame` allocates nothing for AAC-LC, AAC Main, AAC LTP and HE-AAC (SBR) streams: the decoder reuses its buffers, and the `SampleBuffer` keeps its `Data` array as long as the frame size stays the same. Reuse one `SampleBuffer` for all frames to keep it that way, and copy `Data` if you need it after the next call. Parametric stereo (HE-AACv2) still allocates per frame, and so does a frame that fails to decode (its exception).
+
 ## SharpJaadMain
 A sample application that can extract AAC audio from a (MP4) file and transcode it into a WAV file.
 
 ## Credits
 This is a port of the https://sourceforge.net/projects/jaadec/ into C#. 
+
+## Development
+- [doc/testing.md](doc/testing.md): the tests, the AAC conformance streams they decode, and how to run them.
+- [doc/public-api.md](doc/public-api.md): how the public API is guarded against unintended changes.

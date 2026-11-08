@@ -1,7 +1,6 @@
 ﻿using SharpJaad.AAC.Filterbank;
 using SharpJaad.AAC.Syntax;
 using System;
-using System.Linq;
 
 namespace SharpJaad.AAC.Tools
 {
@@ -27,11 +26,20 @@ namespace SharpJaad.AAC.Tools
         private bool _lagUpdate;
         private bool[] _shortUsed, _shortLagPresent, _longUsed;
         private int[] _shortLag;
+        private const int MAX_WINDOWS = 8;
+        // scratch buffers reused by Process() to avoid per-frame allocations
+        private readonly float[] _ltpInput, _ltpOutput;
 
         public LTPrediction(int frameLength)
         {
             _frameLength = frameLength;
             _states = new int[4 * frameLength];
+            _shortUsed = new bool[MAX_WINDOWS];
+            _shortLagPresent = new bool[MAX_WINDOWS];
+            _shortLag = new int[MAX_WINDOWS];
+            _longUsed = new bool[Constants.MAX_LTP_SFB];
+            _ltpInput = new float[2048];
+            _ltpOutput = new float[2048];
         }
 
         public bool IsPresent()
@@ -49,7 +57,7 @@ namespace SharpJaad.AAC.Tools
                 return;
             }
 
-            if (profile.Equals(Profile.AAC_LD))
+            if (profile == Profile.AAC_LD)
             {
                 _lagUpdate = input.ReadBool();
                 if (_lagUpdate) _lag = input.ReadBits(10);
@@ -62,9 +70,9 @@ namespace SharpJaad.AAC.Tools
 
             if (info.IsEightShortFrame())
             {
-                _shortUsed = new bool[windowCount];
-                _shortLagPresent = new bool[windowCount];
-                _shortLag = new int[windowCount];
+                Array.Clear(_shortUsed, 0, _shortUsed.Length);
+                Array.Clear(_shortLagPresent, 0, _shortLagPresent.Length);
+                Array.Clear(_shortLag, 0, _shortLag.Length);
                 for (int w = 0; w < windowCount; w++)
                 {
                     if (_shortUsed[w] = input.ReadBool())
@@ -77,7 +85,7 @@ namespace SharpJaad.AAC.Tools
             else
             {
                 _lastBand = Math.Min(info.GetMaxSFB(), Constants.MAX_LTP_SFB);
-                _longUsed = new bool[_lastBand];
+                Array.Clear(_longUsed, 0, _longUsed.Length);
 
                 for (int i = 0; i < _lastBand; i++)
                 {
@@ -88,7 +96,7 @@ namespace SharpJaad.AAC.Tools
 
         public void SetPredictionUnused(int sfb)
         {
-            if (_longUsed != null) _longUsed[sfb] = false;
+            if (sfb < _lastBand) _longUsed[sfb] = false;
         }
 
         public void Process(ICStream ics, float[] data, FilterBank filterBank, SampleFrequency sf)
@@ -101,8 +109,9 @@ namespace SharpJaad.AAC.Tools
             if (!info.IsEightShortFrame())
             {
                 int samples = _frameLength << 1;
-                float[] input = new float[2048];
-                float[] output = new float[2048];
+                float[] input = _ltpInput;
+                float[] output = _ltpOutput;
+                Array.Clear(output, 0, output.Length);
 
                 for (int i = 0; i < samples; i++)
                 {
@@ -136,7 +145,7 @@ namespace SharpJaad.AAC.Tools
         public void UpdateState(float[] time, float[] overlap, Profile profile)
         {
             int i;
-            if (profile.Equals(Profile.AAC_LD))
+            if (profile == Profile.AAC_LD)
             {
                 for (i = 0; i < _frameLength; i++)
                 {
@@ -160,7 +169,7 @@ namespace SharpJaad.AAC.Tools
 
         public static bool IsLTPProfile(Profile profile)
         {
-            return profile.Equals(Profile.AAC_LTP) || profile.Equals(Profile.ER_AAC_LTP) || profile.Equals(Profile.AAC_LD);
+            return (profile == Profile.AAC_LTP) || (profile == Profile.ER_AAC_LTP) || (profile == Profile.AAC_LD);
         }
 
         public void Copy(LTPrediction ltp)
@@ -170,10 +179,10 @@ namespace SharpJaad.AAC.Tools
             _lag = ltp._lag;
             _lastBand = ltp._lastBand;
             _lagUpdate = ltp._lagUpdate;
-            _shortUsed = ltp._shortUsed.ToArray();
-            _shortLagPresent = ltp._shortLagPresent.ToArray();
-            _shortLag = ltp._shortLag.ToArray();
-            _longUsed = ltp._longUsed.ToArray();
+            Array.Copy(ltp._shortUsed, _shortUsed, _shortUsed.Length);
+            Array.Copy(ltp._shortLagPresent, _shortLagPresent, _shortLagPresent.Length);
+            Array.Copy(ltp._shortLag, _shortLag, _shortLag.Length);
+            Array.Copy(ltp._longUsed, _longUsed, _longUsed.Length);
         }
     }
 }

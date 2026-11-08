@@ -24,7 +24,7 @@ namespace SharpJaad.AAC.Gain
             float[] buf = new float[_frameLen];
 
             int b, j, i;
-            if (winSeq.Equals(WindowSequence.EIGHT_SHORT_SEQUENCE))
+            if (winSeq == WindowSequence.EIGHT_SHORT_SEQUENCE)
             {
                 for (b = 0; b < GCConstants.BANDS; b++)
                 {
@@ -128,7 +128,7 @@ namespace SharpJaad.AAC.Gain
             }
 
             int j;
-            if (winSeq.Equals(WindowSequence.EIGHT_SHORT_SEQUENCE))
+            if (winSeq == WindowSequence.EIGHT_SHORT_SEQUENCE)
             {
                 int k;
                 for (j = 0; j < 8; j++)

@@ -30,6 +30,12 @@ namespace SharpJaad.AAC.Syntax
             cces = new CCE[Constants.MAX_ELEMENTS];
             dses = new DSE[Constants.MAX_ELEMENTS];
             fils = new FIL[Constants.MAX_ELEMENTS];
+            // FIL and DSE elements are cheap: create them up front, so that a frame with more of them than before allocates nothing
+            for (int i = 0; i < Constants.MAX_ELEMENTS; i++)
+            {
+                dses[i] = new DSE();
+                fils[i] = new FIL(config.IsSBRDownSampled());
+            }
 
             StartNewFrame();
         }
@@ -184,7 +190,8 @@ namespace SharpJaad.AAC.Syntax
         private void DecodeFIL(BitStream input, Element prev)
         {
             if (curFIL == Constants.MAX_ELEMENTS) throw new AACException("too much FIL elements");
-            if (fils[curFIL] == null) fils[curFIL] = new FIL(config.IsSBRDownSampled());
+            // as when the FIL was created on first use: it takes the configuration at that point
+            fils[curFIL].InitOnFirstUse(config.IsSBRDownSampled());
             fils[curFIL].Decode(input, prev, config.GetSampleFrequency(), config.IsSBREnabled(), config.IsSmallFrameUsed());
             curFIL++;
 
@@ -254,7 +261,7 @@ namespace SharpJaad.AAC.Syntax
             float[] iqData = ics.GetInvQuantData();
 
             //prediction
-            if (profile.Equals(Profile.AAC_MAIN) && info.IsICPredictionPresent()) info.GetICPrediction().Process(ics, iqData, sf);
+            if ((profile == Profile.AAC_MAIN) && info.IsICPredictionPresent()) info.GetICPrediction().Process(ics, iqData, sf);
             if (ltp != null) ltp.Process(ics, iqData, filterBank, sf);
 
             //dependent coupling
@@ -311,7 +318,7 @@ namespace SharpJaad.AAC.Syntax
             //MS
             if (cpe.IsCommonWindow() && cpe.IsMSMaskPresent()) SharpJaad.AAC.Tools.MS.Process(cpe, iqData1, iqData2);
             //main prediction
-            if (profile.Equals(Profile.AAC_MAIN))
+            if (profile == Profile.AAC_MAIN)
             {
                 if (info1.IsICPredictionPresent()) info1.GetICPrediction().Process(ics1, iqData1, sf);
                 if (info2.IsICPredictionPresent()) info2.GetICPrediction().Process(ics2, iqData2, sf);

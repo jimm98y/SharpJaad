@@ -5,6 +5,7 @@
         public class DynamicRangeInfo
         {
             public const int MAX_NBR_BANDS = 7;
+            internal const int MAX_DRC_BANDS = 16; //bands_increment is 4 bits + 1
             public bool[] _excludeMask;
             public bool[] _additionalExcludedChannels;
             public bool _pceTagPresent;
@@ -23,6 +24,9 @@
             {
                 _excludeMask = new bool[MAX_NBR_BANDS];
                 _additionalExcludedChannels = new bool[MAX_NBR_BANDS];
+                _bandTop = new int[MAX_DRC_BANDS];
+                _dynRngSgn = new bool[MAX_DRC_BANDS];
+                _dynRngCtl = new int[MAX_DRC_BANDS];
             }
         }
 
@@ -34,9 +38,18 @@
         private const int TYPE_SBR_DATA_CRC = 14;
         private bool _downSampledSBR;
         private DynamicRangeInfo _dri;
+        private bool _used;
 
         public FIL(bool downSampledSBR)
         {
+            _downSampledSBR = downSampledSBR;
+            _dri = new DynamicRangeInfo();
+        }
+
+        internal void InitOnFirstUse(bool downSampledSBR)
+        {
+            if (_used) return;
+            _used = true;
             _downSampledSBR = downSampledSBR;
         }
 
@@ -100,7 +113,6 @@
 
         private int DecodeDynamicRangeInfo(BitStream input, int count)
         {
-            if (_dri == null) _dri = new DynamicRangeInfo();
             int ret = count;
 
             int bandCount = 1;
@@ -125,7 +137,6 @@
                 _dri._interpolationScheme = input.ReadBits(4);
                 ret -= 8;
                 bandCount += _dri._bandsIncrement;
-                _dri._bandTop = new int[bandCount];
                 for (int i = 0; i < bandCount; i++)
                 {
                     _dri._bandTop[i] = input.ReadBits(8);
@@ -141,8 +152,6 @@
                 ret -= 8;
             }
 
-            _dri._dynRngSgn = new bool[bandCount];
-            _dri._dynRngCtl = new int[bandCount];
             for (int i = 0; i < bandCount; i++)
             {
                 _dri._dynRngSgn[i] = input.ReadBool();

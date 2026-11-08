@@ -1,0 +1,25 @@
+# PCM of the ISO/IEC 14496-26 AAC conformance streams as decoded by SharpJaad 0.1.1 (git 3b2014c): a change to the decoder
+# that is not meant to change its output must keep every line. The streams are not part of the repository, see ConformanceTests.
+# <stream>: hash=<FNV-1a 64 of the little-endian PCM of all frames> pcmBytes=<total> sr=<last sample rate> ch=<last channels> errors=<frames that threw>
+Fd_2_c1_Ms_0x01.mp4: SETUP-ERR AACException: profile not supported: 42
+Fd_2_c1_Ms_0x04.mp4: SETUP-ERR AACException: profile not supported: 42
+aac-sce-in-stereo.mp4: hash=566D9EB8704573E6 pcmBytes=888832 sr=44100 ch=2 errors=0
+al04_44.mp4: hash=332207F11C7E472B pcmBytes=1454080 sr=44100 ch=2 errors=0
+al04sf_48.mp4: hash=9E2A650DF62D38C7 pcmBytes=1581056 sr=48000 ch=2 errors=0
+al05_44.mp4: hash=2E19CFE8A7C510FB pcmBytes=1310720 sr=44100 ch=2 errors=0
+al06_44.mp4: hash=14650FB0739D0383 pcmBytes=0 sr=0 ch=0 errors=355 first=frame 0: AACException: Index was outside the bounds of the array.
+al07_96.mp4: hash=24E433CF079905E9 pcmBytes=9584640 sr=96000 ch=6 errors=0
+al15_44.mp4: hash=0C16191928DFE268 pcmBytes=49152 sr=0 ch=0 errors=128 first=frame 0: AACException: too many bands: 14, allowed: 10
+al17_44.mp4: hash=6742EAC25E953F1C pcmBytes=1323008 sr=44100 ch=2 errors=0
+al18_44.mp4: hash=C8DA5046D4E66C8B pcmBytes=11522048 sr=44100 ch=2 errors=0
+al22_chCfg0PCE_44.mp4: hash=14650FB0739D0383 pcmBytes=0 sr=0 ch=0 errors=47 first=frame 0: AACException: SBR applied on unexpected element: 
+al_sbr_cm_48_2.mp4: hash=BE25A6B5B6D78CA7 pcmBytes=3088384 sr=0 ch=0 errors=377 first=frame 377: AACException: The specified arrays must have the same number of dimensions.
+al_sbr_cm_48_5.1.mp4: hash=14650FB0739D0383 pcmBytes=0 sr=0 ch=0 errors=744 first=frame 0: AACException: Object reference not set to an instance of an object.
+al_sbr_ps_04_new.mp4: hash=2EEE9A971C7BCE87 pcmBytes=434176 sr=0 ch=0 errors=53 first=frame 53: AACException: The specified arrays must have the same number of dimensions.
+al_sbr_ps_06_new.mp4: hash=6C014FA91C430337 pcmBytes=868352 sr=0 ch=0 errors=106 first=frame 106: AACException: The specified arrays must have the same number of dimensions.
+al_sbr_sr_48_2_fsaac48.mp4: hash=65760E68D96084A7 pcmBytes=4702208 sr=0 ch=0 errors=574 first=frame 574: AACException: The specified arrays must have the same number of dimensions.
+am00_88.mp4: hash=702AED273816A4D7 pcmBytes=23126016 sr=88200 ch=2 errors=0
+am05_44.mp4: hash=0C16191928DFE268 pcmBytes=49152 sr=0 ch=0 errors=128 first=frame 0: AACException: too many bands: 14, allowed: 10
+ap05_48.mp4: hash=C49B885606E5A21A pcmBytes=3649536 sr=48000 ch=2 errors=0
+er_ad6000np_44_ep0.mp4: SETUP-ERR AACException: unsupported profile: ER_AAC_LD
+ct_faac-adts.aac: hash=26208839012D88B6 pcmBytes=3526656 sr=44100 ch=2 errors=0

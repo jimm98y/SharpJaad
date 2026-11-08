@@ -8,6 +8,7 @@
         private const int MAX_LFE_CHANNEL_ELEMENTS = 4;
         private const int MAX_ASSOC_DATA_ELEMENTS = 8;
         private const int MAX_VALID_CC_ELEMENTS = 16;
+        private const int MAX_COMMENT_FIELD_BYTES = 255; //comment_field_bytes is 8 bits
 
         public sealed class TaggedElement
         {
@@ -75,6 +76,12 @@
             _lfeElementTags = new int[MAX_LFE_CHANNEL_ELEMENTS];
             _assocDataElementTags = new int[MAX_ASSOC_DATA_ELEMENTS];
             _ccElements = new CCE[MAX_VALID_CC_ELEMENTS];
+            // the elements are allocated once and overwritten by every decoded PCE
+            for (int i = 0; i < MAX_FRONT_CHANNEL_ELEMENTS; i++) _frontElements[i] = new TaggedElement(false, 0);
+            for (int i = 0; i < MAX_SIDE_CHANNEL_ELEMENTS; i++) _sideElements[i] = new TaggedElement(false, 0);
+            for (int i = 0; i < MAX_BACK_CHANNEL_ELEMENTS; i++) _backElements[i] = new TaggedElement(false, 0);
+            for (int i = 0; i < MAX_VALID_CC_ELEMENTS; i++) _ccElements[i] = new CCE(false, 0);
+            _commentFieldData = new byte[MAX_COMMENT_FIELD_BYTES];
             _sampleFrequency = SampleFrequency.SAMPLE_FREQUENCY_NONE;
         }
 
@@ -129,13 +136,13 @@
 
             for (i = 0; i < _validCCElementsCount; ++i)
             {
-                _ccElements[i] = new CCE(input.ReadBool(), input.ReadBits(4));
+                _ccElements[i]._isIndSW = input.ReadBool();
+                _ccElements[i]._tag = input.ReadBits(4);
             }
 
             input.ByteAlign();
 
             int commentFieldBytes = input.ReadBits(8);
-            _commentFieldData = new byte[commentFieldBytes];
             for (i = 0; i < commentFieldBytes; i++)
             {
                 _commentFieldData[i] = (byte)input.ReadBits(8);
@@ -146,7 +153,8 @@
         {
             for (int i = 0; i < len; ++i)
             {
-                te[i] = new TaggedElement(input.ReadBool(), input.ReadBits(4));
+                te[i]._isCPE = input.ReadBool();
+                te[i]._tag = input.ReadBits(4);
             }
         }
 

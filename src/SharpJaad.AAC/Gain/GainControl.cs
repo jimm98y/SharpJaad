@@ -121,7 +121,7 @@ namespace SharpJaad.AAC.Gain
         private void Compensate(float[] input, float[][] output, WindowSequence winSeq, int band)
         {
             int j;
-            if (winSeq.Equals(WindowSequence.EIGHT_SHORT_SEQUENCE))
+            if (winSeq == WindowSequence.EIGHT_SHORT_SEQUENCE)
             {
                 int a, b;
                 for (int k = 0; k < 8; k++)
@@ -175,7 +175,7 @@ namespace SharpJaad.AAC.Gain
                     _overlap[band][j] = input[band * _lbLong * 2 + _lbLong + j];
                 }
 
-                int lastBlock = winSeq.Equals(WindowSequence.ONLY_LONG_SEQUENCE) ? 1 : 0;
+                int lastBlock = (winSeq == WindowSequence.ONLY_LONG_SEQUENCE) ? 1 : 0;
                 _locationPrev[band][0] = _location[band][lastBlock].ToArray();
                 _levelPrev[band][0] = _level[band][lastBlock].ToArray();
             }
@@ -216,11 +216,11 @@ namespace SharpJaad.AAC.Gain
             CalculateFMD(band, 0, true, maxLocGain0, samples, locA, levA, buf1);
 
             //for the latter half region
-            int block = winSeq.Equals(WindowSequence.EIGHT_SHORT_SEQUENCE) ? blockID : 0;
+            int block = (winSeq == WindowSequence.EIGHT_SHORT_SEQUENCE) ? blockID : 0;
             float secLevel = CalculateFMD(band, block, false, maxLocGain1, samples, locA, levA, buf2);
 
             //for the non-overlapped region
-            if (winSeq.Equals(WindowSequence.LONG_START_SEQUENCE) || winSeq.Equals(WindowSequence.LONG_STOP_SEQUENCE))
+            if ((winSeq == WindowSequence.LONG_START_SEQUENCE) || (winSeq == WindowSequence.LONG_STOP_SEQUENCE))
             {
                 CalculateFMD(band, 1, false, maxLocGain2, samples, locA, levA, buf3);
             }
@@ -228,7 +228,7 @@ namespace SharpJaad.AAC.Gain
             //calculate a gain modification function
             int i;
             int flatLen = 0;
-            if (winSeq.Equals(WindowSequence.LONG_STOP_SEQUENCE))
+            if (winSeq == WindowSequence.LONG_STOP_SEQUENCE)
             {
                 flatLen = samples / 2 - maxLocGain0 - maxLocGain1;
                 for (i = 0; i < flatLen; i++)
@@ -236,7 +236,7 @@ namespace SharpJaad.AAC.Gain
                     modFunc[i] = 1.0f;
                 }
             }
-            if (winSeq.Equals(WindowSequence.ONLY_LONG_SEQUENCE) || winSeq.Equals(WindowSequence.EIGHT_SHORT_SEQUENCE)) levA[0] = 1.0f;
+            if ((winSeq == WindowSequence.ONLY_LONG_SEQUENCE) || (winSeq == WindowSequence.EIGHT_SHORT_SEQUENCE)) levA[0] = 1.0f;
 
             for (i = 0; i < maxLocGain0; i++)
             {
@@ -247,7 +247,7 @@ namespace SharpJaad.AAC.Gain
                 modFunc[i + flatLen + maxLocGain0] = levA[0] * buf2[i];
             }
 
-            if (winSeq.Equals(WindowSequence.LONG_START_SEQUENCE))
+            if (winSeq == WindowSequence.LONG_START_SEQUENCE)
             {
                 for (i = 0; i < maxLocGain2; i++)
                 {
@@ -259,7 +259,7 @@ namespace SharpJaad.AAC.Gain
                     modFunc[i + maxLocGain0 + maxLocGain1 + maxLocGain2] = 1.0f;
                 }
             }
-            else if (winSeq.Equals(WindowSequence.LONG_STOP_SEQUENCE))
+            else if (winSeq == WindowSequence.LONG_STOP_SEQUENCE)
             {
                 for (i = 0; i < maxLocGain2; i++)
                 {

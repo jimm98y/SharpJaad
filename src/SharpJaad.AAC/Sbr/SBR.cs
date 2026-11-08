@@ -101,6 +101,15 @@ namespace SharpJaad.AAC.Sbr
 
         public float[,,,] _Xsbr = new float[2, Constants.MAX_NTSRHFG, 64, 2];
 
+        // per-frame scratch state, reused to avoid allocations; each buffer is cleared before use
+        internal readonly HFAdjustment _hfAdjustment = new HFAdjustment();
+        internal readonly HFGeneration.ACorrCoef _aCorrCoef = new HFGeneration.ACorrCoef();
+        internal readonly float[,] _alpha_0 = new float[64, 2], _alpha_1 = new float[64, 2];
+        internal readonly int[] _t_E_temp = new int[6];
+        private readonly float[,,] _X = new float[Constants.MAX_NTSR, 64, 2];
+        private float[,,] _XLeft, _XRight; // allocated with the PS decoder
+        private readonly int[] _saved_t_E = new int[6], _saved_t_Q = new int[3];
+
         public int _numTimeSlotsRate;
         public int _numTimeSlots;
         public int _tHFGen;
@@ -661,7 +670,9 @@ namespace SharpJaad.AAC.Sbr
             }
             else
             {
-                int[] saved_t_E = new int[6], saved_t_Q = new int[3];
+                int[] saved_t_E = _saved_t_E, saved_t_Q = _saved_t_Q;
+                Array.Clear(saved_t_E, 0, saved_t_E.Length);
+                Array.Clear(saved_t_Q, 0, saved_t_Q.Length);
                 int saved_L_E = _L_E[0];
                 int saved_L_Q = _L_Q[0];
                 int saved_frame_class = _bs_frame_class[0];
@@ -935,6 +946,8 @@ namespace SharpJaad.AAC.Sbr
                     if (_ps == null)
                     {
                         _ps = new PS(_sampleRate, _numTimeSlotsRate);
+                        _XLeft = new float[38, 64, 2];
+                        _XRight = new float[38, 64, 2];
                     }
                     if (_psResetFlag)
                     {
@@ -1271,7 +1284,8 @@ namespace SharpJaad.AAC.Sbr
         {
             bool dont_process = false;
             int ret = 0;
-            float[,,] X = new float[Constants.MAX_NTSR, 64, 2];
+            float[,,] X = _X;
+            Array.Clear(X, 0, X.Length);
 
             /* case can occur due to bit errors */
             if (!_stereo) return 21;
@@ -1340,7 +1354,8 @@ namespace SharpJaad.AAC.Sbr
         {
             bool dont_process = false;
             int ret = 0;
-            float[,,] X = new float[Constants.MAX_NTSR, 64, 2];
+            float[,,] X = _X;
+            Array.Clear(X, 0, X.Length);
 
             /* case can occur due to bit errors */
             if (_stereo) return 21;
@@ -1397,8 +1412,10 @@ namespace SharpJaad.AAC.Sbr
             int l, k;
             bool dont_process = false;
             int ret = 0;
-            float[,,] X_left = new float[38, 64, 2];
-            float[,,] X_right = new float[38, 64, 2];
+            float[,,] X_left = _XLeft;
+            float[,,] X_right = _XRight;
+            Array.Clear(X_left, 0, X_left.Length);
+            Array.Clear(X_right, 0, X_right.Length);
 
             /* case can occur due to bit errors */
             if (_stereo) return 21;

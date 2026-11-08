@@ -1,9 +1,21 @@
 ﻿using SharpJaad.AAC.Tools;
+using System;
 
 namespace SharpJaad.AAC.Sbr
 {
     public class SynthesisFilterbank
     {
+        // scratch buffers reused by every call to avoid per-frame allocations; cleared before each use
+        private readonly float[] _tmp_x2 = new float[32];
+        private readonly float[] _tmp_x1 = new float[32];
+        private readonly float[] _tmp_out_imag1 = new float[32];
+        private readonly float[] _tmp_out_real1 = new float[32];
+        private readonly float[] _tmp_in_imag1 = new float[32];
+        private readonly float[] _tmp_in_real1 = new float[32];
+        private readonly float[] _tmp_out_imag2 = new float[32];
+        private readonly float[] _tmp_out_real2 = new float[32];
+        private readonly float[] _tmp_in_imag2 = new float[32];
+        private readonly float[] _tmp_in_real2 = new float[32];
         private static float[,] qmf32_pre_twiddle = {
             {0.999924701839145f, -0.012271538285720f},
             {0.999322384588350f, -0.036807222941359f},
@@ -58,7 +70,9 @@ namespace SharpJaad.AAC.Sbr
         public void SbrQmfSynthesis32(SBR sbr, float[,,] X,
             float[] output)
         {
-            float[] x1 = new float[32], x2 = new float[32];
+            float[] x1 = _tmp_x1, x2 = _tmp_x2;
+            Array.Clear(x1, 0, x1.Length);
+            Array.Clear(x2, 0, x2.Length);
             float scale = 1.0f / 64.0f;
             int n, k, outt = 0;
             int l;
@@ -117,8 +131,16 @@ namespace SharpJaad.AAC.Sbr
         public void SbrQmfSynthesis64(SBR sbr, float[,,] X,
             float[] output)
         {
-            float[] in_real1 = new float[32], in_imag1 = new float[32], out_real1 = new float[32], out_imag1 = new float[32];
-            float[] in_real2 = new float[32], in_imag2 = new float[32], out_real2 = new float[32], out_imag2 = new float[32];
+            float[] in_real1 = _tmp_in_real1, in_imag1 = _tmp_in_imag1, out_real1 = _tmp_out_real1, out_imag1 = _tmp_out_imag1;
+            Array.Clear(in_real1, 0, in_real1.Length);
+            Array.Clear(in_imag1, 0, in_imag1.Length);
+            Array.Clear(out_real1, 0, out_real1.Length);
+            Array.Clear(out_imag1, 0, out_imag1.Length);
+            float[] in_real2 = _tmp_in_real2, in_imag2 = _tmp_in_imag2, out_real2 = _tmp_out_real2, out_imag2 = _tmp_out_imag2;
+            Array.Clear(in_real2, 0, in_real2.Length);
+            Array.Clear(in_imag2, 0, in_imag2.Length);
+            Array.Clear(out_real2, 0, out_real2.Length);
+            Array.Clear(out_imag2, 0, out_imag2.Length);
             float scale = 1.0f / 64.0f;
             int n, k, outt = 0;
             int l;

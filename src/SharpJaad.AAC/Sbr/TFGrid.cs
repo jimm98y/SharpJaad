@@ -7,7 +7,8 @@
         public static int EnvelopeTimeBorderVector(SBR sbr, int ch)
         {
             int l, border, temp;
-            int[] t_E_temp = new int[6];
+            int[] t_E_temp = sbr._t_E_temp;
+            System.Array.Clear(t_E_temp, 0, t_E_temp.Length);
 
             t_E_temp[0] = sbr._rate * sbr._abs_bord_lead[ch];
             t_E_temp[sbr._L_E[ch]] = sbr._rate * sbr._abs_bord_trail[ch];

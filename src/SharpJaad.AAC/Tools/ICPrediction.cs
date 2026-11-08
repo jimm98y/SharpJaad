@@ -13,6 +13,7 @@ namespace SharpJaad.AAC.Tools
         private bool _predictorReset;
         private int _predictorResetGroup;
         private bool[] _predictionUsed;
+        private const int MAX_PREDICTION_SFB = 64; //max_sfb is 6 bits
         private PredictorState[] _states;
 
         private sealed class PredictorState
@@ -28,6 +29,7 @@ namespace SharpJaad.AAC.Tools
         public ICPrediction()
         {
             _states = new PredictorState[MAX_PREDICTORS];
+            _predictionUsed = new bool[MAX_PREDICTION_SFB];
             ResetAllPredictors();
         }
 
@@ -39,7 +41,7 @@ namespace SharpJaad.AAC.Tools
 
             int maxPredSFB = sf.GetMaximalPredictionSFB();
             int length = Math.Min(maxSFB, maxPredSFB);
-            _predictionUsed = new bool[length];
+            Array.Clear(_predictionUsed, 0, _predictionUsed.Length);
             for (int sfb = 0; sfb < length; sfb++)
             {
                 _predictionUsed[sfb] = input.ReadBool();
@@ -149,14 +151,15 @@ namespace SharpJaad.AAC.Tools
             return IntBitsToFloat((int)(FloatToIntBits(pf) & 0xFFFF0000));
         }
 
-        private static int FloatToIntBits(float f)
+        private static unsafe int FloatToIntBits(float f)
         {
-            return BitConverter.ToInt32(BitConverter.GetBytes(f), 0);
+            // reinterprets the bits without the byte[] that BitConverter.GetBytes allocates
+            return *(int*)&f;
         }
 
-        private static float IntBitsToFloat(int i)
+        private static unsafe float IntBitsToFloat(int i)
         {
-            return BitConverter.ToSingle(BitConverter.GetBytes(i), 0);
+            return *(float*)&i;
         }
     }
 }

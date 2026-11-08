@@ -16,6 +16,10 @@ namespace SharpJaad.AAC.Sbr
         private float[][] G_lim_boost = new float[Constants.MAX_L_E][];
         private float[][] Q_M_lim_boost = new float[Constants.MAX_L_E][];
         private float[][] S_M_boost = new float[Constants.MAX_L_E][];
+        // scratch buffers of CalculateGain, reused to avoid per-frame allocations
+        private readonly float[] _Q_M_lim = new float[Constants.MAX_M];
+        private readonly float[] _G_lim = new float[Constants.MAX_M];
+        private readonly float[] _S_M = new float[Constants.MAX_M];
 
         public HFAdjustment()
         {
@@ -27,9 +31,21 @@ namespace SharpJaad.AAC.Sbr
             }
         }
 
+        // restores the state of a newly constructed instance, so that one instance can be reused for every frame
+        internal void Reset()
+        {
+            for (int i = 0; i < Constants.MAX_L_E; i++)
+            {
+                Array.Clear(G_lim_boost[i], 0, Constants.MAX_M);
+                Array.Clear(Q_M_lim_boost[i], 0, Constants.MAX_M);
+                Array.Clear(S_M_boost[i], 0, Constants.MAX_M);
+            }
+        }
+
         public static int HfAdjustment(SBR sbr, float[,,,] Xsbr, int ch)
         {
-            HFAdjustment adj = new HFAdjustment();
+            HFAdjustment adj = sbr._hfAdjustment;
+            adj.Reset();
             int ret = 0;
 
             if (sbr._bs_frame_class[ch] == Constants.FIXFIX)
@@ -229,7 +245,7 @@ namespace SharpJaad.AAC.Sbr
 
                     for (m = 0; m < sbr._M; m++)
                     {
-                        float[] psi = new float[2];
+                        float psi0, psi1;
 
                         G_filt = 0;
                         Q_filt = 0;
@@ -269,11 +285,11 @@ namespace SharpJaad.AAC.Sbr
 
                         {
                             int rev = (m + sbr._kx & 1) != 0 ? -1 : 1;
-                            psi[0] = adj.S_M_boost[l][m] * phi_re[fIndexSine];
-                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0] += psi[0];
+                            psi0 = adj.S_M_boost[l][m] * phi_re[fIndexSine];
+                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0] += psi0;
 
-                            psi[1] = rev * adj.S_M_boost[l][m] * phi_im[fIndexSine];
-                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 1] += psi[1];
+                            psi1 = rev * adj.S_M_boost[l][m] * phi_im[fIndexSine];
+                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 1] += psi1;
                         }
                     }
 
@@ -297,10 +313,13 @@ namespace SharpJaad.AAC.Sbr
             int current_t_noise_band = 0;
             int S_mapped;
 
-            float[] Q_M_lim = new float[Constants.MAX_M];
-            float[] G_lim = new float[Constants.MAX_M];
+            float[] Q_M_lim = adj._Q_M_lim;
+            Array.Clear(Q_M_lim, 0, Q_M_lim.Length);
+            float[] G_lim = adj._G_lim;
+            Array.Clear(G_lim, 0, G_lim.Length);
             float G_boost;
-            float[] S_M = new float[Constants.MAX_M];
+            float[] S_M = adj._S_M;
+            Array.Clear(S_M, 0, S_M.Length);
 
             for (l = 0; l < sbr._L_E[ch]; l++)
             {

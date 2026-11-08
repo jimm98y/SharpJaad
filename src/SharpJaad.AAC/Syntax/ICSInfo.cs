@@ -1,5 +1,5 @@
 ﻿using SharpJaad.AAC.Tools;
-using System.Linq;
+using System;
 
 namespace SharpJaad.AAC.Syntax
 {
@@ -44,13 +44,15 @@ namespace SharpJaad.AAC.Syntax
                 _ltPredict = new LTPrediction(_frameLength);
             else
                 _ltPredict = null;
+            // allocated up front instead of on the first frame with prediction data; it is untouched until then
+            if (config.GetProfile() == Profile.AAC_MAIN) _icPredict = new ICPrediction();
         }
 
         /* ========== decoding ========== */
         public void Decode(BitStream input, DecoderConfig conf, bool commonWindow)
         {
             SampleFrequency sf = conf.GetSampleFrequency();
-            if (sf.Equals(SampleFrequency.SAMPLE_FREQUENCY_NONE)) throw new AACException("invalid sample frequency");
+            if (sf == SampleFrequency.SAMPLE_FREQUENCY_NONE) throw new AACException("invalid sample frequency");
 
             input.SkipBit(); //reserved
             _windowSequence = (WindowSequence)input.ReadBits(2);
@@ -60,7 +62,7 @@ namespace SharpJaad.AAC.Syntax
             _windowGroupCount = 1;
             _windowGroupLength[0] = 1;
 
-            if (_windowSequence.Equals(WindowSequence.EIGHT_SHORT_SEQUENCE))
+            if (_windowSequence == WindowSequence.EIGHT_SHORT_SEQUENCE)
             {
                 _maxSFB = input.ReadBits(4);
                 int i;
@@ -153,7 +155,7 @@ namespace SharpJaad.AAC.Syntax
 
         public bool IsEightShortFrame()
         {
-            return _windowSequence.Equals(WindowSequence.EIGHT_SHORT_SEQUENCE);
+            return (_windowSequence == WindowSequence.EIGHT_SHORT_SEQUENCE);
         }
 
         public int GetWindowShape(int index)
@@ -193,9 +195,9 @@ namespace SharpJaad.AAC.Syntax
 
             _windowCount = info._windowCount;
             _windowGroupCount = info._windowGroupCount;
-            _windowGroupLength = info._windowGroupLength.ToArray();
+            Array.Copy(info._windowGroupLength, _windowGroupLength, _windowGroupLength.Length);
             _swbCount = info._swbCount;
-            _swbOffsets = info._swbOffsets.ToArray();
+            _swbOffsets = info._swbOffsets; // static read-only table, safe to share
 
             if (_predictionDataPresent)
             {

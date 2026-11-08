@@ -1,0 +1,1538 @@
+abstract SharpJaad.MP4.API.Protection.GetScheme() -> SharpJaad.MP4.API.Protection.Scheme
+abstract SharpJaad.MP4.API.Track.GetCodec() -> System.Enum
+abstract SharpJaad.MP4.API.Track.GetTrackType() -> SharpJaad.MP4.API.Type
+abstract SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.Extension.decode(SharpJaad.MP4.MP4InputStream input) -> void
+abstract SharpJaad.MP4.OD.Descriptor.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+const SharpJaad.MP4.API.ID3Frame.ALBUM_SORT_ORDER = 1414745921 -> int
+const SharpJaad.MP4.API.ID3Frame.ALBUM_TITLE = 1413565506 -> int
+const SharpJaad.MP4.API.ID3Frame.ARTIST = 1414546737 -> int
+const SharpJaad.MP4.API.ID3Frame.ATTACHED_PICTURE = 1095780675 -> int
+const SharpJaad.MP4.API.ID3Frame.AUDIO_ENCRYPTION = 1095061059 -> int
+const SharpJaad.MP4.API.ID3Frame.AUDIO_SEEK_POINT_INDEX = 1095979081 -> int
+const SharpJaad.MP4.API.ID3Frame.BAND = 1414546738 -> int
+const SharpJaad.MP4.API.ID3Frame.BEATS_PER_MINUTE = 1413632077 -> int
+const SharpJaad.MP4.API.ID3Frame.COMMENTS = 1129270605 -> int
+const SharpJaad.MP4.API.ID3Frame.COMMERCIAL_FRAME = 1129270610 -> int
+const SharpJaad.MP4.API.ID3Frame.COMMERCIAL_INFORMATION = 1464029005 -> int
+const SharpJaad.MP4.API.ID3Frame.COMPOSER = 1413697357 -> int
+const SharpJaad.MP4.API.ID3Frame.CONDUCTOR = 1414546739 -> int
+const SharpJaad.MP4.API.ID3Frame.CONTENT_GROUP_DESCRIPTION = 1414091825 -> int
+const SharpJaad.MP4.API.ID3Frame.CONTENT_TYPE = 1413697358 -> int
+const SharpJaad.MP4.API.ID3Frame.COPYRIGHT = 1464029008 -> int
+const SharpJaad.MP4.API.ID3Frame.COPYRIGHT_MESSAGE = 1413697360 -> int
+const SharpJaad.MP4.API.ID3Frame.ENCODED_BY = 1413828163 -> int
+const SharpJaad.MP4.API.ID3Frame.ENCODING_TIME = 1413760334 -> int
+const SharpJaad.MP4.API.ID3Frame.ENCODING_TOOLS_AND_SETTINGS = 1414746949 -> int
+const SharpJaad.MP4.API.ID3Frame.ENCRYPTION_METHOD_REGISTRATION = 1162756946 -> int
+const SharpJaad.MP4.API.ID3Frame.EQUALISATION = 1162958130 -> int
+const SharpJaad.MP4.API.ID3Frame.EVENT_TIMING_CODES = 1163150159 -> int
+const SharpJaad.MP4.API.ID3Frame.FILE_OWNER = 1414485838 -> int
+const SharpJaad.MP4.API.ID3Frame.FILE_TYPE = 1413893204 -> int
+const SharpJaad.MP4.API.ID3Frame.GENERAL_ENCAPSULATED_OBJECT = 1195724610 -> int
+const SharpJaad.MP4.API.ID3Frame.GROUP_IDENTIFICATION_REGISTRATION = 1196575044 -> int
+const SharpJaad.MP4.API.ID3Frame.INITIAL_KEY = 1414219097 -> int
+const SharpJaad.MP4.API.ID3Frame.INTERNATIONAL_STANDARD_RECORDING_CODE = 1414746691 -> int
+const SharpJaad.MP4.API.ID3Frame.INTERNET_RADIO_STATION_NAME = 1414681422 -> int
+const SharpJaad.MP4.API.ID3Frame.INTERNET_RADIO_STATION_OWNER = 1414681423 -> int
+const SharpJaad.MP4.API.ID3Frame.INVOLVED_PEOPLE_LIST = 1414090828 -> int
+const SharpJaad.MP4.API.ID3Frame.LANGUAGES = 1414283598 -> int
+const SharpJaad.MP4.API.ID3Frame.LENGTH = 1414284622 -> int
+const SharpJaad.MP4.API.ID3Frame.LINKED_INFORMATION = 1279872587 -> int
+const SharpJaad.MP4.API.ID3Frame.LYRICIST = 1413830740 -> int
+const SharpJaad.MP4.API.ID3Frame.MEDIA_TYPE = 1414350148 -> int
+const SharpJaad.MP4.API.ID3Frame.MODIFIED_BY = 1414546740 -> int
+const SharpJaad.MP4.API.ID3Frame.MOOD = 1414352719 -> int
+const SharpJaad.MP4.API.ID3Frame.MPEG_LOCATION_LOOKUP_TABLE = 1296845908 -> int
+const SharpJaad.MP4.API.ID3Frame.MUSICIAN_CREDITS_LIST = 1414349644 -> int
+const SharpJaad.MP4.API.ID3Frame.MUSIC_CD_IDENTIFIER = 1296254025 -> int
+const SharpJaad.MP4.API.ID3Frame.OFFICIAL_ARTIST_WEBPAGE = 1464811858 -> int
+const SharpJaad.MP4.API.ID3Frame.OFFICIAL_AUDIO_FILE_WEBPAGE = 1464811846 -> int
+const SharpJaad.MP4.API.ID3Frame.OFFICIAL_AUDIO_SOURCE_WEBPAGE = 1464811859 -> int
+const SharpJaad.MP4.API.ID3Frame.OFFICIAL_INTERNET_RADIO_STATION_HOMEPAGE = 1464816211 -> int
+const SharpJaad.MP4.API.ID3Frame.ORIGINAL_ALBUM_TITLE = 1414480204 -> int
+const SharpJaad.MP4.API.ID3Frame.ORIGINAL_ARTIST = 1414484037 -> int
+const SharpJaad.MP4.API.ID3Frame.ORIGINAL_FILENAME = 1414481486 -> int
+const SharpJaad.MP4.API.ID3Frame.ORIGINAL_LYRICIST = 1414483033 -> int
+const SharpJaad.MP4.API.ID3Frame.ORIGINAL_RELEASE_TIME = 1413762898 -> int
+const SharpJaad.MP4.API.ID3Frame.OWNERSHIP_FRAME = 1331121733 -> int
+const SharpJaad.MP4.API.ID3Frame.PART_OF_A_SET = 1414549331 -> int
+const SharpJaad.MP4.API.ID3Frame.PAYMENT = 1464877401 -> int
+const SharpJaad.MP4.API.ID3Frame.PERFORMER_SORT_ORDER = 1414745936 -> int
+const SharpJaad.MP4.API.ID3Frame.PLAYLIST_DELAY = 1413762137 -> int
+const SharpJaad.MP4.API.ID3Frame.PLAY_COUNTER = 1346588244 -> int
+const SharpJaad.MP4.API.ID3Frame.POPULARIMETER = 1347375181 -> int
+const SharpJaad.MP4.API.ID3Frame.POSITION_SYNCHRONISATION_FRAME = 1347375955 -> int
+const SharpJaad.MP4.API.ID3Frame.PRIVATE_FRAME = 1347570006 -> int
+const SharpJaad.MP4.API.ID3Frame.PRODUCED_NOTICE = 1414550095 -> int
+const SharpJaad.MP4.API.ID3Frame.PUBLISHER = 1414550850 -> int
+const SharpJaad.MP4.API.ID3Frame.PUBLISHERS_OFFICIAL_WEBPAGE = 1464882498 -> int
+const SharpJaad.MP4.API.ID3Frame.RECOMMENDED_BUFFER_SIZE = 1380078918 -> int
+const SharpJaad.MP4.API.ID3Frame.RECORDING_TIME = 1413763651 -> int
+const SharpJaad.MP4.API.ID3Frame.RELATIVE_VOLUME_ADJUSTMENT = 1381384498 -> int
+const SharpJaad.MP4.API.ID3Frame.RELEASE_TIME = 1413763660 -> int
+const SharpJaad.MP4.API.ID3Frame.REVERB = 1381388866 -> int
+const SharpJaad.MP4.API.ID3Frame.SEEK_FRAME = 1397048651 -> int
+const SharpJaad.MP4.API.ID3Frame.SET_SUBTITLE = 1414746964 -> int
+const SharpJaad.MP4.API.ID3Frame.SIGNATURE_FRAME = 1397311310 -> int
+const SharpJaad.MP4.API.ID3Frame.SUBTITLE = 1414091827 -> int
+const SharpJaad.MP4.API.ID3Frame.SYNCHRONISED_LYRIC = 1398361172 -> int
+const SharpJaad.MP4.API.ID3Frame.SYNCHRONISED_TEMPO_CODES = 1398363203 -> int
+const SharpJaad.MP4.API.ID3Frame.TAGGING_TIME = 1413764167 -> int
+const SharpJaad.MP4.API.ID3Frame.TERMS_OF_USE = 1431520594 -> int
+const SharpJaad.MP4.API.ID3Frame.TITLE = 1414091826 -> int
+const SharpJaad.MP4.API.ID3Frame.TITLE_SORT_ORDER = 1414745940 -> int
+const SharpJaad.MP4.API.ID3Frame.TRACK_NUMBER = 1414677323 -> int
+const SharpJaad.MP4.API.ID3Frame.UNIQUE_FILE_IDENTIFIER = 1430669636 -> int
+const SharpJaad.MP4.API.ID3Frame.UNSYNCHRONISED_LYRIC = 1431522388 -> int
+const SharpJaad.MP4.API.ID3Frame.USER_DEFINED_TEXT_INFORMATION_FRAME = 1415075928 -> int
+const SharpJaad.MP4.API.ID3Frame.USER_DEFINED_URL_LINK_FRAME = 1465407576 -> int
+const SharpJaad.MP4.Boxes.BoxTypes.AC3_SAMPLE_ENTRY = 1633889587 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.AC3_SPECIFIC_BOX = 1684103987 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ADDITIONAL_METADATA_CONTAINER_BOX = 1835361135 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ALBUM_ARTIST_NAME_BOX = 1631670868 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ALBUM_ARTIST_SORT_BOX = 1936679265 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ALBUM_NAME_BOX = 2841734242 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ALBUM_SORT_BOX = 1936679276 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.AMR_SAMPLE_ENTRY = 1935764850 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.AMR_SPECIFIC_BOX = 1684106610 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.AMR_WB_SAMPLE_ENTRY = 1935767394 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.APPLE_LOSSLESS_BOX = 1634492771 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ARTIST_NAME_BOX = 2839630420 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ARTIST_SORT_BOX = 1936679282 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.AVC_SAMPLE_ENTRY = 1635148593 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.AVC_SPECIFIC_BOX = 1635148611 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.BINARY_XML_BOX = 1652059500 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.BIT_RATE_BOX = 1651798644 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.CATEGORY_BOX = 1667331175 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.CHAPTER_BOX = 1667788908 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.CHUNK_LARGE_OFFSET_BOX = 1668232756 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.CHUNK_OFFSET_BOX = 1937007471 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.CLEAN_APERTURE_BOX = 1668047216 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.COMMENTS_BOX = 2841865588 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.COMPACT_SAMPLE_SIZE_BOX = 1937013298 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.COMPILATION_PART_BOX = 1668311404 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.COMPOSER_NAME_BOX = 2843177588 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.COMPOSER_SORT_BOX = 1936679791 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.COMPOSITION_TIME_TO_SAMPLE_BOX = 1668576371 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.COPYRIGHT_BOX = 1668313716 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.COVER_BOX = 1668249202 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.CUSTOM_GENRE_BOX = 2842125678 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.CUSTOM_ITUNES_METADATA_BOX = 757935405 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.DATA_ENTRY_URL_BOX = 1970433056 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.DATA_ENTRY_URN_BOX = 1970433568 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.DATA_INFORMATION_BOX = 1684631142 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.DATA_REFERENCE_BOX = 1685218662 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.DECODING_TIME_TO_SAMPLE_BOX = 1937011827 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.DEGRADATION_PRIORITY_BOX = 1937007728 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.DESCRIPTION_BOX = 1684370275 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.DISK_NUMBER_BOX = 1684632427 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.DRMS_SAMPLE_ENTRY = 1685220723 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.EAC3_SAMPLE_ENTRY = 1700998451 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.EAC3_SPECIFIC_BOX = 1684366131 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.EDIT_BOX = 1701082227 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.EDIT_LIST_BOX = 1701606260 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ENCODER_NAME_BOX = 2841996899 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ENCODER_TOOL_BOX = 2842980207 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ENCRYPTED_AUDIO_SAMPLE_ENTRY = 1701733217 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ENCRYPTED_VIDEO_SAMPLE_ENTRY = 1701733238 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.EPISODE_GLOBAL_UNIQUE_ID_BOX = 1701276004 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ESD_BOX = 1702061171 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.EVRC_SAMPLE_ENTRY = 1936029283 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.EVRC_SPECIFIC_BOX = 1684371043 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.EXTENDED_TYPE = 1970628964 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FAIRPLAY_IV_BOX = 1769367926 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FAIRPLAY_PRIVATE_KEY_BOX = 1886546294 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FAIRPLAY_USER_ID_BOX = 1970496882 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FAIRPLAY_USER_KEY_BOX = 1801812256 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FAIRPLAY_USER_NAME_BOX = 1851878757 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FD_HINT_SAMPLE_ENTRY = 1717858336 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FD_ITEM_INFORMATION_BOX = 1718184302 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FD_SESSION_GROUP_BOX = 1936025458 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FEC_RESERVOIR_BOX = 1717920626 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FILE_PARTITION_BOX = 1718641010 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FILE_TYPE_BOX = 1718909296 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.FREE_SPACE_BOX = 1718773093 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GAPLESS_PLAYBACK_BOX = 1885823344 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GENRE_BOX = 1735291493 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GOOGLE_HOST_HEADER_BOX = 1735616616 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GOOGLE_PING_MESSAGE_BOX = 1735618669 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GOOGLE_PING_URL_BOX = 1735618677 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GOOGLE_SOURCE_DATA_BOX = 1735619428 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GOOGLE_START_TIME_BOX = 1735619444 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GOOGLE_TRACK_DURATION_BOX = 1735619684 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GROUPING_BOX = 2842129008 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.GROUP_ID_TO_NAME_BOX = 1734964334 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.H263_SAMPLE_ENTRY = 1932670515 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.H263_SPECIFIC_BOX = 1681012275 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.HANDLER_BOX = 1751411826 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.HD_VIDEO_BOX = 1751414372 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.HINT_MEDIA_HEADER_BOX = 1752000612 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ID3_TAG_BOX = 1768174386 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.IPMP_CONTROL_BOX = 1768975715 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.IPMP_INFO_BOX = 1768778086 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITEM_INFORMATION_BOX = 1768517222 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITEM_INFORMATION_ENTRY = 1768842853 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITEM_LOCATION_BOX = 1768714083 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITEM_PROTECTION_BOX = 1768977007 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITUNES_ACCOUNT_TYPE_BOX = 1634421060 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITUNES_CATALOGUE_ID_BOX = 1668172100 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITUNES_COUNTRY_CODE_BOX = 1936083268 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITUNES_METADATA_BOX = 1684108385 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITUNES_METADATA_MEAN_BOX = 1835360622 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITUNES_METADATA_NAME_BOX = 1851878757 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITUNES_META_LIST_BOX = 1768715124 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ITUNES_PURCHASE_ACCOUNT_BOX = 1634748740 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.KEYWORD_BOX = 1801812343 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.LONG_DESCRIPTION_BOX = 1818518899 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.LYRICS_BOX = 2842458482 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MEDIA_BOX = 1835297121 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MEDIA_DATA_BOX = 1835295092 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MEDIA_HEADER_BOX = 1835296868 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MEDIA_INFORMATION_BOX = 1835626086 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.META_BOX = 1835365473 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.META_BOX_RELATION_BOX = 1835364965 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.META_TYPE_BOX = 1937009003 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MOVIE_BOX = 1836019574 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MOVIE_EXTENDS_BOX = 1836475768 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MOVIE_EXTENDS_HEADER_BOX = 1835362404 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MOVIE_FRAGMENT_BOX = 1836019558 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MOVIE_FRAGMENT_HEADER_BOX = 1835427940 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MOVIE_FRAGMENT_RANDOM_ACCESS_BOX = 1835430497 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MOVIE_FRAGMENT_RANDOM_ACCESS_OFFSET_BOX = 1835430511 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MOVIE_HEADER_BOX = 1836476516 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MP4A_SAMPLE_ENTRY = 1836069985 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MP4V_SAMPLE_ENTRY = 1836070006 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.MPEG_SAMPLE_ENTRY = 1836070003 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.NERO_METADATA_TAGS_BOX = 1952540531 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.NULL_MEDIA_HEADER_BOX = 1852663908 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OBJECT_DESCRIPTOR_BOX = 1768907891 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_ACCESS_UNIT_FORMAT_BOX = 1868849510 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_COMMON_HEADERS_BOX = 1869112434 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_CONTENT_ID_BOX = 1667459428 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_CONTENT_OBJECT_BOX = 1868850273 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_COVER_URI_BOX = 1668706933 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_DISCRETE_MEDIA_HEADERS_BOX = 1868851301 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_DRM_CONTAINER_BOX = 1868853869 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_ICON_URI_BOX = 1768124021 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_INFO_URL_BOX = 1768842869 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_KEY_MANAGEMENT_BOX = 1868852077 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_LYRICS_URI_BOX = 1819435893 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_MUTABLE_DRM_INFORMATION_BOX = 1835299433 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_RIGHTS_OBJECT_BOX = 1868853858 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.OMA_TRANSACTION_TRACKING_BOX = 1868854388 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.ORIGINAL_FORMAT_BOX = 1718775137 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.PADDING_BIT_BOX = 1885430882 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.PARTITION_ENTRY = 1885431150 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.PIXEL_ASPECT_RATIO_BOX = 1885434736 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.PODCAST_BOX = 1885565812 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.PODCAST_URL_BOX = 1886745196 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.PRIMARY_ITEM_BOX = 1885959277 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.PROGRESSIVE_DOWNLOAD_INFORMATION_BOX = 1885628782 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.PROTECTION_SCHEME_INFORMATION_BOX = 1936289382 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.PURCHASE_DATE_BOX = 1886745188 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.QCELP_SAMPLE_ENTRY = 1936810864 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.QCELP_SPECIFIC_BOX = 1685152624 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.RATING_BOX = 1920233063 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.RELEASE_DATE_BOX = 2841928057 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.REQUIREMENT_BOX = 2842846577 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.RTP_HINT_SAMPLE_ENTRY = 1920233504 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SAMPLE_DEPENDENCY_BOX = 1935959408 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SAMPLE_DEPENDENCY_TYPE_BOX = 1935963248 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SAMPLE_DESCRIPTION_BOX = 1937011556 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SAMPLE_GROUP_DESCRIPTION_BOX = 1936158820 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SAMPLE_SCALE_BOX = 1937011564 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SAMPLE_SIZE_BOX = 1937011578 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SAMPLE_TABLE_BOX = 1937007212 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SAMPLE_TO_CHUNK_BOX = 1937011555 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SAMPLE_TO_GROUP_BOX = 1935828848 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SCHEME_INFORMATION_BOX = 1935894633 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SCHEME_TYPE_BOX = 1935894637 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SHADOW_SYNC_SAMPLE_BOX = 1937011560 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SKIP_BOX = 1936419184 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SMV_SAMPLE_ENTRY = 1936944502 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SMV_SPECIFIC_BOX = 1685286262 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SOUND_MEDIA_HEADER_BOX = 1936549988 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SUB_SAMPLE_INFORMATION_BOX = 1937072755 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.SYNC_SAMPLE_BOX = 1937011571 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TEMPO_BOX = 1953329263 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TEXT_METADATA_SAMPLE_ENTRY = 1835365492 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.THREE_GPP_ALBUM_BOX = 1634493037 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.THREE_GPP_AUTHOR_BOX = 1635087464 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.THREE_GPP_CLASSIFICATION_BOX = 1668051814 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.THREE_GPP_DESCRIPTION_BOX = 1685283696 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.THREE_GPP_KEYWORDS_BOX = 1803122532 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.THREE_GPP_LOCATION_INFORMATION_BOX = 1819239273 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.THREE_GPP_PERFORMER_BOX = 1885696614 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.THREE_GPP_RECORDING_YEAR_BOX = 2037543523 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.THREE_GPP_TITLE_BOX = 1953068140 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_BOX = 1953653099 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_EXTENDS_BOX = 1953654136 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_FRAGMENT_BOX = 1953653094 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_FRAGMENT_HEADER_BOX = 1952868452 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_FRAGMENT_RANDOM_ACCESS_BOX = 1952871009 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_FRAGMENT_RUN_BOX = 1953658222 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_HEADER_BOX = 1953196132 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_NAME_BOX = 2842583405 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_NUMBER_BOX = 1953655662 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_REFERENCE_BOX = 1953654118 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_SELECTION_BOX = 1953719660 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TRACK_SORT_BOX = 1936682605 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TV_EPISODE_BOX = 1953916275 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TV_EPISODE_NUMBER_BOX = 1953916270 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TV_NETWORK_NAME_BOX = 1953918574 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TV_SEASON_BOX = 1953919854 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TV_SHOW_BOX = 1953919848 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.TV_SHOW_SORT_BOX = 1936683886 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.USER_DATA_BOX = 1969517665 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.VIDEO_MEDIA_HEADER_BOX = 1986881636 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.WIDE_BOX = 2003395685 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.XML_BOX = 2020437024 -> long
+const SharpJaad.MP4.Boxes.BoxTypes.XML_METADATA_SAMPLE_ENTRY = 1835365496 -> long
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_AUDIO = "M4A " -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_AUDIO_2 = "M4B " -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_AUDIO_ENCRYPTED = "M4P " -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_AVC = "avc1" -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_ISO_BASE_MEDIA = "isom" -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_ISO_BASE_MEDIA_2 = "iso2" -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_ISO_BASE_MEDIA_3 = "iso3" -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_MOBILE_MP4 = "mmp4" -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_MP4_1 = "mp41" -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_MP4_2 = "mp42" -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_MP7 = "mp71" -> string
+const SharpJaad.MP4.Boxes.Impl.FileTypeBox.BRAND_QUICKTIME = "qm  " -> string
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_CRSM = 1668445037 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_HINT = 1751740020 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_IPSM = 1768977261 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_M7SM = 1832350573 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_META = 1835365473 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_MJSM = 1835692909 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_NULL = 1853189228 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_OCSM = 1868788589 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_ODSM = 1868854125 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_SDSM = 1935962989 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_SOUND = 1936684398 -> int
+const SharpJaad.MP4.Boxes.Impl.HandlerBox.TYPE_VIDEO = 1986618469 -> int
+const SharpJaad.MP4.Boxes.Impl.SchemeTypeBox.ITUNES_SCHEME = 1769239918 -> long
+const SharpJaad.MP4.MP4InputStream.MASK16 = 65535 -> int
+const SharpJaad.MP4.MP4InputStream.MASK8 = 255 -> int
+const SharpJaad.MP4.MP4InputStream.UTF16 = "UTF-16" -> string
+const SharpJaad.MP4.MP4InputStream.UTF8 = "UTF-8" -> string
+const SharpJaad.MP4.OD.Descriptor.TYPE_DECODER_CONFIG_DESCRIPTOR = 4 -> int
+const SharpJaad.MP4.OD.Descriptor.TYPE_DECODER_SPECIFIC_INFO = 5 -> int
+const SharpJaad.MP4.OD.Descriptor.TYPE_ES_DESCRIPTOR = 3 -> int
+const SharpJaad.MP4.OD.Descriptor.TYPE_ES_ID_INC = 14 -> int
+const SharpJaad.MP4.OD.Descriptor.TYPE_INITIAL_OBJECT_DESCRIPTOR = 2 -> int
+const SharpJaad.MP4.OD.Descriptor.TYPE_MP4_INITIAL_OBJECT_DESCRIPTOR = 16 -> int
+const SharpJaad.MP4.OD.Descriptor.TYPE_OBJECT_DESCRIPTOR = 1 -> int
+const SharpJaad.MP4.OD.Descriptor.TYPE_SL_CONFIG_DESCRIPTOR = 6 -> int
+override abstract SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.SampleGroupDescriptionEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.API.AudioTrack.GetCodec() -> System.Enum
+override SharpJaad.MP4.API.AudioTrack.GetTrackType() -> SharpJaad.MP4.API.Type
+override SharpJaad.MP4.API.DRM.ITunesProtection.GetScheme() -> SharpJaad.MP4.API.Protection.Scheme
+override SharpJaad.MP4.API.VideoTrack.GetCodec() -> System.Enum
+override SharpJaad.MP4.API.VideoTrack.GetTrackType() -> SharpJaad.MP4.API.Type
+override SharpJaad.MP4.Boxes.BoxImpl.ToString() -> string
+override SharpJaad.MP4.Boxes.FullBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.BinaryXMLBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.BitRateBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ChapterBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ChunkOffsetBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.CleanApertureBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ColorParameterBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.CompositionTimeToSampleBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.CopyrightBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.DataEntryUrlBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.DataEntryUrnBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.DataReferenceBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.DecodingTimeToSampleBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.DegradationPriorityBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.DRM.FairPlayDataBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.EditListBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ESDBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.FD.FDItemInformationBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.FD.FDSessionGroupBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.FD.FECReservoirBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.FD.GroupIDToNameBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.FileTypeBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.FreeSpaceBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.HandlerBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.HintMediaHeaderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.IPMPControlBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.IPMPInfoBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ItemInformationBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.FDExtension.decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ItemLocationBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ItemProtectionBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.MediaDataBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.MediaHeaderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.EncoderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.GenreBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ID3TagBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataMeanBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataNameBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.NeroMetadataTagsBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.RatingBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.RequirementBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPAlbumBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPClassificationBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPKeywordsBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPMetadataBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPRecordingYearBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.MetaBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.MetaBoxRelationBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.MovieExtendsHeaderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.MovieFragmentHeaderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.MovieFragmentRandomAccessOffsetBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ObjectDescriptorBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.OMA.OMAAccessUnitFormatBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.OMA.OMACommonHeadersBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.OMA.OMAContentIDBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.OMA.OMAContentObjectBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.OMA.OMADiscreteMediaHeadersBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.OMA.OMARightsObjectBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.OMA.OMATransactionTrackingBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.OMA.OMAURLBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.OriginalFormatBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.PaddingBitBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.PixelAspectRatioBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.PrimaryItemBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ProgressiveDownloadInformationBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleDependencyTypeBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleDescriptionBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.AudioSampleEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AC3SpecificBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AMRSpecificBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EVRCSpecificBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.H263SpecificBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.QCELPSpecificBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.SMVSpecificBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.FDHintSampleEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.MetadataSampleEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.MPEGSampleEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.RTPHintSampleEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.SampleEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.TextMetadataSampleEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleEntries.XMLMetadataSampleEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleGroupDescriptionBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.AudioSampleGroupEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.HintSampleGroupEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.VisualSampleGroupEntry.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleScaleBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleSizeBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleToChunkBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SampleToGroupBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SchemeTypeBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.ShadowSyncSampleBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SoundMediaHeaderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SubSampleInformationBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.SyncSampleBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.TrackReferenceBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.TrackSelectionBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.VideoMediaHeaderBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.Impl.XMLBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.Boxes.UnknownBox.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.OD.DecoderConfigDescriptor.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.OD.DecoderSpecificInfo.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.OD.ESDescriptor.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.OD.InitialObjectDescriptor.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.OD.ObjectDescriptor.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.OD.SLConfigDescriptor.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+override SharpJaad.MP4.OD.UnknownDescriptor.Decode(SharpJaad.MP4.MP4InputStream input) -> void
+readonly SharpJaad.MP4.API.Track._tkhd -> SharpJaad.MP4.Boxes.Impl.TrackHeaderBox
+readonly SharpJaad.MP4.Boxes.BoxImpl._children -> System.Collections.Generic.List<SharpJaad.MP4.Boxes.Box>
+SharpJaad.ADTS.ADTSDemultiplexer
+SharpJaad.ADTS.ADTSDemultiplexer.ADTSDemultiplexer(System.IO.Stream input) -> void
+SharpJaad.ADTS.ADTSDemultiplexer.GetChannelCount() -> int
+SharpJaad.ADTS.ADTSDemultiplexer.GetDecoderSpecificInfo() -> byte[]
+SharpJaad.ADTS.ADTSDemultiplexer.GetSampleFrequency() -> int
+SharpJaad.ADTS.ADTSDemultiplexer.ReadNextFrame() -> byte[]
+SharpJaad.ADTS.ADTSFrame
+SharpJaad.ADTS.ADTSFrame.ADTSFrame(SharpJaad.Tools.DataInputStream input) -> void
+SharpJaad.ADTS.ADTSFrame.CreateDecoderSpecificInfo() -> byte[]
+SharpJaad.ADTS.ADTSFrame.GetChannelCount() -> int
+SharpJaad.ADTS.ADTSFrame.GetFrameLength() -> int
+SharpJaad.ADTS.ADTSFrame.GetSampleFrequency() -> int
+SharpJaad.MP4.API.Artwork
+SharpJaad.MP4.API.Artwork.Artwork(SharpJaad.MP4.API.Artwork.ArtworkType type, byte[] data) -> void
+SharpJaad.MP4.API.Artwork.ArtworkType
+SharpJaad.MP4.API.Artwork.ArtworkType.BMP = 3 -> SharpJaad.MP4.API.Artwork.ArtworkType
+SharpJaad.MP4.API.Artwork.ArtworkType.GIF = 0 -> SharpJaad.MP4.API.Artwork.ArtworkType
+SharpJaad.MP4.API.Artwork.ArtworkType.JPEG = 1 -> SharpJaad.MP4.API.Artwork.ArtworkType
+SharpJaad.MP4.API.Artwork.ArtworkType.PNG = 2 -> SharpJaad.MP4.API.Artwork.ArtworkType
+SharpJaad.MP4.API.Artwork.ArtworkType.Unknown = 4 -> SharpJaad.MP4.API.Artwork.ArtworkType
+SharpJaad.MP4.API.Artwork.GetArtworkType() -> SharpJaad.MP4.API.Artwork.ArtworkType
+SharpJaad.MP4.API.Artwork.GetData() -> byte[]
+SharpJaad.MP4.API.AudioTrack
+SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioCodec.AAC = 0 -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioCodec.AC3 = 1 -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioCodec.AMR = 2 -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioCodec.AMR_WIDE_BAND = 3 -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioCodec.EVRC = 4 -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioCodec.EXTENDED_AC3 = 5 -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioCodec.QCELP = 6 -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioCodec.SMV = 7 -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioCodec.UNKNOWN_AUDIO_CODEC = 8 -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+SharpJaad.MP4.API.AudioTrack.AudioTrack(SharpJaad.MP4.Boxes.Box trak, SharpJaad.MP4.MP4InputStream input) -> void
+SharpJaad.MP4.API.AudioTrack.GetBalance() -> double
+SharpJaad.MP4.API.AudioTrack.GetChannelCount() -> int
+SharpJaad.MP4.API.AudioTrack.GetSampleRate() -> int
+SharpJaad.MP4.API.AudioTrack.GetSampleSize() -> int
+SharpJaad.MP4.API.AudioTrack.GetVolume() -> double
+SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ADOBE_FLASH_PLAYER_AUDIO = 70 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ADOBE_FLASH_PLAYER_AUDIO_BOOK = 71 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ADOBE_FLASH_PLAYER_PROTECTED_VIDEO = 69 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ADOBE_FLASH_PLAYER_VIDEO = 68 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.APPLE_IPHONE_VIDEO = 74 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.APPLE_QUICKTIME = 72 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.APPLE_TV = 73 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ARRI_DIGITAL_CAMERA = 75 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.AVC = 12 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.CANON_DIGITAL_CAMERA = 76 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.CASIO_DIGITAL_CAMERA = 77 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.CONVERGENT_DESIGN = 78 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DECE_COMMON_FILE_FORMAT = 79 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DIGITAL_MEDIA_PROJECT = 64 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DIRAC = 63 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_AVC_BSAC = 27 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_BSAC = 21 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_BSAC_EXTENDED = 22 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_FULL = 18 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_HE_AAC = 25 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_HE_AAC_EXTENDED = 26 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_HE_AAC_V2 = 23 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_HE_AAC_V2_EXTENDED = 24 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_MAF_AVC_BSAC_EXTENDED = 28 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_MAF_AVC_HE_AAC = 31 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_MAF_AVC_HE_AAC_EXTENDED = 32 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_MAF_AVC_HE_AAC_V2 = 29 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_MAF_AVC_HE_AAC_V2_EXTENDED = 30 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_MPEG_2 = 19 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DMB_MPEG_2_EXTENDED = 20 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DVB_OVER_MPEG_2_TRANSPORT_STREAM = 66 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.DVB_OVER_RTP = 65 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ISMACRYP_2_ENCRYPTED_FILE = 80 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ISO_BASE_MEDIA = 1 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ISO_BASE_MEDIA_2 = 2 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ISO_BASE_MEDIA_3 = 3 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ISO_BASE_MEDIA_4 = 4 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.JPEG_2000 = 13 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.JPEG_2000_COMPOUND_IMAGE = 14 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.JPEG_2000_EXTENDED = 15 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.JPSEARCH = 35 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.LEICA_DIGITAL_CAMERA = 82 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MICROSOFT_PIFF = 83 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MOTION_JPEG_2000_GENERAL_PROFILE = 17 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MOTION_JPEG_2000_SIMPLE_PROFILE = 16 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MP4 = 5 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MP4_AUDIO = 8 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MP4_AUDIO_BOOK = 10 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MP4_PROTECTED_AUDIO = 9 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MP4_V2 = 6 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MP4_VIDEO = 7 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MP4_WITH_MPEG_7 = 11 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MPEG_21 = 33 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MPEG_4_MOBILE_PROFILE_ = 62 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.MPPI_PHOTO_PLAYER = 34 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_AVC_CINEMA_PROFILE = 91 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_AVC_HDTV_PROFILE = 92 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_AVC_MOBILE_PROFILE = 93 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_AVC_PORTABLE_PROFILE = 94 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_AVC_STANDARD_PROFILE = 90 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_CINEMA_PROFILE = 86 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_DIGITAL_AAC_AUDIO = 84 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_HDTV_PROFILE = 87 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_MOBILE_PROFILE = 88 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_PORTABLE_PROFILE = 89 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NERO_STANDARD_PROFILE = 85 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.NIKON_DIGITAL_CAMERA = 81 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.OMA_DCF_2 = 95 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.OMA_PDCF_2_1 = 96 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.OMA_PDCF_XBS_EXTENSIONS = 97 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.PANASONIC_DIGITAL_CAMERA = 98 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.ROSS_VIDEO = 99 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.SAMSUNG_STEREOSCOPIC_DUAL_STREAM = 101 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.SAMSUNG_STEREOSCOPIC_SINGLE_STREAM = 100 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.SD_MEMORY_CARD_VIDEO = 67 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.SONY_MOBILE = 102 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.SONY_PSP = 103 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP2_A = 58 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP2_B = 59 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP2_C = 60 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP2_KDDI_3G_EZMOVIE = 61 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_1 = 36 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_2 = 37 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_3 = 38 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_4 = 39 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_5 = 40 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_6 = 41 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_6_EXTENDED = 43 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_6_GENERAL = 42 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_6_PROGRESSIVE_DOWNLOAD = 44 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_6_STREAMING = 45 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_7 = 46 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_7_EXTENDED = 47 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_7_STREAMING = 48 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_8 = 49 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_8_RECORDING = 50 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_9 = 51 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_9_ADAPTIVE_STREAMING = 56 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_9_EXTENDED = 53 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_9_FILE_DELIVERY = 55 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_9_MEDIA_SEGMENT = 57 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_9_PROGRESSIVE_DOWNLOAD = 52 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.THREE_GPP_RELEASE_9_RECORDING = 54 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.Brand.UNKNOWN_BRAND = 0 -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.API.BrandExtensions
+SharpJaad.MP4.API.Codec.AC3DecoderInfo
+SharpJaad.MP4.API.Codec.AC3DecoderInfo.AC3DecoderInfo(SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox box) -> void
+SharpJaad.MP4.API.Codec.AC3DecoderInfo.GetAcmod() -> int
+SharpJaad.MP4.API.Codec.AC3DecoderInfo.GetBitRateCode() -> int
+SharpJaad.MP4.API.Codec.AC3DecoderInfo.GetBsid() -> int
+SharpJaad.MP4.API.Codec.AC3DecoderInfo.GetBsmod() -> int
+SharpJaad.MP4.API.Codec.AC3DecoderInfo.GetFscod() -> int
+SharpJaad.MP4.API.Codec.AC3DecoderInfo.IsLfeon() -> bool
+SharpJaad.MP4.API.Codec.AMRDecoderInfo
+SharpJaad.MP4.API.Codec.AMRDecoderInfo.AMRDecoderInfo(SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox box) -> void
+SharpJaad.MP4.API.Codec.AMRDecoderInfo.GetDecoderVersion() -> int
+SharpJaad.MP4.API.Codec.AMRDecoderInfo.GetFramesPerSample() -> int
+SharpJaad.MP4.API.Codec.AMRDecoderInfo.GetModeChangePeriod() -> int
+SharpJaad.MP4.API.Codec.AMRDecoderInfo.GetModeSet() -> int
+SharpJaad.MP4.API.Codec.AMRDecoderInfo.GetVendor() -> long
+SharpJaad.MP4.API.Codec.AVCDecoderInfo
+SharpJaad.MP4.API.Codec.AVCDecoderInfo.AVCDecoderInfo(SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox box) -> void
+SharpJaad.MP4.API.Codec.AVCDecoderInfo.GetConfigurationVersion() -> int
+SharpJaad.MP4.API.Codec.AVCDecoderInfo.GetLengthSize() -> int
+SharpJaad.MP4.API.Codec.AVCDecoderInfo.GetLevel() -> int
+SharpJaad.MP4.API.Codec.AVCDecoderInfo.GetPictureParameterSetNALUnits() -> byte[][]
+SharpJaad.MP4.API.Codec.AVCDecoderInfo.GetProfile() -> int
+SharpJaad.MP4.API.Codec.AVCDecoderInfo.GetProfileCompatibility() -> byte
+SharpJaad.MP4.API.Codec.AVCDecoderInfo.GetSequenceParameterSetNALUnits() -> byte[][]
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream.CS = 2 -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream.CVH = 7 -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream.LC_RC_PAIR = 0 -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream.LFE2 = 8 -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream.LRS_RRS_PAIR = 1 -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream.LSD_RSD_PAIR = 4 -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream.LVH_RVH_PAIR = 6 -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream.LW_RW_PAIR = 5 -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream.TS = 3 -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.EAC3DecoderInfo(SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox box) -> void
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.GetDataRate() -> int
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.GetIndependentSubstreams() -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.IndependentSubstream[]
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.IndependentSubstream
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.IndependentSubstream.GetAcmod() -> int
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.IndependentSubstream.GetBsid() -> int
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.IndependentSubstream.GetBsmod() -> int
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.IndependentSubstream.GetDependentSubstreams() -> SharpJaad.MP4.API.Codec.EAC3DecoderInfo.DependentSubstream[]
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.IndependentSubstream.GetFscod() -> int
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.IndependentSubstream.IndependentSubstream(int index, SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox box) -> void
+SharpJaad.MP4.API.Codec.EAC3DecoderInfo.IndependentSubstream.IsLfeon() -> bool
+SharpJaad.MP4.API.Codec.EVRCDecoderInfo
+SharpJaad.MP4.API.Codec.EVRCDecoderInfo.EVRCDecoderInfo(SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox box) -> void
+SharpJaad.MP4.API.Codec.EVRCDecoderInfo.GetDecoderVersion() -> int
+SharpJaad.MP4.API.Codec.EVRCDecoderInfo.GetFramesPerSample() -> int
+SharpJaad.MP4.API.Codec.EVRCDecoderInfo.GetVendor() -> long
+SharpJaad.MP4.API.Codec.H263DecoderInfo
+SharpJaad.MP4.API.Codec.H263DecoderInfo.GetDecoderVersion() -> int
+SharpJaad.MP4.API.Codec.H263DecoderInfo.GetLevel() -> int
+SharpJaad.MP4.API.Codec.H263DecoderInfo.GetProfile() -> int
+SharpJaad.MP4.API.Codec.H263DecoderInfo.GetVendor() -> long
+SharpJaad.MP4.API.Codec.H263DecoderInfo.H263DecoderInfo(SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox box) -> void
+SharpJaad.MP4.API.Codec.QCELPDecoderInfo
+SharpJaad.MP4.API.Codec.QCELPDecoderInfo.GetDecoderVersion() -> int
+SharpJaad.MP4.API.Codec.QCELPDecoderInfo.GetFramesPerSample() -> int
+SharpJaad.MP4.API.Codec.QCELPDecoderInfo.GetVendor() -> long
+SharpJaad.MP4.API.Codec.QCELPDecoderInfo.QCELPDecoderInfo(SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox box) -> void
+SharpJaad.MP4.API.Codec.SMVDecoderInfo
+SharpJaad.MP4.API.Codec.SMVDecoderInfo.GetDecoderVersion() -> int
+SharpJaad.MP4.API.Codec.SMVDecoderInfo.GetFramesPerSample() -> int
+SharpJaad.MP4.API.Codec.SMVDecoderInfo.GetVendor() -> long
+SharpJaad.MP4.API.Codec.SMVDecoderInfo.SMVDecoderInfo(SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox box) -> void
+SharpJaad.MP4.API.DecoderInfo
+SharpJaad.MP4.API.DecoderInfo.DecoderInfo() -> void
+SharpJaad.MP4.API.DRM.ITunesProtection
+SharpJaad.MP4.API.DRM.ITunesProtection.GetInitializationVector() -> byte[]
+SharpJaad.MP4.API.DRM.ITunesProtection.GetPrivateKey() -> byte[]
+SharpJaad.MP4.API.DRM.ITunesProtection.GetUserID() -> string
+SharpJaad.MP4.API.DRM.ITunesProtection.GetUserKey() -> string
+SharpJaad.MP4.API.DRM.ITunesProtection.GetUserName() -> string
+SharpJaad.MP4.API.DRM.ITunesProtection.ITunesProtection(SharpJaad.MP4.Boxes.Box sinf) -> void
+SharpJaad.MP4.API.Frame
+SharpJaad.MP4.API.Frame.CompareTo(SharpJaad.MP4.API.Frame f) -> int
+SharpJaad.MP4.API.Frame.Frame(SharpJaad.MP4.API.Type type, long offset, long size, double time) -> void
+SharpJaad.MP4.API.Frame.GetData() -> byte[]
+SharpJaad.MP4.API.Frame.GetFrameType() -> SharpJaad.MP4.API.Type
+SharpJaad.MP4.API.Frame.GetOffset() -> long
+SharpJaad.MP4.API.Frame.GetSize() -> long
+SharpJaad.MP4.API.Frame.GetTime() -> double
+SharpJaad.MP4.API.Frame.SetData(byte[] data) -> void
+SharpJaad.MP4.API.ID3Frame
+SharpJaad.MP4.API.ID3Frame.GetData() -> byte[]
+SharpJaad.MP4.API.ID3Frame.GetDate() -> System.DateTime
+SharpJaad.MP4.API.ID3Frame.GetEncodedText() -> string
+SharpJaad.MP4.API.ID3Frame.GetEncryptionMethod() -> int
+SharpJaad.MP4.API.ID3Frame.GetGroupID() -> int
+SharpJaad.MP4.API.ID3Frame.GetID() -> int
+SharpJaad.MP4.API.ID3Frame.GetLocale() -> System.Globalization.CultureInfo
+SharpJaad.MP4.API.ID3Frame.GetNumber() -> int
+SharpJaad.MP4.API.ID3Frame.GetNumbers() -> int[]
+SharpJaad.MP4.API.ID3Frame.GetSize() -> long
+SharpJaad.MP4.API.ID3Frame.GetText() -> string
+SharpJaad.MP4.API.ID3Frame.ID3Frame(SharpJaad.Tools.DataInputStream input) -> void
+SharpJaad.MP4.API.ID3Frame.IsCompressed() -> bool
+SharpJaad.MP4.API.ID3Frame.IsEncrypted() -> bool
+SharpJaad.MP4.API.ID3Frame.IsInGroup() -> bool
+SharpJaad.MP4.API.ID3Tag
+SharpJaad.MP4.API.ID3Tag.GetFrames() -> System.Collections.Generic.List<SharpJaad.MP4.API.ID3Frame>
+SharpJaad.MP4.API.ID3Tag.ID3Tag(SharpJaad.Tools.DataInputStream input) -> void
+SharpJaad.MP4.API.MetaData
+SharpJaad.MP4.API.MetaData.ContainsMetaData() -> bool
+SharpJaad.MP4.API.MetaData.Field
+SharpJaad.MP4.API.MetaData.Field.Field() -> void
+SharpJaad.MP4.API.MetaData.Field<T>
+SharpJaad.MP4.API.MetaData.Field<T>.Field(string name) -> void
+SharpJaad.MP4.API.MetaData.Field<T>.GetName() -> string
+SharpJaad.MP4.API.MetaData.Get<T>(SharpJaad.MP4.API.MetaData.Field field) -> T
+SharpJaad.MP4.API.MetaData.GetAll() -> System.Collections.Generic.Dictionary<SharpJaad.MP4.API.MetaData.Field, object>
+SharpJaad.MP4.API.MetaData.MetaData() -> void
+SharpJaad.MP4.API.MetaData.Parse(SharpJaad.MP4.Boxes.Box udta, SharpJaad.MP4.Boxes.Box meta) -> void
+SharpJaad.MP4.API.Movie
+SharpJaad.MP4.API.Movie.ContainsMetaData() -> bool
+SharpJaad.MP4.API.Movie.GetCreationTime() -> System.DateTime
+SharpJaad.MP4.API.Movie.GetDuration() -> double
+SharpJaad.MP4.API.Movie.GetMetaData() -> SharpJaad.MP4.API.MetaData
+SharpJaad.MP4.API.Movie.GetModificationTime() -> System.DateTime
+SharpJaad.MP4.API.Movie.GetProtections() -> System.Collections.Generic.List<SharpJaad.MP4.API.Protection>
+SharpJaad.MP4.API.Movie.GetTracks() -> System.Collections.Generic.List<SharpJaad.MP4.API.Track>
+SharpJaad.MP4.API.Movie.GetTracks(SharpJaad.MP4.API.Type type) -> System.Collections.Generic.List<SharpJaad.MP4.API.Track>
+SharpJaad.MP4.API.Movie.GetTracks(System.Enum codec) -> System.Collections.Generic.List<SharpJaad.MP4.API.Track>
+SharpJaad.MP4.API.Movie.HasMoreFrames() -> bool
+SharpJaad.MP4.API.Movie.Movie(SharpJaad.MP4.Boxes.Box moov, SharpJaad.MP4.MP4InputStream input) -> void
+SharpJaad.MP4.API.Movie.ReadNextFrame() -> SharpJaad.MP4.API.Frame
+SharpJaad.MP4.API.Protection
+SharpJaad.MP4.API.Protection.GetOriginalFormat() -> System.Enum
+SharpJaad.MP4.API.Protection.Protection(SharpJaad.MP4.Boxes.Box sinf) -> void
+SharpJaad.MP4.API.Protection.Scheme
+SharpJaad.MP4.API.Protection.Scheme.ITUNES_FAIR_PLAY = 1769239918 -> SharpJaad.MP4.API.Protection.Scheme
+SharpJaad.MP4.API.Protection.Scheme.UNKNOWN = -1 -> SharpJaad.MP4.API.Protection.Scheme
+SharpJaad.MP4.API.Track
+SharpJaad.MP4.API.Track.FindDecoderSpecificInfo(SharpJaad.MP4.Boxes.Impl.ESDBox esds) -> void
+SharpJaad.MP4.API.Track.GetCreationTime() -> System.DateTime
+SharpJaad.MP4.API.Track.GetDecoderInfo() -> SharpJaad.MP4.API.DecoderInfo
+SharpJaad.MP4.API.Track.GetDecoderSpecificInfo() -> byte[]
+SharpJaad.MP4.API.Track.GetLanguage() -> System.Globalization.CultureInfo
+SharpJaad.MP4.API.Track.GetLocation() -> System.Uri
+SharpJaad.MP4.API.Track.GetModificationTime() -> System.DateTime
+SharpJaad.MP4.API.Track.GetNextTimeStamp() -> double
+SharpJaad.MP4.API.Track.GetProtection() -> SharpJaad.MP4.API.Protection
+SharpJaad.MP4.API.Track.HasMoreFrames() -> bool
+SharpJaad.MP4.API.Track.IsEnabled() -> bool
+SharpJaad.MP4.API.Track.IsInFile() -> bool
+SharpJaad.MP4.API.Track.IsUsed() -> bool
+SharpJaad.MP4.API.Track.IsUsedForPreview() -> bool
+SharpJaad.MP4.API.Track.ReadNextFrame() -> SharpJaad.MP4.API.Frame
+SharpJaad.MP4.API.Track.Seek(double timestamp) -> double
+SharpJaad.MP4.API.Track.Track(SharpJaad.MP4.Boxes.Box trak, SharpJaad.MP4.MP4InputStream input) -> void
+SharpJaad.MP4.API.Track._decoderInfo -> SharpJaad.MP4.API.DecoderInfo
+SharpJaad.MP4.API.Track._decoderSpecificInfo -> SharpJaad.MP4.OD.DecoderSpecificInfo
+SharpJaad.MP4.API.Track._protection -> SharpJaad.MP4.API.Protection
+SharpJaad.MP4.API.Type
+SharpJaad.MP4.API.Type.AUDIO = 1 -> SharpJaad.MP4.API.Type
+SharpJaad.MP4.API.Type.VIDEO = 0 -> SharpJaad.MP4.API.Type
+SharpJaad.MP4.API.Utils
+SharpJaad.MP4.API.VideoTrack
+SharpJaad.MP4.API.VideoTrack.GetCompressorName() -> string
+SharpJaad.MP4.API.VideoTrack.GetDepth() -> int
+SharpJaad.MP4.API.VideoTrack.GetFrameCount() -> int
+SharpJaad.MP4.API.VideoTrack.GetHeight() -> int
+SharpJaad.MP4.API.VideoTrack.GetHorizontalResolution() -> double
+SharpJaad.MP4.API.VideoTrack.GetLayer() -> int
+SharpJaad.MP4.API.VideoTrack.GetVerticalResolution() -> double
+SharpJaad.MP4.API.VideoTrack.GetWidth() -> int
+SharpJaad.MP4.API.VideoTrack.VideoCodec
+SharpJaad.MP4.API.VideoTrack.VideoCodec.AVC = 0 -> SharpJaad.MP4.API.VideoTrack.VideoCodec
+SharpJaad.MP4.API.VideoTrack.VideoCodec.H263 = 1 -> SharpJaad.MP4.API.VideoTrack.VideoCodec
+SharpJaad.MP4.API.VideoTrack.VideoCodec.MP4_ASP = 2 -> SharpJaad.MP4.API.VideoTrack.VideoCodec
+SharpJaad.MP4.API.VideoTrack.VideoCodec.UNKNOWN_VIDEO_CODEC = 3 -> SharpJaad.MP4.API.VideoTrack.VideoCodec
+SharpJaad.MP4.API.VideoTrack.VideoTrack(SharpJaad.MP4.Boxes.Box trak, SharpJaad.MP4.MP4InputStream input) -> void
+SharpJaad.MP4.Boxes.Box
+SharpJaad.MP4.Boxes.Box.GetBoxType() -> long
+SharpJaad.MP4.Boxes.Box.GetChild(long type) -> SharpJaad.MP4.Boxes.Box
+SharpJaad.MP4.Boxes.Box.GetChildren() -> System.Collections.Generic.List<SharpJaad.MP4.Boxes.Box>
+SharpJaad.MP4.Boxes.Box.GetChildren(long type) -> System.Collections.Generic.List<SharpJaad.MP4.Boxes.Box>
+SharpJaad.MP4.Boxes.Box.GetName() -> string
+SharpJaad.MP4.Boxes.Box.GetOffset() -> long
+SharpJaad.MP4.Boxes.Box.GetParent() -> SharpJaad.MP4.Boxes.Box
+SharpJaad.MP4.Boxes.Box.GetSize() -> long
+SharpJaad.MP4.Boxes.Box.HasChild(long type) -> bool
+SharpJaad.MP4.Boxes.Box.HasChildren() -> bool
+SharpJaad.MP4.Boxes.BoxFactory
+SharpJaad.MP4.Boxes.BoxFactory.BoxFactory() -> void
+SharpJaad.MP4.Boxes.BoxImpl
+SharpJaad.MP4.Boxes.BoxImpl.BoxImpl(string name) -> void
+SharpJaad.MP4.Boxes.BoxImpl.GetBoxType() -> long
+SharpJaad.MP4.Boxes.BoxImpl.GetChild(long type) -> SharpJaad.MP4.Boxes.Box
+SharpJaad.MP4.Boxes.BoxImpl.GetChildren() -> System.Collections.Generic.List<SharpJaad.MP4.Boxes.Box>
+SharpJaad.MP4.Boxes.BoxImpl.GetChildren(long type) -> System.Collections.Generic.List<SharpJaad.MP4.Boxes.Box>
+SharpJaad.MP4.Boxes.BoxImpl.GetLeft(SharpJaad.MP4.MP4InputStream input) -> long
+SharpJaad.MP4.Boxes.BoxImpl.GetName() -> string
+SharpJaad.MP4.Boxes.BoxImpl.GetOffset() -> long
+SharpJaad.MP4.Boxes.BoxImpl.GetParent() -> SharpJaad.MP4.Boxes.Box
+SharpJaad.MP4.Boxes.BoxImpl.GetSize() -> long
+SharpJaad.MP4.Boxes.BoxImpl.HasChild(long type) -> bool
+SharpJaad.MP4.Boxes.BoxImpl.HasChildren() -> bool
+SharpJaad.MP4.Boxes.BoxImpl.ReadChildren(SharpJaad.MP4.MP4InputStream input) -> void
+SharpJaad.MP4.Boxes.BoxImpl.ReadChildren(SharpJaad.MP4.MP4InputStream input, int len) -> void
+SharpJaad.MP4.Boxes.BoxImpl.SetParams(SharpJaad.MP4.Boxes.Box parent, long size, long type, long offset) -> void
+SharpJaad.MP4.Boxes.BoxImpl._offset -> long
+SharpJaad.MP4.Boxes.BoxImpl._parent -> SharpJaad.MP4.Boxes.Box
+SharpJaad.MP4.Boxes.BoxImpl._size -> long
+SharpJaad.MP4.Boxes.BoxImpl._type -> long
+SharpJaad.MP4.Boxes.BoxTypes
+SharpJaad.MP4.Boxes.FullBox
+SharpJaad.MP4.Boxes.FullBox.FullBox(string name) -> void
+SharpJaad.MP4.Boxes.FullBox._flags -> int
+SharpJaad.MP4.Boxes.FullBox._version -> int
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.AppleLosslessBox() -> void
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.GetBitRate() -> long
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.GetChannels() -> int
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.GetHistoryMult() -> int
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.GetInitialHistory() -> int
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.GetkModifier() -> int
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.GetMaxCodedFrameSize() -> long
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.GetMaxSamplePerFrame() -> long
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.GetSampleRate() -> long
+SharpJaad.MP4.Boxes.Impl.AppleLosslessBox.GetSampleSize() -> int
+SharpJaad.MP4.Boxes.Impl.BinaryXMLBox
+SharpJaad.MP4.Boxes.Impl.BinaryXMLBox.BinaryXMLBox() -> void
+SharpJaad.MP4.Boxes.Impl.BinaryXMLBox.GetData() -> byte[]
+SharpJaad.MP4.Boxes.Impl.BitRateBox
+SharpJaad.MP4.Boxes.Impl.BitRateBox.BitRateBox() -> void
+SharpJaad.MP4.Boxes.Impl.BitRateBox.GetAverageBitrate() -> long
+SharpJaad.MP4.Boxes.Impl.BitRateBox.GetDecodingBufferSize() -> long
+SharpJaad.MP4.Boxes.Impl.BitRateBox.GetMaximumBitrate() -> long
+SharpJaad.MP4.Boxes.Impl.ChapterBox
+SharpJaad.MP4.Boxes.Impl.ChapterBox.ChapterBox() -> void
+SharpJaad.MP4.Boxes.Impl.ChapterBox.GetChapters() -> System.Collections.Generic.Dictionary<long, string>
+SharpJaad.MP4.Boxes.Impl.ChunkOffsetBox
+SharpJaad.MP4.Boxes.Impl.ChunkOffsetBox.ChunkOffsetBox() -> void
+SharpJaad.MP4.Boxes.Impl.ChunkOffsetBox.GetChunks() -> long[]
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox.CleanApertureBox() -> void
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox.GetCleanApertureHeightD() -> long
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox.GetCleanApertureHeightN() -> long
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox.GetCleanApertureWidthD() -> long
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox.GetCleanApertureWidthN() -> long
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox.GetHorizOffD() -> long
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox.GetHorizOffN() -> long
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox.GetVertOffD() -> long
+SharpJaad.MP4.Boxes.Impl.CleanApertureBox.GetVertOffN() -> long
+SharpJaad.MP4.Boxes.Impl.ColorParameterBox
+SharpJaad.MP4.Boxes.Impl.ColorParameterBox.ColorParameterBox() -> void
+SharpJaad.MP4.Boxes.Impl.CompositionTimeToSampleBox
+SharpJaad.MP4.Boxes.Impl.CompositionTimeToSampleBox.CompositionTimeToSampleBox() -> void
+SharpJaad.MP4.Boxes.Impl.CompositionTimeToSampleBox.GetSampleCounts() -> long[]
+SharpJaad.MP4.Boxes.Impl.CompositionTimeToSampleBox.GetSampleOffsets() -> long[]
+SharpJaad.MP4.Boxes.Impl.CopyrightBox
+SharpJaad.MP4.Boxes.Impl.CopyrightBox.CopyrightBox() -> void
+SharpJaad.MP4.Boxes.Impl.CopyrightBox.GetLanguageCode() -> string
+SharpJaad.MP4.Boxes.Impl.CopyrightBox.GetNotice() -> string
+SharpJaad.MP4.Boxes.Impl.DataEntryUrlBox
+SharpJaad.MP4.Boxes.Impl.DataEntryUrlBox.DataEntryUrlBox() -> void
+SharpJaad.MP4.Boxes.Impl.DataEntryUrlBox.GetLocation() -> string
+SharpJaad.MP4.Boxes.Impl.DataEntryUrlBox.IsInFile() -> bool
+SharpJaad.MP4.Boxes.Impl.DataEntryUrnBox
+SharpJaad.MP4.Boxes.Impl.DataEntryUrnBox.DataEntryUrnBox() -> void
+SharpJaad.MP4.Boxes.Impl.DataEntryUrnBox.GetLocation() -> string
+SharpJaad.MP4.Boxes.Impl.DataEntryUrnBox.GetReferenceName() -> string
+SharpJaad.MP4.Boxes.Impl.DataEntryUrnBox.IsInFile() -> bool
+SharpJaad.MP4.Boxes.Impl.DataReferenceBox
+SharpJaad.MP4.Boxes.Impl.DataReferenceBox.DataReferenceBox() -> void
+SharpJaad.MP4.Boxes.Impl.DecodingTimeToSampleBox
+SharpJaad.MP4.Boxes.Impl.DecodingTimeToSampleBox.DecodingTimeToSampleBox() -> void
+SharpJaad.MP4.Boxes.Impl.DecodingTimeToSampleBox.GetSampleCounts() -> long[]
+SharpJaad.MP4.Boxes.Impl.DecodingTimeToSampleBox.GetSampleDeltas() -> long[]
+SharpJaad.MP4.Boxes.Impl.DegradationPriorityBox
+SharpJaad.MP4.Boxes.Impl.DegradationPriorityBox.DegradationPriorityBox() -> void
+SharpJaad.MP4.Boxes.Impl.DegradationPriorityBox.GetPriorities() -> int[]
+SharpJaad.MP4.Boxes.Impl.DRM.FairPlayDataBox
+SharpJaad.MP4.Boxes.Impl.DRM.FairPlayDataBox.FairPlayDataBox() -> void
+SharpJaad.MP4.Boxes.Impl.DRM.FairPlayDataBox.GetData() -> byte[]
+SharpJaad.MP4.Boxes.Impl.EditListBox
+SharpJaad.MP4.Boxes.Impl.EditListBox.EditListBox() -> void
+SharpJaad.MP4.Boxes.Impl.EditListBox.GetMediaRate() -> double[]
+SharpJaad.MP4.Boxes.Impl.EditListBox.GetMediaTime() -> long[]
+SharpJaad.MP4.Boxes.Impl.EditListBox.GetSegmentDuration() -> long[]
+SharpJaad.MP4.Boxes.Impl.ESDBox
+SharpJaad.MP4.Boxes.Impl.ESDBox.ESDBox() -> void
+SharpJaad.MP4.Boxes.Impl.ESDBox.GetEntryDescriptor() -> SharpJaad.MP4.OD.ESDescriptor
+SharpJaad.MP4.Boxes.Impl.FD.Base64Decoder
+SharpJaad.MP4.Boxes.Impl.FD.FDItemInformationBox
+SharpJaad.MP4.Boxes.Impl.FD.FDItemInformationBox.FDItemInformationBox() -> void
+SharpJaad.MP4.Boxes.Impl.FD.FDSessionGroupBox
+SharpJaad.MP4.Boxes.Impl.FD.FDSessionGroupBox.FDSessionGroupBox() -> void
+SharpJaad.MP4.Boxes.Impl.FD.FDSessionGroupBox.GetGroupIDs() -> long[][]
+SharpJaad.MP4.Boxes.Impl.FD.FDSessionGroupBox.GetHintTrackIDs() -> long[][]
+SharpJaad.MP4.Boxes.Impl.FD.FECReservoirBox
+SharpJaad.MP4.Boxes.Impl.FD.FECReservoirBox.FECReservoirBox() -> void
+SharpJaad.MP4.Boxes.Impl.FD.FECReservoirBox.GetItemIDs() -> int[]
+SharpJaad.MP4.Boxes.Impl.FD.FECReservoirBox.GetSymbolCounts() -> long[]
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.FilePartitionBox() -> void
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetBlockCounts() -> int[]
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetBlockSizes() -> long[]
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetEncodingSymbolLength() -> int
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetFECEncodingID() -> int
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetFECInstanceID() -> int
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetItemID() -> int
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetMaxNumberOfEncodingSymbols() -> int
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetMaxSourceBlockLength() -> int
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetPacketPayloadSize() -> int
+SharpJaad.MP4.Boxes.Impl.FD.FilePartitionBox.GetSchemeSpecificInfo() -> string
+SharpJaad.MP4.Boxes.Impl.FD.GroupIDToNameBox
+SharpJaad.MP4.Boxes.Impl.FD.GroupIDToNameBox.GetMap() -> System.Collections.Generic.Dictionary<long, string>
+SharpJaad.MP4.Boxes.Impl.FD.GroupIDToNameBox.GroupIDToNameBox() -> void
+SharpJaad.MP4.Boxes.Impl.FileTypeBox
+SharpJaad.MP4.Boxes.Impl.FileTypeBox.FileTypeBox() -> void
+SharpJaad.MP4.Boxes.Impl.FileTypeBox.GetCompatibleBrands() -> string[]
+SharpJaad.MP4.Boxes.Impl.FileTypeBox.GetMajorBrand() -> string
+SharpJaad.MP4.Boxes.Impl.FileTypeBox.GetMinorVersion() -> string
+SharpJaad.MP4.Boxes.Impl.FileTypeBox._compatibleBrands -> string[]
+SharpJaad.MP4.Boxes.Impl.FileTypeBox._majorBrand -> string
+SharpJaad.MP4.Boxes.Impl.FileTypeBox._minorVersion -> string
+SharpJaad.MP4.Boxes.Impl.FreeSpaceBox
+SharpJaad.MP4.Boxes.Impl.FreeSpaceBox.FreeSpaceBox() -> void
+SharpJaad.MP4.Boxes.Impl.HandlerBox
+SharpJaad.MP4.Boxes.Impl.HandlerBox.GetHandlerName() -> string
+SharpJaad.MP4.Boxes.Impl.HandlerBox.GetHandlerType() -> long
+SharpJaad.MP4.Boxes.Impl.HandlerBox.HandlerBox() -> void
+SharpJaad.MP4.Boxes.Impl.HintMediaHeaderBox
+SharpJaad.MP4.Boxes.Impl.HintMediaHeaderBox.GetAverageBitrate() -> long
+SharpJaad.MP4.Boxes.Impl.HintMediaHeaderBox.GetAveragePDUsize() -> long
+SharpJaad.MP4.Boxes.Impl.HintMediaHeaderBox.GetMaxBitrate() -> long
+SharpJaad.MP4.Boxes.Impl.HintMediaHeaderBox.GetMaxPDUsize() -> long
+SharpJaad.MP4.Boxes.Impl.HintMediaHeaderBox.HintMediaHeaderBox() -> void
+SharpJaad.MP4.Boxes.Impl.IPMPControlBox
+SharpJaad.MP4.Boxes.Impl.IPMPControlBox.GetIPMPDescriptors() -> SharpJaad.MP4.OD.Descriptor[]
+SharpJaad.MP4.Boxes.Impl.IPMPControlBox.GetToolList() -> SharpJaad.MP4.OD.Descriptor
+SharpJaad.MP4.Boxes.Impl.IPMPControlBox.IPMPControlBox() -> void
+SharpJaad.MP4.Boxes.Impl.IPMPInfoBox
+SharpJaad.MP4.Boxes.Impl.IPMPInfoBox.GetIPMPDescriptors() -> System.Collections.Generic.List<SharpJaad.MP4.OD.Descriptor>
+SharpJaad.MP4.Boxes.Impl.IPMPInfoBox.IPMPInfoBox() -> void
+SharpJaad.MP4.Boxes.Impl.ItemInformationBox
+SharpJaad.MP4.Boxes.Impl.ItemInformationBox.ItemInformationBox() -> void
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.Extension
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.Extension.Extension() -> void
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.FDExtension
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.FDExtension.FDExtension() -> void
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.FDExtension.GetContentLength() -> long
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.FDExtension.GetContentLocation() -> string
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.FDExtension.GetContentMD5() -> string
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.FDExtension.GetGroupID() -> long[]
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.FDExtension.GetTransferLength() -> long
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.GetContentEncoding() -> string
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.GetContentType() -> string
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.GetExtension() -> SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.Extension
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.GetExtensionType() -> long
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.GetItemID() -> int
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.GetItemName() -> string
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.GetItemProtectionIndex() -> int
+SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.ItemInformationEntry() -> void
+SharpJaad.MP4.Boxes.Impl.ItemLocationBox
+SharpJaad.MP4.Boxes.Impl.ItemLocationBox.GetBaseOffset() -> long[]
+SharpJaad.MP4.Boxes.Impl.ItemLocationBox.GetDataReferenceIndex() -> int[]
+SharpJaad.MP4.Boxes.Impl.ItemLocationBox.GetExtentLength() -> long[][]
+SharpJaad.MP4.Boxes.Impl.ItemLocationBox.GetExtentOffset() -> long[][]
+SharpJaad.MP4.Boxes.Impl.ItemLocationBox.GetItemID() -> int[]
+SharpJaad.MP4.Boxes.Impl.ItemLocationBox.ItemLocationBox() -> void
+SharpJaad.MP4.Boxes.Impl.ItemProtectionBox
+SharpJaad.MP4.Boxes.Impl.ItemProtectionBox.ItemProtectionBox() -> void
+SharpJaad.MP4.Boxes.Impl.MediaDataBox
+SharpJaad.MP4.Boxes.Impl.MediaDataBox.MediaDataBox() -> void
+SharpJaad.MP4.Boxes.Impl.MediaHeaderBox
+SharpJaad.MP4.Boxes.Impl.MediaHeaderBox.GetCreationTime() -> long
+SharpJaad.MP4.Boxes.Impl.MediaHeaderBox.GetDuration() -> long
+SharpJaad.MP4.Boxes.Impl.MediaHeaderBox.GetLanguage() -> string
+SharpJaad.MP4.Boxes.Impl.MediaHeaderBox.GetModificationTime() -> long
+SharpJaad.MP4.Boxes.Impl.MediaHeaderBox.GetTimeScale() -> long
+SharpJaad.MP4.Boxes.Impl.MediaHeaderBox.MediaHeaderBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.EncoderBox
+SharpJaad.MP4.Boxes.Impl.Meta.EncoderBox.EncoderBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.EncoderBox.GetData() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.GenreBox
+SharpJaad.MP4.Boxes.Impl.Meta.GenreBox.GenreBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.GenreBox.GetGenre() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.GenreBox.GetLanguageCode() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ID3TagBox
+SharpJaad.MP4.Boxes.Impl.Meta.ID3TagBox.GetID3Data() -> byte[]
+SharpJaad.MP4.Boxes.Impl.Meta.ID3TagBox.GetLanguage() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ID3TagBox.ID3TagBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.BMP = 18 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.DATETIME = 13 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.DURATION = 12 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.GENRE = 14 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.GIF = 8 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.HTML = 3 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.IMPLICIT = 0 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.INTEGER = 15 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.ISRC = 6 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.JPEG = 9 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.MI3P = 7 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.PNG = 10 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.RIAA = 16 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.UNDEFINED = 19 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.UPC = 17 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.URL = 11 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.UTF16 = 2 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.UTF8 = 1 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.UUID = 5 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType.XML = 4 -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.GetBoolean() -> bool
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.GetData() -> byte[]
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.GetDataType() -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.GetDate() -> System.DateTime
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.GetInteger() -> int
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.GetNumber() -> long
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.GetText() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.ITunesMetadataBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataMeanBox
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataMeanBox.GetDomain() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataMeanBox.ITunesMetadataMeanBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataNameBox
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataNameBox.GetMetaName() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataNameBox.ITunesMetadataNameBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.NeroMetadataTagsBox
+SharpJaad.MP4.Boxes.Impl.Meta.NeroMetadataTagsBox.GetPairs() -> System.Collections.Generic.Dictionary<string, string>
+SharpJaad.MP4.Boxes.Impl.Meta.NeroMetadataTagsBox.NeroMetadataTagsBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.RatingBox
+SharpJaad.MP4.Boxes.Impl.Meta.RatingBox.GetLanguageCode() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.RatingBox.GetRating() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.RatingBox.RatingBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.RequirementBox
+SharpJaad.MP4.Boxes.Impl.Meta.RequirementBox.GetRequirement() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.RequirementBox.RequirementBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPAlbumBox
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPAlbumBox.GetTrackNumber() -> int
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPAlbumBox.ThreeGPPAlbumBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPClassificationBox
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPClassificationBox.GetEntity() -> long
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPClassificationBox.GetTable() -> int
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPClassificationBox.ThreeGPPClassificationBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPKeywordsBox
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPKeywordsBox.GetKeywords() -> string[]
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPKeywordsBox.ThreeGPPKeywordsBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox.GetAdditionalNotes() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox.GetAltitude() -> double
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox.GetAstronomicalBody() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox.GetLatitude() -> double
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox.GetLongitude() -> double
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox.GetPlaceName() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox.GetRole() -> int
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPLocationBox.ThreeGPPLocationBox() -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPMetadataBox
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPMetadataBox.DecodeCommon(SharpJaad.MP4.MP4InputStream input) -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPMetadataBox.GetData() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPMetadataBox.GetLanguageCode() -> string
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPMetadataBox.ThreeGPPMetadataBox(string name) -> void
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPRecordingYearBox
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPRecordingYearBox.GetYear() -> int
+SharpJaad.MP4.Boxes.Impl.Meta.ThreeGPPRecordingYearBox.ThreeGPPRecordingYearBox() -> void
+SharpJaad.MP4.Boxes.Impl.MetaBox
+SharpJaad.MP4.Boxes.Impl.MetaBox.MetaBox() -> void
+SharpJaad.MP4.Boxes.Impl.MetaBoxRelationBox
+SharpJaad.MP4.Boxes.Impl.MetaBoxRelationBox.GetFirstMetaboxHandlerType() -> long
+SharpJaad.MP4.Boxes.Impl.MetaBoxRelationBox.GetMetaboxRelation() -> int
+SharpJaad.MP4.Boxes.Impl.MetaBoxRelationBox.GetSecondMetaboxHandlerType() -> long
+SharpJaad.MP4.Boxes.Impl.MetaBoxRelationBox.MetaBoxRelationBox() -> void
+SharpJaad.MP4.Boxes.Impl.MovieExtendsHeaderBox
+SharpJaad.MP4.Boxes.Impl.MovieExtendsHeaderBox.GetFragmentDuration() -> long
+SharpJaad.MP4.Boxes.Impl.MovieExtendsHeaderBox.MovieExtendsHeaderBox() -> void
+SharpJaad.MP4.Boxes.Impl.MovieFragmentHeaderBox
+SharpJaad.MP4.Boxes.Impl.MovieFragmentHeaderBox.GetSequenceNumber() -> long
+SharpJaad.MP4.Boxes.Impl.MovieFragmentHeaderBox.MovieFragmentHeaderBox() -> void
+SharpJaad.MP4.Boxes.Impl.MovieFragmentRandomAccessOffsetBox
+SharpJaad.MP4.Boxes.Impl.MovieFragmentRandomAccessOffsetBox.GetByteSize() -> long
+SharpJaad.MP4.Boxes.Impl.MovieFragmentRandomAccessOffsetBox.MovieFragmentRandomAccessOffsetBox() -> void
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.GetCreationTime() -> long
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.GetDuration() -> long
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.GetModificationTime() -> long
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.GetNextTrackID() -> long
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.GetRate() -> double
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.GetTimeScale() -> long
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.GetTransformationMatrix() -> double[]
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.GetVolume() -> double
+SharpJaad.MP4.Boxes.Impl.MovieHeaderBox.MovieHeaderBox() -> void
+SharpJaad.MP4.Boxes.Impl.ObjectDescriptorBox
+SharpJaad.MP4.Boxes.Impl.ObjectDescriptorBox.GetObjectDescriptor() -> SharpJaad.MP4.OD.Descriptor
+SharpJaad.MP4.Boxes.Impl.ObjectDescriptorBox.ObjectDescriptorBox() -> void
+SharpJaad.MP4.Boxes.Impl.OMA.OMAAccessUnitFormatBox
+SharpJaad.MP4.Boxes.Impl.OMA.OMAAccessUnitFormatBox.GetInitialVectorLength() -> int
+SharpJaad.MP4.Boxes.Impl.OMA.OMAAccessUnitFormatBox.GetKeyIndicatorLength() -> int
+SharpJaad.MP4.Boxes.Impl.OMA.OMAAccessUnitFormatBox.IsSelectiveEncrypted() -> bool
+SharpJaad.MP4.Boxes.Impl.OMA.OMAAccessUnitFormatBox.OMAAccessUnitFormatBox() -> void
+SharpJaad.MP4.Boxes.Impl.OMA.OMACommonHeadersBox
+SharpJaad.MP4.Boxes.Impl.OMA.OMACommonHeadersBox.GetContentID() -> byte[]
+SharpJaad.MP4.Boxes.Impl.OMA.OMACommonHeadersBox.GetEncryptionMethod() -> int
+SharpJaad.MP4.Boxes.Impl.OMA.OMACommonHeadersBox.GetPaddingScheme() -> int
+SharpJaad.MP4.Boxes.Impl.OMA.OMACommonHeadersBox.GetPlaintextLength() -> long
+SharpJaad.MP4.Boxes.Impl.OMA.OMACommonHeadersBox.GetRightsIssuerURL() -> byte[]
+SharpJaad.MP4.Boxes.Impl.OMA.OMACommonHeadersBox.GetTextualHeaders() -> System.Collections.Generic.Dictionary<string, string>
+SharpJaad.MP4.Boxes.Impl.OMA.OMACommonHeadersBox.OMACommonHeadersBox() -> void
+SharpJaad.MP4.Boxes.Impl.OMA.OMAContentIDBox
+SharpJaad.MP4.Boxes.Impl.OMA.OMAContentIDBox.getContentID() -> string
+SharpJaad.MP4.Boxes.Impl.OMA.OMAContentIDBox.OMAContentIDBox() -> void
+SharpJaad.MP4.Boxes.Impl.OMA.OMAContentObjectBox
+SharpJaad.MP4.Boxes.Impl.OMA.OMAContentObjectBox.GetData() -> byte[]
+SharpJaad.MP4.Boxes.Impl.OMA.OMAContentObjectBox.OMAContentObjectBox() -> void
+SharpJaad.MP4.Boxes.Impl.OMA.OMADiscreteMediaHeadersBox
+SharpJaad.MP4.Boxes.Impl.OMA.OMADiscreteMediaHeadersBox.GetContentType() -> string
+SharpJaad.MP4.Boxes.Impl.OMA.OMADiscreteMediaHeadersBox.OMADiscreteMediaHeadersBox() -> void
+SharpJaad.MP4.Boxes.Impl.OMA.OMARightsObjectBox
+SharpJaad.MP4.Boxes.Impl.OMA.OMARightsObjectBox.GetData() -> byte[]
+SharpJaad.MP4.Boxes.Impl.OMA.OMARightsObjectBox.OMARightsObjectBox() -> void
+SharpJaad.MP4.Boxes.Impl.OMA.OMATransactionTrackingBox
+SharpJaad.MP4.Boxes.Impl.OMA.OMATransactionTrackingBox.GetTransactionID() -> string
+SharpJaad.MP4.Boxes.Impl.OMA.OMATransactionTrackingBox.OMATransactionTrackingBox() -> void
+SharpJaad.MP4.Boxes.Impl.OMA.OMAURLBox
+SharpJaad.MP4.Boxes.Impl.OMA.OMAURLBox.GetContent() -> string
+SharpJaad.MP4.Boxes.Impl.OMA.OMAURLBox.OMAURLBox(string name) -> void
+SharpJaad.MP4.Boxes.Impl.OriginalFormatBox
+SharpJaad.MP4.Boxes.Impl.OriginalFormatBox.GetOriginalFormat() -> long
+SharpJaad.MP4.Boxes.Impl.OriginalFormatBox.OriginalFormatBox() -> void
+SharpJaad.MP4.Boxes.Impl.PaddingBitBox
+SharpJaad.MP4.Boxes.Impl.PaddingBitBox.GetPad1() -> int[]
+SharpJaad.MP4.Boxes.Impl.PaddingBitBox.GetPad2() -> int[]
+SharpJaad.MP4.Boxes.Impl.PaddingBitBox.PaddingBitBox() -> void
+SharpJaad.MP4.Boxes.Impl.PixelAspectRatioBox
+SharpJaad.MP4.Boxes.Impl.PixelAspectRatioBox.GetHorizontalSpacing() -> long
+SharpJaad.MP4.Boxes.Impl.PixelAspectRatioBox.GetVerticalSpacing() -> long
+SharpJaad.MP4.Boxes.Impl.PixelAspectRatioBox.PixelAspectRatioBox() -> void
+SharpJaad.MP4.Boxes.Impl.PrimaryItemBox
+SharpJaad.MP4.Boxes.Impl.PrimaryItemBox.GetItemID() -> int
+SharpJaad.MP4.Boxes.Impl.PrimaryItemBox.PrimaryItemBox() -> void
+SharpJaad.MP4.Boxes.Impl.ProgressiveDownloadInformationBox
+SharpJaad.MP4.Boxes.Impl.ProgressiveDownloadInformationBox.GetInformationPairs() -> System.Collections.Generic.Dictionary<long, long>
+SharpJaad.MP4.Boxes.Impl.ProgressiveDownloadInformationBox.ProgressiveDownloadInformationBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleDependencyBox
+SharpJaad.MP4.Boxes.Impl.SampleDependencyBox.decode(SharpJaad.MP4.MP4InputStream input) -> void
+SharpJaad.MP4.Boxes.Impl.SampleDependencyBox.GetDependencyCount() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleDependencyBox.GetRelativeSampleNumber() -> int[][]
+SharpJaad.MP4.Boxes.Impl.SampleDependencyBox.SampleDependencyBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleDependencyTypeBox
+SharpJaad.MP4.Boxes.Impl.SampleDependencyTypeBox.GetSampleDependsOn() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleDependencyTypeBox.GetSampleHasRedundancy() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleDependencyTypeBox.GetSampleIsDependedOn() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleDependencyTypeBox.SampleDependencyTypeBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleDescriptionBox
+SharpJaad.MP4.Boxes.Impl.SampleDescriptionBox.SampleDescriptionBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.AudioSampleEntry
+SharpJaad.MP4.Boxes.Impl.SampleEntries.AudioSampleEntry.AudioSampleEntry(string name) -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.AudioSampleEntry.GetChannelCount() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.AudioSampleEntry.GetSampleRate() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.AudioSampleEntry.GetSampleSize() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AC3SpecificBox
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AC3SpecificBox.AC3SpecificBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AC3SpecificBox.GetAcmod() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AC3SpecificBox.GetBitRateCode() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AC3SpecificBox.GetBsid() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AC3SpecificBox.GetBsmod() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AC3SpecificBox.GetFscod() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AC3SpecificBox.IsLfeon() -> bool
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AMRSpecificBox
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AMRSpecificBox.AMRSpecificBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AMRSpecificBox.GetFramesPerSample() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AMRSpecificBox.GetModeChangePeriod() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AMRSpecificBox.GetModeSet() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox.AVCSpecificBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox.GetConfigurationVersion() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox.GetLengthSize() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox.GetLevel() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox.GetPictureParameterSetNALUnits() -> byte[][]
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox.GetProfile() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox.GetProfileCompatibility() -> byte
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.AVCSpecificBox.GetSequenceParameterSetNALUnits() -> byte[][]
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox.CodecSpecificBox(string name) -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox.DecodeCommon(SharpJaad.MP4.MP4InputStream input) -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox.GetDecoderVersion() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox.GetVendor() -> long
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.EAC3SpecificBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.GetAcmods() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.GetBsids() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.GetBsmods() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.GetDataRate() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.GetDependentSubstreamCount() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.GetDependentSubstreamLocation() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.GetFscods() -> int[]
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.GetIndependentSubstreamCount() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EAC3SpecificBox.GetLfeons() -> bool[]
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EVRCSpecificBox
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EVRCSpecificBox.EVRCSpecificBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.EVRCSpecificBox.GetFramesPerSample() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.H263SpecificBox
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.H263SpecificBox.GetLevel() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.H263SpecificBox.GetProfile() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.H263SpecificBox.H263SpecificBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.QCELPSpecificBox
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.QCELPSpecificBox.GetFramesPerSample() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.QCELPSpecificBox.QCELPSpecificBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.SMVSpecificBox
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.SMVSpecificBox.GetFramesPerSample() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.SMVSpecificBox.SMVSpecificBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.FDHintSampleEntry
+SharpJaad.MP4.Boxes.Impl.SampleEntries.FDHintSampleEntry.FDHintSampleEntry() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.FDHintSampleEntry.GetFECOverhead() -> double
+SharpJaad.MP4.Boxes.Impl.SampleEntries.FDHintSampleEntry.GetPartitionEntryID() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.MetadataSampleEntry
+SharpJaad.MP4.Boxes.Impl.SampleEntries.MetadataSampleEntry.GetContentEncoding() -> string
+SharpJaad.MP4.Boxes.Impl.SampleEntries.MetadataSampleEntry.MetadataSampleEntry(string name) -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.MPEGSampleEntry
+SharpJaad.MP4.Boxes.Impl.SampleEntries.MPEGSampleEntry.MPEGSampleEntry() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.RTPHintSampleEntry
+SharpJaad.MP4.Boxes.Impl.SampleEntries.RTPHintSampleEntry.GetMaxPacketSize() -> long
+SharpJaad.MP4.Boxes.Impl.SampleEntries.RTPHintSampleEntry.RTPHintSampleEntry() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.SampleEntry
+SharpJaad.MP4.Boxes.Impl.SampleEntries.SampleEntry.GetDataReferenceIndex() -> long
+SharpJaad.MP4.Boxes.Impl.SampleEntries.SampleEntry.SampleEntry(string name) -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.TextMetadataSampleEntry
+SharpJaad.MP4.Boxes.Impl.SampleEntries.TextMetadataSampleEntry.GetMimeType() -> string
+SharpJaad.MP4.Boxes.Impl.SampleEntries.TextMetadataSampleEntry.TextMetadataSampleEntry() -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry
+SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry.GetCompressorName() -> string
+SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry.GetDepth() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry.GetFrameCount() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry.GetHeight() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry.GetHorizontalResolution() -> double
+SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry.GetVerticalResolution() -> double
+SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry.GetWidth() -> int
+SharpJaad.MP4.Boxes.Impl.SampleEntries.VideoSampleEntry.VideoSampleEntry(string name) -> void
+SharpJaad.MP4.Boxes.Impl.SampleEntries.XMLMetadataSampleEntry
+SharpJaad.MP4.Boxes.Impl.SampleEntries.XMLMetadataSampleEntry.GetNamespace() -> string
+SharpJaad.MP4.Boxes.Impl.SampleEntries.XMLMetadataSampleEntry.GetSchemaLocation() -> string
+SharpJaad.MP4.Boxes.Impl.SampleEntries.XMLMetadataSampleEntry.XMLMetadataSampleEntry() -> void
+SharpJaad.MP4.Boxes.Impl.SampleGroupDescriptionBox
+SharpJaad.MP4.Boxes.Impl.SampleGroupDescriptionBox.GetDefaultLength() -> long
+SharpJaad.MP4.Boxes.Impl.SampleGroupDescriptionBox.GetDescriptionLength() -> long
+SharpJaad.MP4.Boxes.Impl.SampleGroupDescriptionBox.GetGroupingType() -> long
+SharpJaad.MP4.Boxes.Impl.SampleGroupDescriptionBox.SampleGroupDescriptionBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.AudioSampleGroupEntry
+SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.AudioSampleGroupEntry.AudioSampleGroupEntry() -> void
+SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.HintSampleGroupEntry
+SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.HintSampleGroupEntry.HintSampleGroupEntry() -> void
+SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.SampleGroupDescriptionEntry
+SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.SampleGroupDescriptionEntry.SampleGroupDescriptionEntry(string name) -> void
+SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.VisualSampleGroupEntry
+SharpJaad.MP4.Boxes.Impl.SampleGroupEntries.VisualSampleGroupEntry.VisualSampleGroupEntry() -> void
+SharpJaad.MP4.Boxes.Impl.SampleScaleBox
+SharpJaad.MP4.Boxes.Impl.SampleScaleBox.GetDisplayCenterX() -> int
+SharpJaad.MP4.Boxes.Impl.SampleScaleBox.GetDisplayCenterY() -> int
+SharpJaad.MP4.Boxes.Impl.SampleScaleBox.GetScaleMethod() -> int
+SharpJaad.MP4.Boxes.Impl.SampleScaleBox.IsConstrained() -> bool
+SharpJaad.MP4.Boxes.Impl.SampleScaleBox.SampleScaleBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleSizeBox
+SharpJaad.MP4.Boxes.Impl.SampleSizeBox.GetSampleCount() -> int
+SharpJaad.MP4.Boxes.Impl.SampleSizeBox.GetSampleSizes() -> long[]
+SharpJaad.MP4.Boxes.Impl.SampleSizeBox.SampleSizeBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleToChunkBox
+SharpJaad.MP4.Boxes.Impl.SampleToChunkBox.GetFirstChunks() -> long[]
+SharpJaad.MP4.Boxes.Impl.SampleToChunkBox.GetSampleDescriptionIndex() -> long[]
+SharpJaad.MP4.Boxes.Impl.SampleToChunkBox.GetSamplesPerChunk() -> long[]
+SharpJaad.MP4.Boxes.Impl.SampleToChunkBox.SampleToChunkBox() -> void
+SharpJaad.MP4.Boxes.Impl.SampleToGroupBox
+SharpJaad.MP4.Boxes.Impl.SampleToGroupBox.GetGroupDescriptionIndex() -> long[]
+SharpJaad.MP4.Boxes.Impl.SampleToGroupBox.GetGroupingType() -> long
+SharpJaad.MP4.Boxes.Impl.SampleToGroupBox.GetSampleCount() -> long[]
+SharpJaad.MP4.Boxes.Impl.SampleToGroupBox.SampleToGroupBox() -> void
+SharpJaad.MP4.Boxes.Impl.SchemeTypeBox
+SharpJaad.MP4.Boxes.Impl.SchemeTypeBox.GetSchemeType() -> long
+SharpJaad.MP4.Boxes.Impl.SchemeTypeBox.GetSchemeURI() -> string
+SharpJaad.MP4.Boxes.Impl.SchemeTypeBox.GetSchemeVersion() -> long
+SharpJaad.MP4.Boxes.Impl.SchemeTypeBox.SchemeTypeBox() -> void
+SharpJaad.MP4.Boxes.Impl.ShadowSyncSampleBox
+SharpJaad.MP4.Boxes.Impl.ShadowSyncSampleBox.GetSampleNumbers() -> long[,]
+SharpJaad.MP4.Boxes.Impl.ShadowSyncSampleBox.ShadowSyncSampleBox() -> void
+SharpJaad.MP4.Boxes.Impl.SoundMediaHeaderBox
+SharpJaad.MP4.Boxes.Impl.SoundMediaHeaderBox.GetBalance() -> double
+SharpJaad.MP4.Boxes.Impl.SoundMediaHeaderBox.SoundMediaHeaderBox() -> void
+SharpJaad.MP4.Boxes.Impl.SubSampleInformationBox
+SharpJaad.MP4.Boxes.Impl.SubSampleInformationBox.GetDiscardable() -> bool[][]
+SharpJaad.MP4.Boxes.Impl.SubSampleInformationBox.GetSampleDelta() -> long[]
+SharpJaad.MP4.Boxes.Impl.SubSampleInformationBox.GetSubsamplePriority() -> int[][]
+SharpJaad.MP4.Boxes.Impl.SubSampleInformationBox.GetSubsampleSize() -> long[][]
+SharpJaad.MP4.Boxes.Impl.SubSampleInformationBox.SubSampleInformationBox() -> void
+SharpJaad.MP4.Boxes.Impl.SyncSampleBox
+SharpJaad.MP4.Boxes.Impl.SyncSampleBox.GetSampleNumbers() -> long[]
+SharpJaad.MP4.Boxes.Impl.SyncSampleBox.SyncSampleBox() -> void
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.GetDefaultSampleDescriptionIndex() -> long
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.GetDefaultSampleDuration() -> long
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.GetDefaultSampleSize() -> long
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.GetSampleDegradationPriority() -> int
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.GetSampleDependsOn() -> int
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.GetSampleHasRedundancy() -> int
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.GetSampleIsDependedOn() -> int
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.GetSamplePaddingValue() -> int
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.GetTrackID() -> long
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.IsSampleDifferenceSample() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackExtendsBox.TrackExtendsBox() -> void
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.GetBaseDataOffset() -> long
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.GetDefaultSampleDuration() -> long
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.GetDefaultSampleFlags() -> long
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.GetDefaultSampleSize() -> long
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.GetSampleDescriptionIndex() -> long
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.GetTrackID() -> long
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.IsBaseDataOffsetPresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.IsDefaultSampleDurationPresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.IsDefaultSampleFlagsPresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.IsDefaultSampleSizePresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.IsDurationIsEmpty() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.IsSampleDescriptionIndexPresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentHeaderBox.TrackFragmentHeaderBox() -> void
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox.GetEntryCount() -> int
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox.GetMoofOffsets() -> long[]
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox.GetSampleNumbers() -> long[]
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox.GetTimes() -> long[]
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox.GetTrackID() -> long
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox.GetTrafNumbers() -> long[]
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox.GetTrunNumbers() -> long[]
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRandomAccessBox.TrackFragmentRandomAccessBox() -> void
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.GetDataOffset() -> long
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.GetFirstSampleFlags() -> long
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.GetSampleCompositionTimeOffset() -> long[]
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.GetSampleCount() -> int
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.GetSampleDuration() -> long[]
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.GetSampleFlags() -> long[]
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.GetSampleSize() -> long[]
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.IsDataOffsetPresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.IsFirstSampleFlagsPresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.IsSampleCompositionTimeOffsetPresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.IsSampleDurationPresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.IsSampleFlagsPresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.IsSampleSizePresent() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackFragmentRunBox.TrackFragmentRunBox() -> void
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetAlternateGroup() -> int
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetCreationTime() -> long
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetDuration() -> long
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetHeight() -> double
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetLayer() -> int
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetMatrix() -> double[]
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetModificationTime() -> long
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetTrackID() -> int
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetVolume() -> double
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.GetWidth() -> double
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.IsTrackEnabled() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.IsTrackInMovie() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.IsTrackInPreview() -> bool
+SharpJaad.MP4.Boxes.Impl.TrackHeaderBox.TrackHeaderBox() -> void
+SharpJaad.MP4.Boxes.Impl.TrackReferenceBox
+SharpJaad.MP4.Boxes.Impl.TrackReferenceBox.GetReferenceType() -> string
+SharpJaad.MP4.Boxes.Impl.TrackReferenceBox.GetTrackIDs() -> System.Collections.Generic.List<long>
+SharpJaad.MP4.Boxes.Impl.TrackReferenceBox.TrackReferenceBox() -> void
+SharpJaad.MP4.Boxes.Impl.TrackSelectionBox
+SharpJaad.MP4.Boxes.Impl.TrackSelectionBox.GetAttributes() -> System.Collections.Generic.List<long>
+SharpJaad.MP4.Boxes.Impl.TrackSelectionBox.GetSwitchGroup() -> long
+SharpJaad.MP4.Boxes.Impl.TrackSelectionBox.TrackSelectionBox() -> void
+SharpJaad.MP4.Boxes.Impl.VideoMediaHeaderBox
+SharpJaad.MP4.Boxes.Impl.VideoMediaHeaderBox.GetColor() -> System.Drawing.Color
+SharpJaad.MP4.Boxes.Impl.VideoMediaHeaderBox.GetGraphicsMode() -> long
+SharpJaad.MP4.Boxes.Impl.VideoMediaHeaderBox.VideoMediaHeaderBox() -> void
+SharpJaad.MP4.Boxes.Impl.XMLBox
+SharpJaad.MP4.Boxes.Impl.XMLBox.GetContent() -> string
+SharpJaad.MP4.Boxes.Impl.XMLBox.XMLBox() -> void
+SharpJaad.MP4.Boxes.UnknownBox
+SharpJaad.MP4.Boxes.UnknownBox.UnknownBox() -> void
+SharpJaad.MP4.Boxes.Utils
+SharpJaad.MP4.MP4Container
+SharpJaad.MP4.MP4Container.GetBoxes() -> System.Collections.Generic.List<SharpJaad.MP4.Boxes.Box>
+SharpJaad.MP4.MP4Container.GetCompatibleBrands() -> SharpJaad.MP4.API.Brand[]
+SharpJaad.MP4.MP4Container.GetMajorBrand() -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.MP4Container.GetMinorBrand() -> SharpJaad.MP4.API.Brand
+SharpJaad.MP4.MP4Container.GetMovie() -> SharpJaad.MP4.API.Movie
+SharpJaad.MP4.MP4Container.MP4Container(System.IO.Stream input) -> void
+SharpJaad.MP4.MP4Exception
+SharpJaad.MP4.MP4Exception.MP4Exception(string message) -> void
+SharpJaad.MP4.MP4InputStream
+SharpJaad.MP4.MP4InputStream.Close() -> void
+SharpJaad.MP4.MP4InputStream.GetOffset() -> long
+SharpJaad.MP4.MP4InputStream.HasLeft() -> bool
+SharpJaad.MP4.MP4InputStream.HasRandomAccess() -> bool
+SharpJaad.MP4.MP4InputStream.MP4InputStream(System.IO.Stream input) -> void
+SharpJaad.MP4.MP4InputStream.Read() -> int
+SharpJaad.MP4.MP4InputStream.Read(byte[] b, int off, int len) -> void
+SharpJaad.MP4.MP4InputStream.ReadBytes(byte[] b) -> void
+SharpJaad.MP4.MP4InputStream.ReadBytes(int n) -> long
+SharpJaad.MP4.MP4InputStream.ReadFixedPoint(int m, int n) -> double
+SharpJaad.MP4.MP4InputStream.ReadString(int n) -> string
+SharpJaad.MP4.MP4InputStream.ReadTerminated(int max, int terminator) -> byte[]
+SharpJaad.MP4.MP4InputStream.ReadUTFString(int max) -> string
+SharpJaad.MP4.MP4InputStream.ReadUTFString(int max, string encoding) -> string
+SharpJaad.MP4.MP4InputStream.Seek(long pos) -> void
+SharpJaad.MP4.MP4InputStream.SkipBytes(long n) -> void
+SharpJaad.MP4.OD.DecoderConfigDescriptor
+SharpJaad.MP4.OD.DecoderConfigDescriptor.DecoderConfigDescriptor() -> void
+SharpJaad.MP4.OD.DecoderConfigDescriptor.GetAverageBitRate() -> long
+SharpJaad.MP4.OD.DecoderConfigDescriptor.GetDecodingBufferSize() -> int
+SharpJaad.MP4.OD.DecoderConfigDescriptor.GetMaxBitRate() -> long
+SharpJaad.MP4.OD.DecoderConfigDescriptor.GetObjectProfile() -> int
+SharpJaad.MP4.OD.DecoderConfigDescriptor.GetStreamType() -> int
+SharpJaad.MP4.OD.DecoderConfigDescriptor.IsUpstream() -> bool
+SharpJaad.MP4.OD.DecoderSpecificInfo
+SharpJaad.MP4.OD.DecoderSpecificInfo.DecoderSpecificInfo() -> void
+SharpJaad.MP4.OD.DecoderSpecificInfo.GetData() -> byte[]
+SharpJaad.MP4.OD.Descriptor
+SharpJaad.MP4.OD.Descriptor.Descriptor() -> void
+SharpJaad.MP4.OD.Descriptor.GetChildren() -> System.Collections.Generic.List<SharpJaad.MP4.OD.Descriptor>
+SharpJaad.MP4.OD.Descriptor.GetDescriptorType() -> int
+SharpJaad.MP4.OD.Descriptor.GetSize() -> int
+SharpJaad.MP4.OD.Descriptor.ReadChildren(SharpJaad.MP4.MP4InputStream input) -> void
+SharpJaad.MP4.OD.Descriptor._size -> int
+SharpJaad.MP4.OD.Descriptor._start -> long
+SharpJaad.MP4.OD.Descriptor._type -> int
+SharpJaad.MP4.OD.ESDescriptor
+SharpJaad.MP4.OD.ESDescriptor.ESDescriptor() -> void
+SharpJaad.MP4.OD.ESDescriptor.GetDependingOnES_ID() -> int
+SharpJaad.MP4.OD.ESDescriptor.GetES_ID() -> int
+SharpJaad.MP4.OD.ESDescriptor.GetStreamPriority() -> int
+SharpJaad.MP4.OD.ESDescriptor.GetURL() -> string
+SharpJaad.MP4.OD.ESDescriptor.HasStreamDependency() -> bool
+SharpJaad.MP4.OD.ESDescriptor.IsURLPresent() -> bool
+SharpJaad.MP4.OD.InitialObjectDescriptor
+SharpJaad.MP4.OD.InitialObjectDescriptor.AreProfilesPresent() -> bool
+SharpJaad.MP4.OD.InitialObjectDescriptor.GetAudioProfile() -> int
+SharpJaad.MP4.OD.InitialObjectDescriptor.GetGraphicsProfile() -> int
+SharpJaad.MP4.OD.InitialObjectDescriptor.GetObjectDescriptorID() -> int
+SharpJaad.MP4.OD.InitialObjectDescriptor.GetODProfile() -> int
+SharpJaad.MP4.OD.InitialObjectDescriptor.GetSceneProfile() -> int
+SharpJaad.MP4.OD.InitialObjectDescriptor.GetURL() -> string
+SharpJaad.MP4.OD.InitialObjectDescriptor.GetVisualProfile() -> int
+SharpJaad.MP4.OD.InitialObjectDescriptor.IncludesInlineProfiles() -> bool
+SharpJaad.MP4.OD.InitialObjectDescriptor.InitialObjectDescriptor() -> void
+SharpJaad.MP4.OD.InitialObjectDescriptor.IsURLPresent() -> bool
+SharpJaad.MP4.OD.ObjectDescriptor
+SharpJaad.MP4.OD.ObjectDescriptor.GetObjectDescriptorID() -> int
+SharpJaad.MP4.OD.ObjectDescriptor.GetURL() -> string
+SharpJaad.MP4.OD.ObjectDescriptor.IsURLPresent() -> bool
+SharpJaad.MP4.OD.ObjectDescriptor.ObjectDescriptor() -> void
+SharpJaad.MP4.OD.SLConfigDescriptor
+SharpJaad.MP4.OD.SLConfigDescriptor.SLConfigDescriptor() -> void
+SharpJaad.MP4.OD.UnknownDescriptor
+SharpJaad.MP4.OD.UnknownDescriptor.UnknownDescriptor() -> void
+SharpJaad.Tools.DataInputStream
+SharpJaad.Tools.DataInputStream.DataInputStream(System.IO.Stream in) -> void
+SharpJaad.Tools.DataInputStream.Dispose() -> void
+SharpJaad.Tools.DataInputStream.Flush() -> void
+SharpJaad.Tools.DataInputStream.Read(byte[] b) -> int
+SharpJaad.Tools.DataInputStream.Read(byte[] b, int off, int len) -> int
+SharpJaad.Tools.DataInputStream.ReadBoolean() -> bool
+SharpJaad.Tools.DataInputStream.ReadByte() -> byte
+SharpJaad.Tools.DataInputStream.ReadChar() -> char
+SharpJaad.Tools.DataInputStream.ReadDouble() -> double
+SharpJaad.Tools.DataInputStream.ReadFloat() -> float
+SharpJaad.Tools.DataInputStream.ReadFully(byte[] b) -> void
+SharpJaad.Tools.DataInputStream.ReadFully(byte[] b, int off, int len) -> void
+SharpJaad.Tools.DataInputStream.ReadInt() -> int
+SharpJaad.Tools.DataInputStream.ReadLong() -> long
+SharpJaad.Tools.DataInputStream.ReadShort() -> short
+SharpJaad.Tools.DataInputStream.ReadUnsignedByte() -> int
+SharpJaad.Tools.DataInputStream.ReadUnsignedShort() -> int
+SharpJaad.Tools.DataInputStream.ReadUTF() -> string
+SharpJaad.WAV.WaveFileWriter
+SharpJaad.WAV.WaveFileWriter.Close() -> void
+SharpJaad.WAV.WaveFileWriter.WaveFileWriter(System.IO.Stream output, int sampleRate, int channels, int bitsPerSample) -> void
+SharpJaad.WAV.WaveFileWriter.Write(byte[] data) -> void
+SharpJaad.WAV.WaveFileWriter.Write(byte[] data, int off, int len) -> void
+SharpJaad.WAV.WaveFileWriter.Write(short[] data) -> void
+SharpJaad.WAV.WaveFileWriter.Write(short[] data, int off, int len) -> void
+static readonly SharpJaad.MP4.API.MetaData.Field.ALBUM -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.ALBUM_ARTIST -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.ALBUM_SORT_TEXT -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.ARTIST -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.ARTIST_SORT_TEXT -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.CATEGORY -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.COMMENTS -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.COMPILATION -> SharpJaad.MP4.API.MetaData.Field<bool>
+static readonly SharpJaad.MP4.API.MetaData.Field.COMPOSER -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.COPYRIGHT -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.COVER_ARTWORKS -> SharpJaad.MP4.API.MetaData.Field<System.Collections.Generic.List<SharpJaad.MP4.API.Artwork>>
+static readonly SharpJaad.MP4.API.MetaData.Field.DESCRIPTION -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.DISK_NUMBER -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.ENCODER_NAME -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.ENCODER_TOOL -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.ENCODING_DATE -> SharpJaad.MP4.API.MetaData.Field<System.DateTime>
+static readonly SharpJaad.MP4.API.MetaData.Field.EPISODE_GLOBAL_UNIQUE_ID -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.GAPLESS_PLAYBACK -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.GENRE -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.GROUPING -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.HD_VIDEO -> SharpJaad.MP4.API.MetaData.Field<bool>
+static readonly SharpJaad.MP4.API.MetaData.Field.INTERNET_RADIO_STATION -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.KEYWORDS -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.LANGUAGE -> SharpJaad.MP4.API.MetaData.Field<System.Globalization.CultureInfo>
+static readonly SharpJaad.MP4.API.MetaData.Field.LENGTH_IN_MILLISECONDS -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.LOCATION -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.LYRICS -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.PODCAST -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.PODCAST_URL -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.PUBLISHER -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.PURCHASE_DATE -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.RATING -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.RELEASE_DATE -> SharpJaad.MP4.API.MetaData.Field<System.DateTime>
+static readonly SharpJaad.MP4.API.MetaData.Field.TEMPO -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.TITLE -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.TITLE_SORT_TEXT -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.TOTAL_DISKS -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.TOTAL_TRACKS -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.TRACK_NUMBER -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.TV_EPISODE -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.TV_EPISODE_NUMBER -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.TV_NETWORK -> SharpJaad.MP4.API.MetaData.Field<string>
+static readonly SharpJaad.MP4.API.MetaData.Field.TV_SEASON -> SharpJaad.MP4.API.MetaData.Field<int>
+static readonly SharpJaad.MP4.API.MetaData.Field.TV_SHOW -> SharpJaad.MP4.API.MetaData.Field<string>
+static SharpJaad.MP4.API.Artwork.ForDataType(SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType dataType) -> SharpJaad.MP4.API.Artwork.ArtworkType
+static SharpJaad.MP4.API.AudioTrack.ForType(long type) -> SharpJaad.MP4.API.AudioTrack.AudioCodec
+static SharpJaad.MP4.API.BrandExtensions.ForID(string id) -> SharpJaad.MP4.API.Brand
+static SharpJaad.MP4.API.BrandExtensions.GetID(this SharpJaad.MP4.API.Brand brand) -> string
+static SharpJaad.MP4.API.DecoderInfo.Parse(SharpJaad.MP4.Boxes.Impl.SampleEntries.Codec.CodecSpecificBox css) -> SharpJaad.MP4.API.DecoderInfo
+static SharpJaad.MP4.API.ID3Tag.ReadSynch(SharpJaad.Tools.DataInputStream input) -> int
+static SharpJaad.MP4.API.Protection.Parse(SharpJaad.MP4.Boxes.Box sinf) -> SharpJaad.MP4.API.Protection
+static SharpJaad.MP4.API.Utils.GetDate(long time) -> System.DateTime
+static SharpJaad.MP4.API.VideoTrack.ForType(long type) -> SharpJaad.MP4.API.VideoTrack.VideoCodec
+static SharpJaad.MP4.Boxes.BoxFactory.ParseBox(SharpJaad.MP4.Boxes.Box parent, SharpJaad.MP4.MP4InputStream input) -> SharpJaad.MP4.Boxes.Box
+static SharpJaad.MP4.Boxes.BoxFactory.ParseBox(SharpJaad.MP4.MP4InputStream input, System.Type boxClass) -> SharpJaad.MP4.Boxes.Box
+static SharpJaad.MP4.Boxes.BoxFactory.TypeToString(long l) -> string
+static SharpJaad.MP4.Boxes.Impl.FD.Base64Decoder.Decode(byte[] b) -> byte[]
+static SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.Extension.ForType(int type) -> SharpJaad.MP4.Boxes.Impl.ItemInformationEntry.Extension
+static SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.ForInt(int i) -> SharpJaad.MP4.Boxes.Impl.Meta.ITunesMetadataBox.DataType
+static SharpJaad.MP4.Boxes.Utils.DetectUndetermined(long l) -> long
+static SharpJaad.MP4.Boxes.Utils.GetLanguageCode(long l) -> string
+static SharpJaad.MP4.OD.Descriptor.CreateDescriptor(SharpJaad.MP4.MP4InputStream input) -> SharpJaad.MP4.OD.Descriptor
+virtual SharpJaad.MP4.Boxes.BoxImpl.Decode(SharpJaad.MP4.MP4InputStream input) -> void

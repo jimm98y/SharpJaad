@@ -255,7 +255,7 @@ namespace SharpJaad.AAC
                 case 0x2B7:
                     Profile profile = (Profile)input.ReadBits(5);
 
-                    if (profile.Equals(Profile.AAC_SBR))
+                    if (profile == Profile.AAC_SBR)
                     {
                         config._sbrPresent = input.ReadBool();
                         if (config._sbrPresent)

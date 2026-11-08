@@ -16,7 +16,7 @@
 
         public SampleBuffer()
         {
-            Data = new byte[0];
+            Data = System.Array.Empty<byte>();
             SampleRate = 0;
             Channels = 0;
             BitsPerSample = 0;

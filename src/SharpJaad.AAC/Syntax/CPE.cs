@@ -20,7 +20,7 @@ namespace SharpJaad.AAC.Syntax
         {
             Profile profile = conf.GetProfile();
             SampleFrequency sf = conf.GetSampleFrequency();
-            if (sf.Equals(SampleFrequency.SAMPLE_FREQUENCY_NONE)) throw new AACException("invalid sample frequency");
+            if (sf == SampleFrequency.SAMPLE_FREQUENCY_NONE) throw new AACException("invalid sample frequency");
 
             ReadElementInstanceTag(input);
 
@@ -32,7 +32,7 @@ namespace SharpJaad.AAC.Syntax
                 _icsR.GetInfo().SetData(input, conf, info);
 
                 _msMask = (MSMask)input.ReadBits(2);
-                if (_msMask.Equals(MSMask.TYPE_USED))
+                if (_msMask == MSMask.TYPE_USED)
                 {
                     int maxSFB = info.GetMaxSFB();
                     int windowGroupCount = info.GetWindowGroupCount();
@@ -42,8 +42,8 @@ namespace SharpJaad.AAC.Syntax
                         _msUsed[idx] = input.ReadBool();
                     }
                 }
-                else if (_msMask.Equals(MSMask.TYPE_ALL_1)) Arrays.Fill(_msUsed, true);
-                else if (_msMask.Equals(MSMask.TYPE_ALL_0)) Arrays.Fill(_msUsed, false);
+                else if (_msMask == MSMask.TYPE_ALL_1) Arrays.Fill(_msUsed, true);
+                else if (_msMask == MSMask.TYPE_ALL_0) Arrays.Fill(_msUsed, false);
                 else throw new AACException("reserved MS mask type used");
             }
             else
@@ -84,7 +84,7 @@ namespace SharpJaad.AAC.Syntax
 
         public bool IsMSMaskPresent()
         {
-            return !_msMask.Equals(MSMask.TYPE_ALL_0);
+            return _msMask != MSMask.TYPE_ALL_0;
         }
 
         public bool IsCommonWindow()

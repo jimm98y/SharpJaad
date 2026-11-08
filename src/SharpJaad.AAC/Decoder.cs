@@ -32,6 +32,9 @@ namespace SharpJaad.AAC
         private BitStream _input;
         private ADIFHeader _adifHeader;
 
+        // 6144 bits per channel (ISO/IEC 14496-3, 4.5.3.1) for up to 8 channels
+        private const int MAX_FRAME_BYTES = 6144 / 8 * 8;
+
         /// <summary>
         /// The methods returns true, if a profile is supported by the decoder.
         /// </summary>
@@ -59,6 +62,7 @@ namespace SharpJaad.AAC
             _filterBank = new FilterBank(_config.IsSmallFrameUsed(), (int)_config.GetChannelConfiguration());
 
             _input = new BitStream();
+            _input.EnsureCapacity(MAX_FRAME_BYTES);
 
             //LOGGER.log(Level.FINE, "profile: {0}", config.getProfile());
             //LOGGER.log(Level.FINE, "sf: {0}", config.getSampleFrequency().getFrequency());
@@ -75,6 +79,7 @@ namespace SharpJaad.AAC
             _filterBank = new FilterBank(_config.IsSmallFrameUsed(), (int)_config.GetChannelConfiguration());
 
             _input = new BitStream();
+            _input.EnsureCapacity(MAX_FRAME_BYTES);
 
             //LOGGER.log(Level.FINE, "profile: {0}", config.getProfile());
             //LOGGER.log(Level.FINE, "sf: {0}", config.getSampleFrequency().getFrequency());
@@ -133,12 +138,12 @@ namespace SharpJaad.AAC
             }
             catch (AACException)
             {
-                buffer.SetData(new byte[0], 0, 0, 0, 0);
+                buffer.SetData(Array.Empty<byte>(), 0, 0, 0, 0);
                 throw;
             }
             catch (Exception e)
             {
-                buffer.SetData(new byte[0], 0, 0, 0, 0);
+                buffer.SetData(Array.Empty<byte>(), 0, 0, 0, 0);
                 throw new AACException(e.Message);
             }
         }
