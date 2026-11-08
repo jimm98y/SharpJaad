@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace SharpJaad.AAC.Sbr
 {
@@ -213,8 +213,8 @@ namespace SharpJaad.AAC.Sbr
                 {
                     for (n = 0; n < 4; n++)
                     {
-                        Array.Copy(adj.G_lim_boost[l], 0, sbr._G_temp_prev, 2 * 5 * ch + 5 * n + 0, sbr._M);
-                        Array.Copy(adj.Q_M_lim_boost[l], 0, sbr._Q_temp_prev, 2 * 5 * ch + 5 * n + 0, sbr._M);
+                        Buffer.BlockCopy(adj.G_lim_boost[l], 0, sbr._G_temp_prev, ((ch * 5 + n) * 64) * sizeof(float), sbr._M * sizeof(float));
+                        Buffer.BlockCopy(adj.Q_M_lim_boost[l], 0, sbr._Q_temp_prev, ((ch * 5 + n) * 64) * sizeof(float), sbr._M * sizeof(float));
                     }
                     /* reset ringbuffer index */
                     sbr._GQ_ringbuf_index[ch] = 4;
@@ -224,8 +224,8 @@ namespace SharpJaad.AAC.Sbr
                 for (i = sbr._t_E[ch, l]; i < sbr._t_E[ch, l + 1]; i++)
                 {
                     /* load new values into ringbuffer */
-                    Array.Copy(adj.G_lim_boost[l], 0, sbr._G_temp_prev, 2 * 5 * ch + 5 * sbr._GQ_ringbuf_index[ch] + 0, sbr._M);
-                    Array.Copy(adj.Q_M_lim_boost[l], 0, sbr._Q_temp_prev, 2 * 5 * ch + 5 * sbr._GQ_ringbuf_index[ch] + 0, sbr._M);
+                    Buffer.BlockCopy(adj.G_lim_boost[l], 0, sbr._G_temp_prev, ((ch * 5 + sbr._GQ_ringbuf_index[ch]) * 64) * sizeof(float), sbr._M * sizeof(float));
+                    Buffer.BlockCopy(adj.Q_M_lim_boost[l], 0, sbr._Q_temp_prev, ((ch * 5 + sbr._GQ_ringbuf_index[ch]) * 64) * sizeof(float), sbr._M * sizeof(float));
 
                     for (m = 0; m < sbr._M; m++)
                     {
