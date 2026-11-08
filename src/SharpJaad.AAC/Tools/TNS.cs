@@ -76,7 +76,7 @@ namespace SharpJaad.AAC.Tools
             int swbCount = info.GetSWBCount();
             int[] offsets = info.GetSWBOffsets();
             int windowCount = info.GetWindowCount();
-            int windowLength = shortWindows ? 128 : 1024;
+            int windowLength = shortWindows ? info.GetShortWindowLength() : info.GetFrameLength();
 
             for (int w = 0; w < windowCount; w++)
             {

@@ -225,7 +225,6 @@ namespace SharpJaad.AAC
                     case Profile.ER_AAC_LD:
                         //ga-specific info:
                         config._frameLengthFlag = input.ReadBool();
-                        if (config._frameLengthFlag) throw new AACException("config uses 960-sample frames, not yet supported"); //TODO: are 960-frames working yet?
                         config._dependsOnCoreCoder = input.ReadBool();
                         if (config._dependsOnCoreCoder) config._coreCoderDelay = input.ReadBits(14);
                         else config._coreCoderDelay = 0;

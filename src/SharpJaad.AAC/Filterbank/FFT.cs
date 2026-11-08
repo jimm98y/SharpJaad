@@ -31,8 +31,22 @@ namespace SharpJaad.AAC.Filterbank
                     throw new AACException("unexpected FFT length: " + length);
             }
 
+            // the tables have the root and, for both directions, the imaginary part: [re, im inverse, im forward]
+            if (_roots.GetLength(1) == 2)
+            {
+                var roots = new float[length, 3];
+                for (int i = 0; i < length; i++)
+                {
+                    roots[i, 0] = _roots[i, 0];
+                    roots[i, 1] = _roots[i, 1];
+                    roots[i, 2] = -_roots[i, 1];
+                }
+                _roots = roots;
+            }
+
             //processing buffers
             _rev = new float[length, 2];
+            if ((length & (length - 1)) != 0) InitMixedRadix();
             _a = new float[2];
             _b = new float[2];
             _c = new float[2];
@@ -43,6 +57,11 @@ namespace SharpJaad.AAC.Filterbank
 
         public void Process(float[,] input, bool forward)
         {
+            if (_factors != null)
+            {
+                ProcessMixedRadix(input, forward);
+                return;
+            }
             int imOff = forward ? 2 : 1;
             int scale = 1;
             //bit-reversal
@@ -123,6 +142,85 @@ namespace SharpJaad.AAC.Filterbank
                         input[j + k, 0] = (input[j + k, 0] + zRe) * scale;
                         input[j + k, 1] = (input[j + k, 1] + zIm) * scale;
                     }
+                }
+            }
+        }
+
+        // lengths that are no power of 2 (60 and 480, for frames of 960 samples): a Stockham FFT over the prime
+        // factors, with the roots of the table
+        private int[] _factors;
+        private float[,] _work;
+        private float[] _sumRe, _sumIm;
+
+        private void InitMixedRadix()
+        {
+            int n = _length, count = 0;
+            var factors = new int[32];
+            foreach (int p in new[] { 4, 2, 3, 5 })
+            {
+                while (n % p == 0)
+                {
+                    factors[count++] = p;
+                    n /= p;
+                }
+            }
+            if (n != 1) throw new AACException("unexpected FFT length: " + _length);
+            _factors = new int[count];
+            System.Array.Copy(factors, _factors, count);
+            _work = new float[_length, 2];
+            _sumRe = new float[5];
+            _sumIm = new float[5];
+        }
+
+        private void ProcessMixedRadix(float[,] input, bool forward)
+        {
+            int imOff = forward ? 2 : 1;
+            float[,] x = input, y = _work;
+            int n = _length, s = 1;
+            foreach (int p in _factors)
+            {
+                int m = n / p;
+                int step = _length / n; // the roots of n are every step-th root of the table
+                for (int j = 0; j < m; j++)
+                {
+                    for (int k = 0; k < s; k++)
+                    {
+                        // a DFT of size p over x[k + s * (j + m * r)], then the twiddle factor of n for output q
+                        for (int q = 0; q < p; q++)
+                        {
+                            float re = 0, im = 0;
+                            for (int r = 0; r < p; r++)
+                            {
+                                int root = (r * q % p) * (_length / p);
+                                float wr = _roots[root, 0], wi = _roots[root, imOff];
+                                float ar = x[k + s * (j + m * r), 0], ai = x[k + s * (j + m * r), 1];
+                                re += ar * wr - ai * wi;
+                                im += ar * wi + ai * wr;
+                            }
+                            _sumRe[q] = re;
+                            _sumIm[q] = im;
+                        }
+                        for (int q = 0; q < p; q++)
+                        {
+                            int root = (j * q * step) % _length;
+                            float wr = _roots[root, 0], wi = _roots[root, imOff];
+                            y[k + s * (p * j + q), 0] = _sumRe[q] * wr - _sumIm[q] * wi;
+                            y[k + s * (p * j + q), 1] = _sumRe[q] * wi + _sumIm[q] * wr;
+                        }
+                    }
+                }
+                float[,] t = x;
+                x = y;
+                y = t;
+                n = m;
+                s *= p;
+            }
+            if (x != input)
+            {
+                for (int i = 0; i < _length; i++)
+                {
+                    input[i, 0] = x[i, 0];
+                    input[i, 1] = x[i, 1];
                 }
             }
         }

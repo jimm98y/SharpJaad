@@ -220,6 +220,7 @@ namespace SharpJaad.AAC.Syntax
             int maxSFB = _info.GetMaxSFB();
             int windowGroups = _info.GetWindowGroupCount();
             int[] offsets = _info.GetSWBOffsets();
+            int windowLength = _info.GetShortWindowLength(); //the windows of a group follow each other
             int[] buf = _huffBuf;
 
             int sfb, j, k, w, hcb, off, width, num;
@@ -235,7 +236,7 @@ namespace SharpJaad.AAC.Syntax
                     width = offsets[sfb + 1] - offsets[sfb];
                     if (hcb == HCB.ZERO_HCB || hcb == HCB.INTENSITY_HCB || hcb == HCB.INTENSITY_HCB2)
                     {
-                        for (w = 0; w < groupLen; w++, off += 128)
+                        for (w = 0; w < groupLen; w++, off += windowLength)
                         {
                             Arrays.Fill(_data, off, off + width, 0);
                         }
@@ -243,7 +244,7 @@ namespace SharpJaad.AAC.Syntax
                     else if (hcb == HCB.NOISE_HCB)
                     {
                         //apply PNS: fill with random values
-                        for (w = 0; w < groupLen; w++, off += 128)
+                        for (w = 0; w < groupLen; w++, off += windowLength)
                         {
                             float energy = 0;
 
@@ -263,7 +264,7 @@ namespace SharpJaad.AAC.Syntax
                     }
                     else
                     {
-                        for (w = 0; w < groupLen; w++, off += 128)
+                        for (w = 0; w < groupLen; w++, off += windowLength)
                         {
                             num = hcb >= HCB.FIRST_PAIR_HCB ? 2 : 4;
                             for (k = 0; k < width; k += num)
@@ -281,7 +282,7 @@ namespace SharpJaad.AAC.Syntax
                         }
                     }
                 }
-                groupOff += groupLen << 7;
+                groupOff += groupLen * windowLength;
             }
         }
 

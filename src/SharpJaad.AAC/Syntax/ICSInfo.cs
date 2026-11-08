@@ -32,10 +32,28 @@ namespace SharpJaad.AAC.Syntax
         private int[] _windowGroupLength;
         private int _swbCount;
         private int[] _swbOffsets;
+        private readonly bool _smallFrames; //frames of 960 samples, short windows of 120
+
+        /// <summary>
+        /// The number of coefficients of one short window: 128, or 120 in frames of 960 samples.
+        /// </summary>
+        internal int GetShortWindowLength()
+        {
+            return _smallFrames ? 120 : 128;
+        }
+
+        /// <summary>
+        /// The number of coefficients of a frame: 1024 or 960.
+        /// </summary>
+        internal int GetFrameLength()
+        {
+            return _frameLength;
+        }
 
         public ICSInfo(DecoderConfig config)
         {
             _frameLength = config.GetFrameLength();
+            _smallFrames = config.IsSmallFrameUsed();
             _windowShape = new int[2];
             _windowSequence = WindowSequence.ONLY_LONG_SEQUENCE;
             _windowGroupLength = new int[Constants.MAX_WINDOW_GROUP_COUNT];
@@ -76,15 +94,15 @@ namespace SharpJaad.AAC.Syntax
                     }
                 }
                 _windowCount = 8;
-                _swbOffsets = ScaleFactorBands.SWB_OFFSET_SHORT_WINDOW[(int)sf];
-                _swbCount = ScaleFactorBands.SWB_SHORT_WINDOW_COUNT[(int)sf];
+                _swbOffsets = _smallFrames ? ScaleFactorBands.SWB_OFFSET_120[(int)sf] : ScaleFactorBands.SWB_OFFSET_SHORT_WINDOW[(int)sf];
+                _swbCount = _smallFrames ? ScaleFactorBands.SWB_COUNT_120[(int)sf] : ScaleFactorBands.SWB_SHORT_WINDOW_COUNT[(int)sf];
             }
             else
             {
                 _maxSFB = input.ReadBits(6);
                 _windowCount = 1;
-                _swbOffsets = ScaleFactorBands.SWB_OFFSET_LONG_WINDOW[(int)sf];
-                _swbCount = ScaleFactorBands.SWB_LONG_WINDOW_COUNT[(int)sf];
+                _swbOffsets = _smallFrames ? ScaleFactorBands.SWB_OFFSET_960[(int)sf] : ScaleFactorBands.SWB_OFFSET_LONG_WINDOW[(int)sf];
+                _swbCount = _smallFrames ? ScaleFactorBands.SWB_COUNT_960[(int)sf] : ScaleFactorBands.SWB_LONG_WINDOW_COUNT[(int)sf];
                 _predictionDataPresent = input.ReadBool();
                 if (_predictionDataPresent) ReadPredictionData(input, conf.GetProfile(), sf, commonWindow);
             }

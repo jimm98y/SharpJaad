@@ -108,5 +108,27 @@
             SWB_OFFSET_128_16,
             SWB_OFFSET_128_8
         };
+
+        // frames of 960 samples (windows of 960 and 120): the bands of the 1024 and 128 tables that start below the end
+        // of the window, the last one ending there (ISO/IEC 14496-3 4.5.4, as num_swb_960 and num_swb_120)
+        internal static readonly int[][] SWB_OFFSET_960 = Truncate(SWB_OFFSET_LONG_WINDOW, 960, out SWB_COUNT_960);
+        internal static readonly int[][] SWB_OFFSET_120 = Truncate(SWB_OFFSET_SHORT_WINDOW, 120, out SWB_COUNT_120);
+        internal static readonly int[] SWB_COUNT_960, SWB_COUNT_120;
+
+        private static int[][] Truncate(int[][] tables, int length, out int[] counts)
+        {
+            var result = new int[tables.Length][];
+            counts = new int[tables.Length];
+            for (int t = 0; t < tables.Length; t++)
+            {
+                int n = 0;
+                while (tables[t][n] >= 0 && tables[t][n] < length) n++;
+                result[t] = new int[n + 1];
+                System.Array.Copy(tables[t], result[t], n);
+                result[t][n] = length;
+                counts[t] = n;
+            }
+            return result;
+        }
     }
 }

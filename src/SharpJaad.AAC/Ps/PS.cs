@@ -108,9 +108,12 @@ namespace SharpJaad.AAC.Ps
         private float[,] _h12Prev = new float[50, 2];
         private float[,] _h21Prev = new float[50, 2];
         private float[,] _h22Prev = new float[50, 2];
-        private int _phaseHist;
+        //the phase history per parameter band: [band, previous / before previous, re / im]
         private float[,,] _ipdPrev = new float[20, 2, 2];
         private float[,,] _opdPrev = new float[20, 2, 2];
+        private readonly float[,] _ipdSmooth = new float[20, 2], _opdSmooth = new float[20, 2];
+        private readonly int[] _phaseKey = new int[20]; //frame and envelope of the smoothed value of a band
+        private int _phaseFrame;
 
         public PS(SampleFrequency sr, int numTimeSlotsRate)
         {
@@ -165,22 +168,22 @@ namespace SharpJaad.AAC.Ps
             for (i = 0; i < 50; i++)
             {
                 _h11Prev[i, 0] = 1;
-                _h12Prev[i, 1] = 1;
-                _h11Prev[i, 0] = 1;
+                _h11Prev[i, 1] = 1;
+                _h12Prev[i, 0] = 1;
                 _h12Prev[i, 1] = 1;
             }
 
-            _phaseHist = 0;
+            for (i = 0; i < 20; i++) _phaseKey[i] = -1;
 
             for (i = 0; i < 20; i++)
             {
-                _ipdPrev[i, 0, 0] = 0;
+                _ipdPrev[i, 0, 0] = 1;
                 _ipdPrev[i, 0, 1] = 0;
-                _ipdPrev[i, 1, 0] = 0;
+                _ipdPrev[i, 1, 0] = 1;
                 _ipdPrev[i, 1, 1] = 0;
-                _opdPrev[i, 0, 0] = 0;
+                _opdPrev[i, 0, 0] = 1;
                 _opdPrev[i, 0, 1] = 0;
-                _opdPrev[i, 1, 0] = 0;
+                _opdPrev[i, 1, 0] = 1;
                 _opdPrev[i, 1, 1] = 0;
             }
         }
@@ -301,7 +304,8 @@ namespace SharpJaad.AAC.Ps
                     num_bits_left -= PsExtension(ld, ps_extension_id, num_bits_left);
                 }
 
-                ld.SkipBits(num_bits_left);
+                // an extension can read past its advertised size (as in FAAD2, nothing is skipped then)
+                if (num_bits_left > 0) ld.SkipBits(num_bits_left);
             }
 
             int bits2 = (int)(ld.GetPosition() - bits);
@@ -507,48 +511,50 @@ namespace SharpJaad.AAC.Ps
             }
         }
 
+        private readonly int[] _map20 = new int[20];
+
         private void Map20IndexTo34(int[] index, int bins)
         {
-            //index[0] = index[0];
-            index[1] = (index[0] + index[1]) / 2;
-            index[2] = index[1];
-            index[3] = index[2];
-            index[4] = (index[2] + index[3]) / 2;
-            index[5] = index[3];
-            index[6] = index[4];
-            index[7] = index[4];
-            index[8] = index[5];
-            index[9] = index[5];
-            index[10] = index[6];
-            index[11] = index[7];
-            index[12] = index[8];
-            index[13] = index[8];
-            index[14] = index[9];
-            index[15] = index[9];
-            index[16] = index[10];
+            // every value is mapped from the 20 band values: read from a copy, the bands are overwritten in place
+            Array.Copy(index, _map20, Math.Min(index.Length, _map20.Length));
+            index[1] = (_map20[0] + _map20[1]) / 2;
+            index[2] = _map20[1];
+            index[3] = _map20[2];
+            index[4] = (_map20[2] + _map20[3]) / 2;
+            index[5] = _map20[3];
+            index[6] = _map20[4];
+            index[7] = _map20[4];
+            index[8] = _map20[5];
+            index[9] = _map20[5];
+            index[10] = _map20[6];
+            index[11] = _map20[7];
+            index[12] = _map20[8];
+            index[13] = _map20[8];
+            index[14] = _map20[9];
+            index[15] = _map20[9];
+            index[16] = _map20[10];
 
             if (bins == 34)
             {
-                index[17] = index[11];
-                index[18] = index[12];
-                index[19] = index[13];
-                index[20] = index[14];
-                index[21] = index[14];
-                index[22] = index[15];
-                index[23] = index[15];
-                index[24] = index[16];
-                index[25] = index[16];
-                index[26] = index[17];
-                index[27] = index[17];
-                index[28] = index[18];
-                index[29] = index[18];
-                index[30] = index[18];
-                index[31] = index[18];
-                index[32] = index[19];
-                index[33] = index[19];
+                index[17] = _map20[11];
+                index[18] = _map20[12];
+                index[19] = _map20[13];
+                index[20] = _map20[14];
+                index[21] = _map20[14];
+                index[22] = _map20[15];
+                index[23] = _map20[15];
+                index[24] = _map20[16];
+                index[25] = _map20[16];
+                index[26] = _map20[17];
+                index[27] = _map20[17];
+                index[28] = _map20[18];
+                index[29] = _map20[18];
+                index[30] = _map20[18];
+                index[31] = _map20[18];
+                index[32] = _map20[19];
+                index[33] = _map20[19];
             }
         }
-
         /* parse the bitstream data decoded in ps_data() */
         private void PsDataDecode()
         {
@@ -964,7 +970,7 @@ namespace SharpJaad.AAC.Ps
                             }
 
                             /* z^(-2) * Phi_Fract[k] */
-                            tmp[0] = tmp[0] * Phi_Fract[0] + tmp0[1] * Phi_Fract[1];
+                            tmp[0] = tmp0[0] * Phi_Fract[0] + tmp0[1] * Phi_Fract[1];
                             tmp[1] = tmp0[1] * Phi_Fract[0] - tmp0[0] * Phi_Fract[1];
 
                             R0[0] = tmp[0];
@@ -1094,8 +1100,22 @@ namespace SharpJaad.AAC.Ps
             return (float)Math.Sqrt(c[0] * c[0] + c[1] * c[1]);
         }
 
+        // smooths the phase of index: the current one, half the previous and a quarter of the one before, normalized
+        // later with the others; then the history moves on
+        private static void SmoothPhase(float[,,] history, int bk, int index, float[,] smooth)
+        {
+            float re = PSTables.ipdopd_cos_tab[index], im = PSTables.ipdopd_sin_tab[index];
+            smooth[bk, 0] = re + 0.5f * history[bk, 0, 0] + 0.25f * history[bk, 1, 0];
+            smooth[bk, 1] = im + 0.5f * history[bk, 0, 1] + 0.25f * history[bk, 1, 1];
+            history[bk, 1, 0] = history[bk, 0, 0];
+            history[bk, 1, 1] = history[bk, 0, 1];
+            history[bk, 0, 0] = re;
+            history[bk, 0, 1] = im;
+        }
+
         private void PsMixPhase(float[,,] X_left, float[,,] X_right, float[,,] X_hybrid_left, float[,,] X_hybrid_right)
         {
+            _phaseFrame++;
             int n;
             int gr;
             int bk = 0;
@@ -1249,8 +1269,8 @@ namespace SharpJaad.AAC.Ps
 
                         h11[0] = PSConstants.COEF_SQRT2 * (cosa * cosg);
                         h12[0] = PSConstants.COEF_SQRT2 * (sina * cosg);
-                        h21[0] = PSConstants.COEF_SQRT2 * (-cosa * sing);
-                        h22[0] = PSConstants.COEF_SQRT2 * (sina * sing);
+                        h21[0] = PSConstants.COEF_SQRT2 * (-sina * sing); //as ISO/IEC 14496-3 8.6.4.6.2 (FAAD2 swaps sin and cos here)
+                        h22[0] = PSConstants.COEF_SQRT2 * (cosa * sing);
                     }
 
                     /* calculate phase rotation parameters H_xy */
@@ -1261,39 +1281,20 @@ namespace SharpJaad.AAC.Ps
                     {
                         float xy, pq, xypq;
 
-                        /* ringbuffer index */
-                        int i = _phaseHist;
-
-                        /* previous value */
-                        tempLeft[0] = _ipdPrev[bk, i, 0] * 0.25f;
-                        tempLeft[1] = _ipdPrev[bk, i, 1] * 0.25f;
-                        tempRight[0] = _opdPrev[bk, i, 0] * 0.25f;
-                        tempRight[1] = _opdPrev[bk, i, 1] * 0.25f;
-
-                        /* save current value */
-                        _ipdPrev[bk, i, 0] = PSTables.ipdopd_cos_tab[Math.Abs(_ipdIndex[env][bk])];
-                        _ipdPrev[bk, i, 1] = PSTables.ipdopd_sin_tab[Math.Abs(_ipdIndex[env][bk])];
-                        _opdPrev[bk, i, 0] = PSTables.ipdopd_cos_tab[Math.Abs(_opdIndex[env][bk])];
-                        _opdPrev[bk, i, 1] = PSTables.ipdopd_sin_tab[Math.Abs(_opdIndex[env][bk])];
-
-                        /* add current value */
-                        tempLeft[0] += _ipdPrev[bk, i, 0];
-                        tempLeft[1] += _ipdPrev[bk, i, 1];
-                        tempRight[0] += _opdPrev[bk, i, 0];
-                        tempRight[1] += _opdPrev[bk, i, 1];
-
-                        /* ringbuffer index */
-                        if (i == 0)
+                        /* phase smoothing: the current phase, plus half the previous and a quarter of the one before,
+                         * per parameter band and envelope (ISO/IEC 14496-3 8.6.4.6.3.2, as FFmpeg does); the groups
+                         * of a band share the value of the envelope */
+                        int key = _phaseFrame * PSConstants.MAX_PS_ENVELOPES + env;
+                        if (_phaseKey[bk] != key)
                         {
-                            i = 2;
+                            _phaseKey[bk] = key;
+                            SmoothPhase(_ipdPrev, bk, Math.Abs(_ipdIndex[env][bk]), _ipdSmooth);
+                            SmoothPhase(_opdPrev, bk, Math.Abs(_opdIndex[env][bk]), _opdSmooth);
                         }
-                        i--;
-
-                        /* get value before previous */
-                        tempLeft[0] += _ipdPrev[bk, i, 0] * 0.5f;
-                        tempLeft[1] += _ipdPrev[bk, i, 1] * 0.5f;
-                        tempRight[0] += _opdPrev[bk, i, 0] * 0.5f;
-                        tempRight[1] += _opdPrev[bk, i, 1] * 0.5f;
+                        tempLeft[0] = _ipdSmooth[bk, 0];
+                        tempLeft[1] = _ipdSmooth[bk, 1];
+                        tempRight[0] = _opdSmooth[bk, 0];
+                        tempRight[1] = _opdSmooth[bk, 1];
 
                         xy = MagnitudeC(tempRight);
                         pq = MagnitudeC(tempLeft);
@@ -1461,13 +1462,6 @@ namespace SharpJaad.AAC.Ps
                                 X_right[n, sb, 1] = tempRight[1];
                             }
                         }
-                    }
-
-                    /* shift phase smoother's circular buffer index */
-                    _phaseHist++;
-                    if (_phaseHist == 2)
-                    {
-                        _phaseHist = 0;
                     }
                 }
             }

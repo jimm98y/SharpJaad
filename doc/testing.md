@@ -9,6 +9,8 @@ runs `src/SharpJaad.Tests` on net481, net8.0 and net10.0:
 - **DecoderTests** decode `src/SharpJaadMain/aac-sample.mp4` and compare the PCM with the recorded output, and check
   what does not show in a hash: big endian output, independent decoders, truncated frames, frames of changing size.
 - **BitStreamTests** check the bit reader, also when it is given shorter data after longer data.
+- **FftTests** check the FFT of the filterbank against a direct DFT, also the mixed radix lengths of frames of 960
+  samples.
 - **AllocationTests** (.NET only, .NET Framework cannot count allocations) check that decoding allocates nothing once
   the first frame of a stream is decoded: the first frame allocates the elements of the stream and the output buffer,
   every later frame reuses them.
@@ -35,7 +37,7 @@ for f in Fd_2_c1_Ms_0x01.mp4 Fd_2_c1_Ms_0x04.mp4 aac-sce-in-stereo.mp4 al04_44.m
          al06_44.mp4 al07_96.mp4 al15_44.mp4 al17_44.mp4 al18_44.mp4 al22_chCfg0PCE_44.mp4 al_sbr_cm_48_2.mp4 \
          al_sbr_cm_48_5.1.mp4 al_sbr_ps_04_new.mp4 al_sbr_ps_06_new.mp4 al_sbr_sr_48_2_fsaac48.mp4 am00_88.mp4 \
          am05_44.mp4 ap05_48.mp4 er_ad6000np_44_ep0.mp4 ct_faac-adts.aac \
-         al04_44.s16 al05_44.s16 al06_44.s16 al07_96_reorder.s16 al15_44_reorder.s16 al17_44.s16 al18_44.s16 \
+         al04_44.s16 al04sf_48.s16 al05_44.s16 al06_44.s16 al07_96_reorder.s16 al15_44_reorder.s16 al17_44.s16 al18_44.s16 \
          al_sbr_hq_cm_48_2.s16 al_sbr_hq_cm_48_5.1_reorder.s16 al_sbr_ps_04_ur.s16 al_sbr_ps_06_ur.s16 \
          al_sbr_hq_sr_48_2_fsaac48.s16 am00_88.s16 am05_44_reorder.s16 ap05_48.s16; do
   curl -sO https://fate-suite.ffmpeg.org/aac/$f
@@ -43,8 +45,8 @@ done
 export SHARPJAAD_CONFORMANCE_DIR=$PWD
 ```
 
-What does not decode: `Fd_*` (USAC), `er_ad6000np_44_ep0` (ER AAC LD) and `al04sf_48` (960 sample frames) are not
-supported. Parametric stereo (`al_sbr_ps_*`) still deviates from the reference after PS starts.
+What does not decode: `Fd_*` (USAC) and `er_ad6000np_44_ep0` (ER AAC LD) are not supported. `al_sbr_ps_06` deviates from
+the reference for a few frames after each switch between 20 and 34 parametric stereo bands.
 
 ## Running the tests against another version
 

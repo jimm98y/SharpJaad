@@ -206,13 +206,13 @@ namespace SharpJaad.AAC.Syntax
                         {
                             for (k = swbOffsets[sfb]; k < swbOffsets[sfb + 1]; k++)
                             {
-                                data[dstOff + group * 128 + k] += x * iqData[srcOff + group * 128 + k];
+                                data[dstOff + group * info.GetShortWindowLength() + k] += x * iqData[srcOff + group * info.GetShortWindowLength() + k];
                             }
                         }
                     }
                 }
-                dstOff += len * 128;
-                srcOff += len * 128;
+                dstOff += len * info.GetShortWindowLength();
+                srcOff += len * info.GetShortWindowLength();
             }
         }
     }

@@ -72,7 +72,7 @@ namespace SharpJaad.AAC.Ps
                 for (n = 0; n < _frameLen; n++)
                 {
                     _work[12 + n, 0] = X[n + 6 /*delay*/, band, 0];
-                    _work[12 + n, 0] = X[n + 6 /*delay*/, band, 0];
+                    _work[12 + n, 1] = X[n + 6 /*delay*/, band, 1];
                 }
 
                 /* store samples */
@@ -129,6 +129,16 @@ namespace SharpJaad.AAC.Ps
                     X_hybrid[n, 2, 1] += X_hybrid[n, 5, 1];
                     X_hybrid[n, 5, 0] = 0;
                     X_hybrid[n, 5, 1] = 0;
+                }
+            }
+
+            // the last samples of the bands only the 34 band mode filters are kept too, for a switch to it (as FFmpeg)
+            for (band = qmf_bands; band < 5; band++)
+            {
+                for (int i = 0; i < 12; i++)
+                {
+                    _buffer[band, i, 0] = X[_frameLen - 6 + i, band, 0];
+                    _buffer[band, i, 1] = X[_frameLen - 6 + i, band, 1];
                 }
             }
         }
