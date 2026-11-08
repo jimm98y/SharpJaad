@@ -1,7 +1,27 @@
-﻿namespace SharpJaad.AAC.Ps
+﻿using System;
+
+namespace SharpJaad.AAC.Ps
 {
     public class Filterbank
     {
+        // scratch buffers reused by every call to avoid per-frame allocations; cleared before each use
+        private readonly float[] _tmp_input_re2_152 = new float[2];
+        private readonly float[] _tmp_input_re1_152 = new float[2];
+        private readonly float[] _tmp_input_im2_153 = new float[2];
+        private readonly float[] _tmp_input_im1_153 = new float[2];
+        private readonly float[] _tmp_input_re2_226 = new float[4];
+        private readonly float[] _tmp_input_re1_226 = new float[4];
+        private readonly float[] _tmp_input_im2_227 = new float[4];
+        private readonly float[] _tmp_input_im1_227 = new float[4];
+        private readonly float[] _tmp_x = new float[4];
+        private readonly float[] _tmp_input_re2 = new float[6];
+        private readonly float[] _tmp_input_re1 = new float[6];
+        private readonly float[] _tmp_input_im2 = new float[6];
+        private readonly float[] _tmp_input_im1 = new float[6];
+        private readonly float[] _tmp_out_re2 = new float[6];
+        private readonly float[] _tmp_out_re1 = new float[6];
+        private readonly float[] _tmp_out_im2 = new float[6];
+        private readonly float[] _tmp_out_im1 = new float[6];
         private int _frameLen;
         private int[] _resolution20 = new int[3];
         private int[] _resolution34 = new int[5];
@@ -146,11 +166,15 @@
         }
 
         /* complex filter, size 4 */
-        private static void ChannelFilter4(int frame_len, float[] filter, float[,] buffer, float[,,] X_hybrid)
+        private void ChannelFilter4(int frame_len, float[] filter, float[,] buffer, float[,,] X_hybrid)
         {
             int i;
-            float[] input_re1 = new float[2], input_re2 = new float[2];
-            float[] input_im1 = new float[2], input_im2 = new float[2];
+            float[] input_re1 = _tmp_input_re1_152, input_re2 = _tmp_input_re2_152;
+            Array.Clear(input_re1, 0, input_re1.Length);
+            Array.Clear(input_re2, 0, input_re2.Length);
+            float[] input_im1 = _tmp_input_im1_153, input_im2 = _tmp_input_im2_153;
+            Array.Clear(input_im1, 0, input_im1.Length);
+            Array.Clear(input_im2, 0, input_im2.Length);
 
             for (i = 0; i < frame_len; i++)
             {
@@ -223,9 +247,14 @@
         private void ChannelFilter8(int frame_len, float[] filter, float[,] buffer, float[,,] X_hybrid)
         {
             int i, n;
-            float[] input_re1 = new float[4], input_re2 = new float[4];
-            float[] input_im1 = new float[4], input_im2 = new float[4];
-            float[] x = new float[4];
+            float[] input_re1 = _tmp_input_re1_226, input_re2 = _tmp_input_re2_226;
+            Array.Clear(input_re1, 0, input_re1.Length);
+            Array.Clear(input_re2, 0, input_re2.Length);
+            float[] input_im1 = _tmp_input_im1_227, input_im2 = _tmp_input_im2_227;
+            Array.Clear(input_im1, 0, input_im1.Length);
+            Array.Clear(input_im2, 0, input_im2.Length);
+            float[] x = _tmp_x;
+            Array.Clear(x, 0, x.Length);
 
             for (i = 0; i < frame_len; i++)
             {
@@ -315,10 +344,18 @@
         private void ChannelFilter12(int frame_len, float[] filter, float[,] buffer, float[,,] X_hybrid)
         {
             int i, n;
-            float[] input_re1 = new float[6], input_re2 = new float[6];
-            float[] input_im1 = new float[6], input_im2 = new float[6];
-            float[] out_re1 = new float[6], out_re2 = new float[6];
-            float[] out_im1 = new float[6], out_im2 = new float[6];
+            float[] input_re1 = _tmp_input_re1, input_re2 = _tmp_input_re2;
+            Array.Clear(input_re1, 0, input_re1.Length);
+            Array.Clear(input_re2, 0, input_re2.Length);
+            float[] input_im1 = _tmp_input_im1, input_im2 = _tmp_input_im2;
+            Array.Clear(input_im1, 0, input_im1.Length);
+            Array.Clear(input_im2, 0, input_im2.Length);
+            float[] out_re1 = _tmp_out_re1, out_re2 = _tmp_out_re2;
+            Array.Clear(out_re1, 0, out_re1.Length);
+            Array.Clear(out_re2, 0, out_re2.Length);
+            float[] out_im1 = _tmp_out_im1, out_im2 = _tmp_out_im2;
+            Array.Clear(out_im1, 0, out_im1.Length);
+            Array.Clear(out_im2, 0, out_im2.Length);
 
             for (i = 0; i < frame_len; i++)
             {

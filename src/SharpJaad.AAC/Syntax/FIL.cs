@@ -6,6 +6,7 @@
         {
             public const int MAX_NBR_BANDS = 7;
             internal const int MAX_DRC_BANDS = 16; //bands_increment is 4 bits + 1
+            internal const int MAX_EXCLUDED_CHANNELS = 63; //the mask of further channels is not kept
             public bool[] _excludeMask;
             public bool[] _additionalExcludedChannels;
             public bool _pceTagPresent;
@@ -22,7 +23,7 @@
 
             public DynamicRangeInfo()
             {
-                _excludeMask = new bool[MAX_NBR_BANDS];
+                _excludeMask = new bool[MAX_EXCLUDED_CHANNELS];
                 _additionalExcludedChannels = new bool[MAX_NBR_BANDS];
                 _bandTop = new int[MAX_DRC_BANDS];
                 _dynRngSgn = new bool[MAX_DRC_BANDS];
@@ -69,7 +70,7 @@
 
             int pos2 = input.GetPosition() - pos;
             int bitsLeft = cpy - pos2;
-            if (bitsLeft > 0) input.SkipBits(pos2);
+            if (bitsLeft > 0) input.SkipBits(bitsLeft);
             else if (bitsLeft < 0) throw new AACException("FIL element overread: " + bitsLeft);
         }
 
@@ -84,15 +85,11 @@
                     break;
                 case TYPE_SBR_DATA:
                 case TYPE_SBR_DATA_CRC:
-                    if (sbrEnabled)
+                    // without an element to apply it to (SBR before the first SCE or CPE) the data is skipped
+                    if (sbrEnabled && (prev is SCE_LFE || prev is CPE))
                     {
-                        if (prev is SCE_LFE || prev is CPE || prev is CCE)
-                        {
-                            prev.DecodeSBR(input, sf, ret, prev is CPE, type == TYPE_SBR_DATA_CRC, _downSampledSBR, smallFrames);
-                            ret = 0;
-                            break;
-                        }
-                        else throw new AACException("SBR applied on unexpected element: " + prev);
+                        prev.DecodeSBR(input, sf, ret, prev is CPE, type == TYPE_SBR_DATA_CRC, _downSampledSBR, smallFrames);
+                        ret = 0;
                     }
                     else
                     {
@@ -113,7 +110,8 @@
 
         private int DecodeDynamicRangeInfo(BitStream input, int count)
         {
-            int ret = count;
+            //the first byte is the extension type and the four presence flags
+            int ret = count - 4;
 
             int bandCount = 1;
 
@@ -122,6 +120,7 @@
             {
                 _dri._pceInstanceTag = input.ReadBits(4);
                 _dri._tagReservedBits = input.ReadBits(4);
+                ret -= 8;
             }
 
             //excluded channels
@@ -166,15 +165,17 @@
             int i;
             int exclChs = 0;
 
+            //groups of 7 channels, each followed by a bit that says if another group follows
             do
             {
                 for (i = 0; i < 7; i++)
                 {
-                    _dri._excludeMask[exclChs] = input.ReadBool();
+                    bool excluded = input.ReadBool();
+                    if (exclChs < _dri._excludeMask.Length) _dri._excludeMask[exclChs] = excluded;
                     exclChs++;
                 }
             }
-            while (exclChs < 57 && input.ReadBool());
+            while (input.ReadBool());
 
             return exclChs / 7 * 8;
         }

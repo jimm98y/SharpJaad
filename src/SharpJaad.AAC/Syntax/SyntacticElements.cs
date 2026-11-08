@@ -14,12 +14,22 @@ namespace SharpJaad.AAC.Syntax
         private int frame = 0;
         //elements
         private PCE pce;
-        private Element[] elements; //SCE, LFE and CPE
+        private Element[] elements; //SCE, LFE and CPE of the current frame, in bitstream order
+        private bool[] elementIsLFE;
+        //the elements by instance tag: an element keeps its state (prediction, LTP, SBR) for the channels it codes
+        private readonly SCE_LFE[] sces = new SCE_LFE[MAX_TAGS], lfes = new SCE_LFE[MAX_TAGS];
+        private readonly CPE[] cpes = new CPE[MAX_TAGS];
+        private readonly CCE[] cceByTag = new CCE[MAX_TAGS];
+        //for an instance tag used twice in a frame (invalid, but decodable)
+        private SCE_LFE[] spareSCEs;
+        private CPE[] spareCPEs;
+        private const int MAX_TAGS = 16; //element_instance_tag is 4 bits
         private CCE[] cces;
         private DSE[] dses;
         private FIL[] fils;
         private int curElem, curCCE, curDSE, curFIL;
         private float[][] data;
+        private float[][] dataMono, dataStereo; //the buffers for one and two channels, sharing the first
 
         public SyntacticElements(DecoderConfig config)
         {
@@ -27,6 +37,9 @@ namespace SharpJaad.AAC.Syntax
 
             pce = new PCE();
             elements = new Element[4 * Constants.MAX_ELEMENTS];
+            elementIsLFE = new bool[elements.Length];
+            spareSCEs = new SCE_LFE[elements.Length];
+            spareCPEs = new CPE[elements.Length];
             cces = new CCE[Constants.MAX_ELEMENTS];
             dses = new DSE[Constants.MAX_ELEMENTS];
             fils = new FIL[Constants.MAX_ELEMENTS];
@@ -34,10 +47,19 @@ namespace SharpJaad.AAC.Syntax
             for (int i = 0; i < Constants.MAX_ELEMENTS; i++)
             {
                 dses[i] = new DSE();
-                fils[i] = new FIL(config.IsSBRDownSampled());
+                fils[i] = new FIL(IsSBRDownSampled());
             }
 
             StartNewFrame();
+        }
+
+        /// <summary>
+        /// SBR in downsampled mode: the output keeps the sample rate of the core. Signaled in the decoder specific info
+        /// (the SBR sample rate is the core one), and for implicit SBR above a core of 24 kHz (as FAAD2 does).
+        /// </summary>
+        private bool IsSBRDownSampled()
+        {
+            return config.IsSBRDownSampled() || (!config.IsSBRPresent() && config.GetSampleFrequency().GetFrequency() > 24000);
         }
 
         public void StartNewFrame()
@@ -63,12 +85,14 @@ namespace SharpJaad.AAC.Syntax
             {
                 while (content && (type = input.ReadBits(3)) != Constants.ELEMENT_END)
                 {
+                    // the SBR data of a FIL belongs to the last SCE or CPE: DSE, PCE and FIL elements in between do not
+                    // change it (as in FAAD2 and FFmpeg); SBR for a CCE is not supported and skipped
                     switch (type)
                     {
                         case Constants.ELEMENT_SCE:
                         case Constants.ELEMENT_LFE:
                             //LOGGER.finest("SCE");
-                            prev = DecodeSCE_LFE(input);
+                            prev = DecodeSCE_LFE(input, type == Constants.ELEMENT_LFE);
                             break;
                         case Constants.ELEMENT_CPE:
                             //LOGGER.finest("CPE");
@@ -82,17 +106,14 @@ namespace SharpJaad.AAC.Syntax
                         case Constants.ELEMENT_DSE:
                             //LOGGER.finest("DSE");
                             DecodeDSE(input);
-                            prev = null;
                             break;
                         case Constants.ELEMENT_PCE:
                             //LOGGER.finest("PCE");
                             DecodePCE(input);
-                            prev = null;
                             break;
                         case Constants.ELEMENT_FIL:
                             //LOGGER.finest("FIL");
                             DecodeFIL(input, prev);
-                            prev = null;
                             break;
                     }
                 }
@@ -106,37 +127,37 @@ namespace SharpJaad.AAC.Syntax
                 switch (config.GetChannelConfiguration())
                 {
                     case ChannelConfiguration.CHANNEL_CONFIG_MONO:
-                        DecodeSCE_LFE(input);
+                        DecodeSCE_LFE(input, false);
                         break;
                     case ChannelConfiguration.CHANNEL_CONFIG_STEREO:
                         DecodeCPE(input);
                         break;
                     case ChannelConfiguration.CHANNEL_CONFIG_STEREO_PLUS_CENTER:
-                        DecodeSCE_LFE(input);
+                        DecodeSCE_LFE(input, false);
                         DecodeCPE(input);
                         break;
                     case ChannelConfiguration.CHANNEL_CONFIG_STEREO_PLUS_CENTER_PLUS_REAR_MONO:
-                        DecodeSCE_LFE(input);
+                        DecodeSCE_LFE(input, false);
                         DecodeCPE(input);
-                        DecodeSCE_LFE(input);
+                        DecodeSCE_LFE(input, false);
                         break;
                     case ChannelConfiguration.CHANNEL_CONFIG_FIVE:
-                        DecodeSCE_LFE(input);
+                        DecodeSCE_LFE(input, false);
                         DecodeCPE(input);
                         DecodeCPE(input);
                         break;
                     case ChannelConfiguration.CHANNEL_CONFIG_FIVE_PLUS_ONE:
-                        DecodeSCE_LFE(input);
+                        DecodeSCE_LFE(input, false);
                         DecodeCPE(input);
                         DecodeCPE(input);
-                        DecodeSCE_LFE(input);
+                        DecodeSCE_LFE(input, true);
                         break;
                     case ChannelConfiguration.CHANNEL_CONFIG_SEVEN_PLUS_ONE:
-                        DecodeSCE_LFE(input);
+                        DecodeSCE_LFE(input, false);
                         DecodeCPE(input);
                         DecodeCPE(input);
                         DecodeCPE(input);
-                        DecodeSCE_LFE(input);
+                        DecodeSCE_LFE(input, true);
                         break;
                     default:
                         throw new AACException("unsupported channel configuration for error resilience: " + config.GetChannelConfiguration());
@@ -147,27 +168,57 @@ namespace SharpJaad.AAC.Syntax
             bitsRead = input.GetPosition() - start;
         }
 
-        private Element DecodeSCE_LFE(BitStream input)
+        private Element DecodeSCE_LFE(BitStream input, bool lfe)
         {
-            if (elements[curElem] == null) elements[curElem] = new SCE_LFE(config);
-            ((SCE_LFE)elements[curElem]).Decode(input, config);
+            if (curElem == elements.Length) throw new AACException("too many elements");
+            int tag = input.PeekBits(4);
+            SCE_LFE[] pool = lfe ? lfes : sces;
+            SCE_LFE e = pool[tag];
+            if (e == null) e = pool[tag] = new SCE_LFE(config);
+            else if (IsInFrame(e)) e = spareSCEs[curElem] ?? (spareSCEs[curElem] = new SCE_LFE(config));
+            e.Decode(input, config);
+            elements[curElem] = e;
+            elementIsLFE[curElem] = lfe;
             curElem++;
-            return elements[curElem - 1];
+            return e;
         }
 
         private Element DecodeCPE(BitStream input)
         {
-            if (elements[curElem] == null) elements[curElem] = new CPE(config);
-            ((CPE)elements[curElem]).Decode(input, config);
+            if (curElem == elements.Length) throw new AACException("too many elements");
+            int tag = input.PeekBits(4);
+            CPE e = cpes[tag];
+            if (e == null) e = cpes[tag] = new CPE(config);
+            else if (IsInFrame(e)) e = spareCPEs[curElem] ?? (spareCPEs[curElem] = new CPE(config));
+            e.Decode(input, config);
+            elements[curElem] = e;
+            elementIsLFE[curElem] = false;
             curElem++;
-            return elements[curElem - 1];
+            return e;
+        }
+
+        private bool IsInFrame(Element e)
+        {
+            for (int i = 0; i < curElem; i++)
+            {
+                if (elements[i] == e) return true;
+            }
+            return false;
         }
 
         private void DecodeCCE(BitStream input)
         {
             if (curCCE == Constants.MAX_ELEMENTS) throw new AACException("too much CCE elements");
-            if (cces[curCCE] == null) cces[curCCE] = new CCE(config);
-            cces[curCCE].Decode(input, config);
+            // by instance tag, as the other elements: a CCE keeps the state of its channel
+            int tag = input.PeekBits(4);
+            CCE cce = cceByTag[tag];
+            if (cce == null) cce = cceByTag[tag] = new CCE(config);
+            for (int i = 0; i < curCCE; i++)
+            {
+                if (cces[i] == cce) throw new AACException("CCE instance tag used twice in a frame: " + tag);
+            }
+            cce.Decode(input, config);
+            cces[curCCE] = cce;
             curCCE++;
         }
 
@@ -184,14 +235,14 @@ namespace SharpJaad.AAC.Syntax
             pce.Decode(input);
             config.SetProfile(pce.GetProfile());
             config.SetSampleFrequency(pce.GetSampleFrequency());
-            config.SetChannelConfiguration((ChannelConfiguration)pce.GetChannelCount());
+            config.SetChannelCountFromPCE(pce);
         }
 
         private void DecodeFIL(BitStream input, Element prev)
         {
             if (curFIL == Constants.MAX_ELEMENTS) throw new AACException("too much FIL elements");
             // as when the FIL was created on first use: it takes the configuration at that point
-            fils[curFIL].InitOnFirstUse(config.IsSBRDownSampled());
+            fils[curFIL].InitOnFirstUse(IsSBRDownSampled());
             fils[curFIL].Decode(input, prev, config.GetSampleFrequency(), config.IsSBREnabled(), config.IsSmallFrameUsed());
             curFIL++;
 
@@ -208,49 +259,59 @@ namespace SharpJaad.AAC.Syntax
             SampleFrequency sf = config.GetSampleFrequency();
             //final ChannelConfiguration channels = config.getChannelConfiguration();
 
-            int chs = (int)config.GetChannelConfiguration();
+            int chs = config.GetChannelCount();
             if (chs == 1 && psPresent) chs++;
-            int mult = sbrPresent ? 2 : 1;
+            int mult = sbrPresent && !IsSBRDownSampled() ? 2 : 1;
+            int length = mult * config.GetFrameLength();
             //only reallocate if needed
-            if (data == null || chs != data.Length || mult * config.GetFrameLength() != data[0].Length)
+            if (data == null || chs != data.Length || length != data[0].Length)
             {
-                data = new float[chs][];
-
-                for (int i = 0; i < chs; i++)
+                if (chs <= 2 && dataStereo != null && dataStereo[0].Length == length)
                 {
-                    data[i] = new float[mult * config.GetFrameLength()];
+                    // mono to PS stereo: the buffers are ready (each is overwritten in full by every frame)
+                    data = chs == 1 ? dataMono : dataStereo;
+                }
+                else
+                {
+                    data = new float[chs][];
+
+                    for (int i = 0; i < chs; i++)
+                    {
+                        data[i] = new float[length];
+                    }
+                    // a mono stream turns stereo when PS starts: the buffers for that are allocated along
+                    dataMono = chs == 1 ? data : chs == 2 ? new float[][] { data[0] } : null;
+                    dataStereo = chs == 1 ? new float[][] { data[0], new float[length] } : chs == 2 ? data : null;
                 }
             }
 
+            //the coupling channels first: their output is added to the channels they couple to
+            for (int i = 0; i < curCCE; i++) cces[i].Process(profile, sf);
+
             int channel = 0;
-            Element e;
-            SCE_LFE scelfe;
-            CPE cpe;
-            for (int i = 0; i < elements.Length && channel < chs; i++)
+            PCE channelMap = config.GetPCE();
+            for (int i = 0; i < curElem; i++)
             {
-                e = elements[i];
-                if (e == null) continue;
-                if (e is SCE_LFE)
+                Element e = elements[i];
+                bool isCPE = e is CPE;
+                // with a PCE the channels follow its order of the elements, without one the bitstream order
+                if (channelMap != null)
                 {
-                    scelfe = (SCE_LFE)e;
-                    channel += ProcessSingle(scelfe, filterBank, channel, profile, sf);
+                    int mapped = channelMap.FindChannel(isCPE, elementIsLFE[i], e.GetElementInstanceTag());
+                    if (mapped >= 0) channel = mapped;
                 }
-                else if (e is CPE)
+                if (channel + (isCPE ? 2 : 1) > chs) continue;
+
+                if (isCPE)
                 {
-                    cpe = (CPE)e;
-                    ProcessPair(cpe, filterBank, channel, profile, sf);
+                    ProcessPair((CPE)e, filterBank, channel, profile, sf);
                     channel += 2;
                 }
-                else if (e is CCE)
-                {
-                    //applies invquant and save the result in the CCE
-                    ((CCE)e).Process();
-                    channel++;
-                }
+                else channel += ProcessSingle((SCE_LFE)e, elementIsLFE[i], filterBank, channel, profile, sf);
             }
         }
 
-        private int ProcessSingle(SCE_LFE scelfe, FilterBank filterBank, int channel, Profile profile, SampleFrequency sf)
+        private int ProcessSingle(SCE_LFE scelfe, bool lfe, FilterBank filterBank, int channel, Profile profile, SampleFrequency sf)
         {
             ICStream ics = scelfe.GetICStream();
             ICSInfo info = ics.GetInfo();
@@ -261,17 +322,17 @@ namespace SharpJaad.AAC.Syntax
             float[] iqData = ics.GetInvQuantData();
 
             //prediction
-            if ((profile == Profile.AAC_MAIN) && info.IsICPredictionPresent()) info.GetICPrediction().Process(ics, iqData, sf);
+            if (profile == Profile.AAC_MAIN && info.GetICPrediction() != null) info.GetICPrediction().Process(ics, iqData, sf);
             if (ltp != null) ltp.Process(ics, iqData, filterBank, sf);
 
             //dependent coupling
-            processDependentCoupling(false, elementID, CCE.BEFORE_TNS, iqData, null);
+            if (!lfe) processDependentCoupling(false, elementID, CCE.BEFORE_TNS, iqData, null);
 
             //TNS
             if (ics.IsTNSDataPresent()) ics.GetTNS().Process(ics, iqData, sf, false);
 
             //dependent coupling
-            processDependentCoupling(false, elementID, CCE.AFTER_TNS, iqData, null);
+            if (!lfe) processDependentCoupling(false, elementID, CCE.AFTER_TNS, iqData, null);
 
             //filterbank
             filterBank.Process(info.GetWindowSequence(), info.GetWindowShape(ICSInfo.CURRENT), info.GetWindowShape(ICSInfo.PREVIOUS), iqData, data[channel], channel);
@@ -279,7 +340,7 @@ namespace SharpJaad.AAC.Syntax
             if (ltp != null) ltp.UpdateState(data[channel], filterBank.GetOverlap(channel), profile);
 
             //dependent coupling
-            ProcessIndependentCoupling(false, elementID, data[channel], null);
+            if (!lfe) ProcessIndependentCoupling(false, elementID, data[channel], null);
 
             //gain control
             if (ics.IsGainControlPresent()) ics.GetGainControl().Process(iqData, info.GetWindowShape(ICSInfo.CURRENT), info.GetWindowShape(ICSInfo.PREVIOUS), info.GetWindowSequence());
@@ -289,14 +350,14 @@ namespace SharpJaad.AAC.Syntax
             if (sbrPresent && config.IsSBREnabled())
             {
                 //if(data[channel].Length==config.getFrameLength()) LOGGER.log(Level.WARNING, "SBR data present, but buffer has normal size!");
-                SBR sbr = scelfe.GetSBR();
-                if (sbr.IsPSUsed())
+                SBR sbr = scelfe.GetOrCreateSBR(sf, false, IsSBRDownSampled(), config.IsSmallFrameUsed());
+                if (sbr.IsPSUsed() && channel + 1 < data.Length)
                 {
                     chs = 2;
-                    scelfe.GetSBR().ProcessPS(data[channel], data[channel + 1], false);
+                    sbr.ProcessPS(data[channel], data[channel + 1], false);
                 }
                 else
-                    scelfe.GetSBR().Process(data[channel], false);
+                    sbr.Process(data[channel], false);
             }
             return chs;
         }
@@ -320,8 +381,8 @@ namespace SharpJaad.AAC.Syntax
             //main prediction
             if (profile == Profile.AAC_MAIN)
             {
-                if (info1.IsICPredictionPresent()) info1.GetICPrediction().Process(ics1, iqData1, sf);
-                if (info2.IsICPredictionPresent()) info2.GetICPrediction().Process(ics2, iqData2, sf);
+                if (info1.GetICPrediction() != null) info1.GetICPrediction().Process(ics1, iqData1, sf);
+                if (info2.GetICPrediction() != null) info2.GetICPrediction().Process(ics2, iqData2, sf);
             }
             //IS
             IS.Process(cpe, iqData1, iqData2);
@@ -358,7 +419,7 @@ namespace SharpJaad.AAC.Syntax
             if (sbrPresent && config.IsSBREnabled())
             {
                 //if(data[channel].Length==config.getFrameLength()) LOGGER.log(Level.WARNING, "SBR data present, but buffer has normal size!");
-                cpe.GetSBR().Process(data[channel], data[channel + 1], false);
+                cpe.GetOrCreateSBR(sf, true, IsSBRDownSampled(), config.IsSmallFrameUsed()).Process(data[channel], data[channel + 1], false);
             }
         }
 
@@ -366,7 +427,7 @@ namespace SharpJaad.AAC.Syntax
         {
             int index, c, chSelect;
             CCE cce;
-            for (int i = 0; i < cces.Length; i++)
+            for (int i = 0; i < curCCE; i++)
             {
                 cce = cces[i];
                 index = 0;
@@ -398,7 +459,7 @@ namespace SharpJaad.AAC.Syntax
         {
             int index, c, chSelect;
             CCE cce;
-            for (int i = 0; i < cces.Length; i++)
+            for (int i = 0; i < curCCE; i++)
             {
                 cce = cces[i];
                 index = 0;
@@ -435,7 +496,7 @@ namespace SharpJaad.AAC.Syntax
             // mono can't be upgraded after implicit PS occures
             int chs = Math.Max(data.Length, 2);
 
-            int mult = sbrPresent && config.IsSBREnabled() ? 2 : 1;
+            int mult = sbrPresent && config.IsSBREnabled() && !IsSBRDownSampled() ? 2 : 1;
             int length = mult * config.GetFrameLength();
             int freq = mult * config.GetSampleFrequency().GetFrequency();
 

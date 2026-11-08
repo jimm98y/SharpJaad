@@ -191,7 +191,8 @@ namespace SharpJaad.AAC.Syntax
             _windowShape[CURRENT] = info._windowShape[CURRENT];
             _maxSFB = info._maxSFB;
             _predictionDataPresent = info._predictionDataPresent;
-            if (_predictionDataPresent) _icPredict = info._icPredict;
+            // the prediction data is common, the predictors are not: each channel keeps its own states
+            if (_predictionDataPresent && _icPredict != null && info._icPredict != null) _icPredict.CopyPredictionData(info._icPredict);
 
             _windowCount = info._windowCount;
             _windowGroupCount = info._windowGroupCount;
@@ -199,7 +200,8 @@ namespace SharpJaad.AAC.Syntax
             _swbCount = info._swbCount;
             _swbOffsets = info._swbOffsets; // static read-only table, safe to share
 
-            if (_predictionDataPresent)
+            //the LTP profile has LTP data for the second channel too; in AAC Main the prediction data is common
+            if (_predictionDataPresent && _ltPredict != null)
             {
                 _ltPredict.Decode(input, this, conf.GetProfile());
             }

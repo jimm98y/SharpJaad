@@ -1,4 +1,6 @@
-﻿using SharpJaad.AAC.Huffman;
+﻿using SharpJaad.AAC.Filterbank;
+using SharpJaad.AAC.Huffman;
+using SharpJaad.AAC.Tools;
 using System;
 
 namespace SharpJaad.AAC.Syntax
@@ -26,9 +28,14 @@ namespace SharpJaad.AAC.Syntax
 		 *[2] list of gains for left channel; [3] lists of gains for both channels
 		 */
         private readonly float[,] _gain;
+        private readonly DecoderConfig _config;
+        //independent coupling adds the output of the filterbank: the CCE has its own, with the overlap of its channel
+        private FilterBank _filterBank;
+        private float[] _timeData;
 
         public CCE(DecoderConfig config)
         {
+            _config = config;
             _ics = new ICStream(config);
             _channelPair = new bool[8];
             _idSelect = new int[8];
@@ -64,7 +71,7 @@ namespace SharpJaad.AAC.Syntax
         public void Decode(BitStream input, DecoderConfig conf)
         {
             ReadElementInstanceTag(input);
-            _couplingPoint = 2 * input.ReadBit();
+            bool independent = input.ReadBool(); //ind_sw_cce_flag
             _coupledCount = input.ReadBits(3);
             int gainCount = 0;
             int i;
@@ -80,8 +87,9 @@ namespace SharpJaad.AAC.Syntax
                 }
                 else _chSelect[i] = 2;
             }
-            _couplingPoint += input.ReadBit();
-            _couplingPoint |= _couplingPoint >> 1;
+            //cc_domain: dependent coupling before or after TNS; independent coupling is after the filterbank
+            bool afterTNS = input.ReadBool();
+            _couplingPoint = independent ? AFTER_IMDCT : afterTNS ? AFTER_TNS : BEFORE_TNS;
 
             bool sign = input.ReadBool();
             double scale = CCE_SCALE[input.ReadBits(2)];
@@ -121,7 +129,7 @@ namespace SharpJaad.AAC.Syntax
                                     {
                                         int s = 1;
                                         t = xg += t;
-                                        if (!sign)
+                                        if (sign)
                                         {
                                             s -= 2 * (t & 0x1);
                                             t >>= 1;
@@ -139,16 +147,36 @@ namespace SharpJaad.AAC.Syntax
 
         public void Process()
         {
-            //iqData = ics.getInvQuantData();
+        }
+
+        /// <summary>
+        /// The processing of the CCE's own channel before its gains are applied to the coupled channels: prediction,
+        /// and for independent coupling TNS and the filterbank.
+        /// </summary>
+        internal void Process(Profile profile, SampleFrequency sf)
+        {
+            ICSInfo info = _ics.GetInfo();
+            float[] iqData = _ics.GetInvQuantData();
+            if (profile == Profile.AAC_MAIN && info.GetICPrediction() != null) info.GetICPrediction().Process(_ics, iqData, sf);
+            if (_couplingPoint != AFTER_IMDCT) return;
+
+            if (_ics.IsTNSDataPresent()) _ics.GetTNS().Process(_ics, iqData, sf, false);
+            if (_filterBank == null)
+            {
+                _filterBank = new FilterBank(_config.IsSmallFrameUsed(), 1);
+                _timeData = new float[_config.GetFrameLength()];
+            }
+            _filterBank.Process(info.GetWindowSequence(), info.GetWindowShape(ICSInfo.CURRENT), info.GetWindowShape(ICSInfo.PREVIOUS), iqData, _timeData, 0);
         }
 
         public void ApplyIndependentCoupling(int index, float[] data)
         {
-            double g = _gain[index, 0];
-            float[] iqData = _ics.GetInvQuantData();
-            for (int i = 0; i < data.Length; i++)
+            if (_timeData == null) return;
+            float g = _gain[index, 0];
+            int length = Math.Min(data.Length, _timeData.Length);
+            for (int i = 0; i < length; i++)
             {
-                data[i] += (float)(g * iqData[i]);
+                data[i] += g * _timeData[i];
             }
         }
 

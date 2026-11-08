@@ -24,6 +24,7 @@
 	<ItemGroup>
 		<None Include="..\SharpJaadMain\aac-sample.mp4" Link="TestData\aac-sample.mp4" CopyToOutputDirectory="PreserveNewest" />
 		<None Include="TestData\conformance.txt" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="TestData\reference.txt" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 
 </Project>

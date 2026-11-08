@@ -1,15 +1,10 @@
 using SharpJaad.AAC;
-using SharpJaad.AAC.Syntax;
 using SharpJaad.ADTS;
 using SharpJaad.MP4;
 using SharpJaad.MP4.API;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-
-// decoding shares static state (the PNS noise generator of ICStream), so the tests must not run at the same time
-[assembly: Xunit.CollectionBehavior(DisableTestParallelization = true)]
 
 namespace SharpJaad.Tests
 {
@@ -51,70 +46,9 @@ namespace SharpJaad.Tests
             return stream;
         }
 
-        /// <summary>
-        /// Creates the decoder for a stream. DecoderConfig cannot parse explicit SBR/PS signaling (object type 5 or 29)
-        /// nor a program config element in the decoder specific info, so for those the core is configured directly
-        /// and SBR/PS are decoded as implicitly signaled.
-        /// </summary>
         public static Decoder CreateDecoder(byte[] dsi)
         {
-            try
-            {
-                return new Decoder(dsi);
-            }
-            catch (AACException) when ((dsi[0] >> 3) == 5 || (dsi[0] >> 3) == 29 || ((dsi[1] >> 3) & 15) == 0)
-            {
-                return new Decoder(FallbackConfig(dsi));
-            }
-        }
-
-        private static DecoderConfig FallbackConfig(byte[] d)
-        {
-            int bits = 0;
-            int Read(int n)
-            {
-                int v = 0;
-                for (int i = 0; i < n; i++, bits++) v = (v << 1) | ((d[bits >> 3] >> (7 - (bits & 7))) & 1);
-                return v;
-            }
-
-            int aot = Read(5);
-            int sfi = Read(4);
-            if (sfi == 15) Read(24);
-            int ch = Read(4);
-            if (aot == 5 || aot == 29)
-            {
-                int esf = Read(4);
-                if (esf == 15) Read(24);
-                aot = Read(5);
-            }
-            if (ch == 0)
-            {
-                // GASpecificConfig, then program_config_element: count its channels
-                Read(3); Read(4); Read(2); Read(4);
-                int front = Read(4), side = Read(4), back = Read(4), lfe = Read(2);
-                Read(3); Read(4);
-                if (Read(1) == 1) Read(4);
-                if (Read(1) == 1) Read(4);
-                if (Read(1) == 1) Read(3);
-                int n = lfe;
-                for (int i = 0; i < front + side + back; i++) { n += 1 + Read(1); Read(4); }
-                ch = n == 8 ? 7 : n;
-            }
-
-            var config = new DecoderConfig();
-            config.SetProfile((Profile)aot);
-            config.SetSampleFrequency((SampleFrequency)sfi);
-            config.SetChannelConfiguration((ChannelConfiguration)ch);
-            return config;
-        }
-
-        /// <summary>
-        /// Puts the noise generator shared by all decoders back to its initial state, as in a new process.
-        /// </summary>
-        public static void ResetNoiseGenerator()
-        {
-            typeof(ICStream).GetField("randomState", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, 0x1F2E3D4C);
+            return new Decoder(dsi);
         }
 
         public const ulong FnvOffset = 1469598103934665603UL;

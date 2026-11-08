@@ -9,9 +9,10 @@ namespace SharpJaad.Tests
 {
     /// <summary>
     /// Decodes the AAC conformance streams of the FFmpeg test suite (https://fate-suite.ffmpeg.org/aac/) and compares
-    /// the PCM with what SharpJaad 0.1.1 produced, listed in TestData/conformance.txt. The streams are not in the
-    /// repository: set SHARPJAAD_CONFORMANCE_DIR to a folder holding them (see doc/testing.md). Without it the tests
-    /// only report that they did not run.
+    /// the PCM with the output recorded in TestData/conformance.txt: any change of the output shows, also where no
+    /// reference exists (ReferenceTests compares with FFmpeg). The streams are not in the repository: set
+    /// SHARPJAAD_CONFORMANCE_DIR to a folder holding them (see doc/testing.md). Without it the tests only report that
+    /// they did not run.
     /// </summary>
     public class ConformanceTests
     {
@@ -43,7 +44,7 @@ namespace SharpJaad.Tests
 
         [Theory]
         [MemberData(nameof(Streams))]
-        public void DecodesToTheSamePcmAsTheLastRelease(string name, string expected)
+        public void DecodesToTheRecordedPcm(string name, string expected)
         {
             string path = Locate(name);
             if (path == null)
@@ -52,9 +53,42 @@ namespace SharpJaad.Tests
                 return;
             }
 
-            // as in a new process, which is how conformance.txt was made
-            TestStreams.ResetNoiseGenerator();
-            Assert.Equal(expected, Comparable(TestStreams.Summarize(path)));
+            string actual = TestStreams.Summarize(path);
+            _output.WriteLine($"{name}: {actual}"); // the line for conformance.txt
+            Assert.Equal(expected, Comparable(actual));
+        }
+
+        [Fact]
+        public void TheNoiseOfPnsDoesNotDependOnOtherDecoders()
+        {
+            // al17 and al18 use PNS: decoding one while another decoder decodes the other must not change its noise
+            string pathA = Locate("al17_44.mp4"), pathB = Locate("al18_44.mp4");
+            if (pathA == null || pathB == null)
+            {
+                _output.WriteLine($"not run: al17_44.mp4 or al18_44.mp4 not found, {DirectoryVariable} = '{Environment.GetEnvironmentVariable(DirectoryVariable)}'");
+                return;
+            }
+            TestStreams.Stream a = TestStreams.Read(pathA), b = TestStreams.Read(pathB);
+
+            var alone = new AAC.Decoder(a.DecoderSpecificInfo);
+            var aloneBuffer = new AAC.SampleBuffer();
+            var expected = new List<byte[]>();
+            foreach (byte[] frame in a.Frames)
+            {
+                alone.DecodeFrame(frame, aloneBuffer);
+                expected.Add((byte[])aloneBuffer.Data.Clone());
+            }
+
+            var first = new AAC.Decoder(a.DecoderSpecificInfo);
+            var second = new AAC.Decoder(b.DecoderSpecificInfo);
+            var firstBuffer = new AAC.SampleBuffer();
+            var secondBuffer = new AAC.SampleBuffer();
+            for (int i = 0; i < a.Frames.Count; i++)
+            {
+                if (i < b.Frames.Count) second.DecodeFrame(b.Frames[i], secondBuffer);
+                first.DecodeFrame(a.Frames[i], firstBuffer);
+                Assert.Equal(expected[i], firstBuffer.Data);
+            }
         }
 
         // exception messages come from the runtime and may be localized: compare the exception type only

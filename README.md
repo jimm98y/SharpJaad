@@ -43,7 +43,7 @@ Buffer.BlockCopy(buffer.Data, 0, pcm, 0, buffer.Data.Length);
 ```
 
 ### Allocations
-After the first frame, `DecodeFrame` allocates nothing for AAC-LC, AAC Main, AAC LTP and HE-AAC (SBR) streams: the decoder reuses its buffers, and the `SampleBuffer` keeps its `Data` array as long as the frame size stays the same. Reuse one `SampleBuffer` for all frames to keep it that way, and copy `Data` if you need it after the next call. Parametric stereo (HE-AACv2) still allocates per frame, and so does a frame that fails to decode (its exception).
+After the first frame, `DecodeFrame` allocates nothing for AAC-LC, AAC Main, AAC LTP, HE-AAC (SBR) and HE-AACv2 (PS) streams: the decoder reuses its buffers, and the `SampleBuffer` keeps its `Data` array as long as the frame size stays the same. Reuse one `SampleBuffer` for all frames to keep it that way, and copy `Data` if you need it after the next call. Only a frame that fails to decode allocates (its exception). For this, a mono HE-AAC decoder creates its parametric stereo state (about 130 KB) up front, as PS can start in any frame.
 
 ## SharpJaadMain
 A sample application that can extract AAC audio from a (MP4) file and transcode it into a WAV file.

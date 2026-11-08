@@ -194,6 +194,17 @@ namespace SharpJaad.AAC.Sbr
             return 0;
         }
 
+        // stores the gains of envelope l in slot n of the smoothing ring buffer of the channel
+        private static void SaveGains(SBR sbr, HFAdjustment adj, int ch, int n, int l)
+        {
+            float[] g = adj.G_lim_boost[l], q = adj.Q_M_lim_boost[l];
+            for (int m = 0; m < sbr._M; m++)
+            {
+                sbr._G_temp_prev[ch, n, m] = g[m];
+                sbr._Q_temp_prev[ch, n, m] = q[m];
+            }
+        }
+
         private static void HfAssembly(SBR sbr, HFAdjustment adj,
             float[,,,] Xsbr, int ch)
         {
@@ -229,8 +240,7 @@ namespace SharpJaad.AAC.Sbr
                 {
                     for (n = 0; n < 4; n++)
                     {
-                        Array.Copy(adj.G_lim_boost[l], 0, sbr._G_temp_prev, 2 * 5 * ch + 5 * n + 0, sbr._M);
-                        Array.Copy(adj.Q_M_lim_boost[l], 0, sbr._Q_temp_prev, 2 * 5 * ch + 5 * n + 0, sbr._M);
+                        SaveGains(sbr, adj, ch, n, l);
                     }
                     /* reset ringbuffer index */
                     sbr._GQ_ringbuf_index[ch] = 4;
@@ -240,8 +250,7 @@ namespace SharpJaad.AAC.Sbr
                 for (i = sbr._t_E[ch, l]; i < sbr._t_E[ch, l + 1]; i++)
                 {
                     /* load new values into ringbuffer */
-                    Array.Copy(adj.G_lim_boost[l], 0, sbr._G_temp_prev, 2 * 5 * ch + 5 * sbr._GQ_ringbuf_index[ch] + 0, sbr._M);
-                    Array.Copy(adj.Q_M_lim_boost[l], 0, sbr._Q_temp_prev, 2 * 5 * ch + 5 * sbr._GQ_ringbuf_index[ch] + 0, sbr._M);
+                    SaveGains(sbr, adj, ch, sbr._GQ_ringbuf_index[ch], l);
 
                     for (m = 0; m < sbr._M; m++)
                     {

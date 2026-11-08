@@ -19,15 +19,24 @@ namespace SharpJaad.AAC.Syntax
 
         public void DecodeSBR(BitStream input, SampleFrequency sf, int count, bool stereo, bool crc, bool downSampled, bool smallFrames)
         {
+            GetOrCreateSBR(sf, stereo, downSampled, smallFrames).Decode(input, count, crc);
+        }
+
+        /// <summary>
+        /// The SBR of the element, created if the element has had no SBR data: in a stream with SBR such an element
+        /// (an LFE for example) is still upsampled by the SBR filterbanks, which keeps it in time with the others.
+        /// </summary>
+        internal SBR GetOrCreateSBR(SampleFrequency sf, bool stereo, bool downSampled, bool smallFrames)
+        {
             if (_sbr == null)
             {
-                /* implicit SBR signalling, see 4.6.18.2.6 */
-                int fq = sf.GetFrequency();
-                if (fq < 24000 && !downSampled)
-                    sf = SampleFrequencyExtensions.FromFrequency(2 * fq);
+                // SBR works at twice the core sample rate, also in downsampled mode (as in FAAD2), where only its
+                // synthesis filterbank is halved; the tables of SBR depend on this rate
+                SampleFrequency doubled = SampleFrequencyExtensions.FromFrequency(2 * sf.GetFrequency());
+                if (doubled != SampleFrequency.SAMPLE_FREQUENCY_NONE) sf = doubled;
                 _sbr = new SBR(smallFrames, stereo, sf, downSampled);
             }
-            _sbr.Decode(input, count, crc);
+            return _sbr;
         }
 
         public bool IsSBRPresent()

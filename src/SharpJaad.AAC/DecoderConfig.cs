@@ -7,6 +7,9 @@ namespace SharpJaad.AAC
         private Profile _profile, _extProfile;
         private SampleFrequency _sampleFrequency;
         private ChannelConfiguration _channelConfiguration;
+        private int _pceChannelCount; //the channels of a program config element, 0 if there is none
+        private PCE _pce;
+        internal int _pnsRandomState = 0x1F2E3D4C; //the random generator of PNS, per decoder
         private bool _frameLengthFlag;
         private bool _dependsOnCoreCoder;
         private int _coreCoderDelay;
@@ -49,7 +52,34 @@ namespace SharpJaad.AAC
 
         public void SetChannelConfiguration(ChannelConfiguration channelConfiguration)
         {
+            _pceChannelCount = 0;
+            _pce = null;
             _channelConfiguration = channelConfiguration;
+        }
+
+        /// <summary>
+        /// The number of channels: the configuration is the number, except for 7.1 (7), or the channels of a program config
+        /// element, which are also set as the configuration.
+        /// </summary>
+        internal int GetChannelCount()
+        {
+            if (_pceChannelCount > 0) return _pceChannelCount;
+            return _channelConfiguration == ChannelConfiguration.CHANNEL_CONFIG_SEVEN_PLUS_ONE ? 8 : (int)_channelConfiguration;
+        }
+
+        internal void SetChannelCountFromPCE(PCE pce)
+        {
+            _pce = pce;
+            _pceChannelCount = pce.GetChannelCount();
+            _channelConfiguration = (ChannelConfiguration)_pceChannelCount;
+        }
+
+        /// <summary>
+        /// The program config element that set the channels, null if there is none.
+        /// </summary>
+        internal PCE GetPCE()
+        {
+            return _pce;
         }
 
         public int GetCoreCoderDelay()
@@ -170,25 +200,22 @@ namespace SharpJaad.AAC
             try
             {
                 config._profile = ReadProfile(input);
-
-                int sf = input.ReadBits(4);
-                if (sf == 0xF) config._sampleFrequency = SampleFrequencyExtensions.FromFrequency(input.ReadBits(24));
-                else config._sampleFrequency = (SampleFrequency)sf;
+                config._sampleFrequency = ReadSampleFrequency(input);
                 config._channelConfiguration = (ChannelConfiguration)input.ReadBits(4);
+
+                // explicit SBR (5) or SBR+PS (29) signaling: the extension sample rate, then the object type of the core
+                if (config._profile == Profile.AAC_SBR || (int)config._profile == AOT_PS)
+                {
+                    config._extProfile = Profile.AAC_SBR;
+                    config._sbrPresent = true;
+                    SampleFrequency extensionFrequency = ReadSampleFrequency(input);
+                    //if sample frequencies are the same: downsample SBR
+                    config._downSampledSBR = config._sampleFrequency == extensionFrequency;
+                    config._profile = ReadProfile(input);
+                }
 
                 switch (config._profile)
                 {
-                    case Profile.AAC_SBR:
-                        config._extProfile = config._profile;
-                        config._sbrPresent = true;
-                        sf = input.ReadBits(4);
-                        //TODO: 24 bits already read; read again?
-                        //if(sf==0xF) config.sampleFrequency = SampleFrequency.forFrequency(in.readBits(24));
-                        //if sample frequencies are the same: downsample SBR
-                        config._downSampledSBR = (int)config._sampleFrequency == sf;
-                        config._sampleFrequency = (SampleFrequency)sf;
-                        config._profile = ReadProfile(input);
-                        break;
                     case Profile.AAC_MAIN:
                     case Profile.AAC_LC:
                     case Profile.AAC_SSR:
@@ -204,6 +231,13 @@ namespace SharpJaad.AAC
                         else config._coreCoderDelay = 0;
                         config._extensionFlag = input.ReadBool();
 
+                        if (config._channelConfiguration == ChannelConfiguration.CHANNEL_CONFIG_NONE)
+                        {
+                            PCE pce = new PCE();
+                            pce.Decode(input);
+                            config.SetChannelCountFromPCE(pce);
+                        }
+
                         if (config._extensionFlag)
                         {
                             if (config._profile.IsErrorResilientProfile())
@@ -216,18 +250,7 @@ namespace SharpJaad.AAC
                             input.SkipBit();
                         }
 
-                        if (config._channelConfiguration == ChannelConfiguration.CHANNEL_CONFIG_NONE)
-                        {
-                            //TODO: is this working correct? -> ISO 14496-3 part 1: 1.A.4.3
-                            input.SkipBits(3); //PCE
-                            PCE pce = new PCE();
-                            pce.Decode(input);
-                            config._profile = pce.GetProfile();
-                            config._sampleFrequency = pce.GetSampleFrequency();
-                            config._channelConfiguration = (ChannelConfiguration)pce.GetChannelCount();
-                        }
-
-                        if (input.GetBitsLeft() > 10) ReadSyncExtension(input, config);
+                        if (config._extProfile != Profile.AAC_SBR && input.GetBitsLeft() >= 16) ReadSyncExtension(input, config);
                         break;
                     default:
                         throw new AACException("profile not supported: " + (int)config._profile);
@@ -247,32 +270,32 @@ namespace SharpJaad.AAC
             return (Profile)i;
         }
 
+        private const int AOT_PS = 29;
+
+        private static SampleFrequency ReadSampleFrequency(BitStream input)
+        {
+            int sf = input.ReadBits(4);
+            return sf == 0xF ? SampleFrequencyExtensions.FromFrequency(input.ReadBits(24)) : (SampleFrequency)sf;
+        }
+
+        // backward compatible signaling of SBR (and PS) after the GASpecificConfig, ISO/IEC 14496-3 1.6.5
         private static void ReadSyncExtension(BitStream input, DecoderConfig config)
         {
             int type = input.ReadBits(11);
-            switch (type)
+            if (type != 0x2B7) return;
+
+            Profile profile = ReadProfile(input);
+            if (profile == Profile.AAC_SBR)
             {
-                case 0x2B7:
-                    Profile profile = (Profile)input.ReadBits(5);
-
-                    if (profile == Profile.AAC_SBR)
-                    {
-                        config._sbrPresent = input.ReadBool();
-                        if (config._sbrPresent)
-                        {
-                            config._profile = profile;
-
-                            int tmp = input.ReadBits(4);
-
-                            if (tmp == (int)config._sampleFrequency) config._downSampledSBR = true;
-                            if (tmp == 15)
-                            {
-                                throw new AACException("sample rate specified explicitly, not supported yet!");
-                                //tmp = in.readBits(24);
-                            }
-                        }
-                    }
-                    break;
+                config._sbrPresent = input.ReadBool();
+                if (config._sbrPresent)
+                {
+                    // the profile stays the one of the core: the core decoding depends on it
+                    config._extProfile = profile;
+                    SampleFrequency extensionFrequency = ReadSampleFrequency(input);
+                    config._downSampledSBR = config._sampleFrequency == extensionFrequency;
+                    // a following PS sync extension (0x548) needs no handling: PS is detected in the stream
+                }
             }
         }
     }

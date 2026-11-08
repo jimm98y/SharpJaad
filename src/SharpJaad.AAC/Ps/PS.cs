@@ -5,6 +5,38 @@ namespace SharpJaad.AAC.Ps
 {
     public class PS
     {
+        // scratch buffers reused by every call to avoid per-frame allocations; cleared before each use
+        private readonly int[] _tmp_temp_delay_ser = new int[PSConstants.NO_ALLPASS_LINKS];
+        private readonly float[,] _tmp_P = new float[32, 34];
+        private readonly float[,] _tmp_G_TransientRatio = new float[32, 34];
+        private readonly float[] _tmp_inputLeft = new float[2];
+        private readonly float[] _tmp_g_DecaySlope_filt = new float[PSConstants.NO_ALLPASS_LINKS];
+        private readonly float[] _tmp_R0 = new float[2];
+        private readonly float[] _tmp_tmp0 = new float[2];
+        private readonly float[] _tmp_tmp = new float[2];
+        private readonly float[] _tmp_Phi_Fract = new float[2];
+        private readonly float[] _tmp_tmp2 = new float[2];
+        private readonly float[] _tmp_Q_Fract_allpass = new float[2];
+        private readonly float[] _tmp_h22 = new float[2];
+        private readonly float[] _tmp_h21 = new float[2];
+        private readonly float[] _tmp_h12 = new float[2];
+        private readonly float[] _tmp_h11 = new float[2];
+        private readonly float[] _tmp_H22 = new float[2];
+        private readonly float[] _tmp_H21 = new float[2];
+        private readonly float[] _tmp_H12 = new float[2];
+        private readonly float[] _tmp_H11 = new float[2];
+        private readonly float[] _tmp_deltaH22 = new float[2];
+        private readonly float[] _tmp_deltaH21 = new float[2];
+        private readonly float[] _tmp_deltaH12 = new float[2];
+        private readonly float[] _tmp_deltaH11 = new float[2];
+        private readonly float[] _tmp_tempLeft = new float[2];
+        private readonly float[] _tmp_tempRight = new float[2];
+        private readonly float[] _tmp_phaseLeft = new float[2];
+        private readonly float[] _tmp_phaseRight = new float[2];
+        private readonly float[] _tmp_inRight = new float[2];
+        private readonly float[] _tmp_inLeft = new float[2];
+        private readonly float[,,] _tmp_X_hybrid_left = new float[32, 32, 2];
+        private readonly float[,,] _tmp_X_hybrid_right = new float[32, 32, 2];
         /* bitstream parameters */
         private bool _enableIid, _enableIcc, _enableExt;
         private int _iidMode;
@@ -722,11 +754,15 @@ namespace SharpJaad.AAC.Ps
             int gr, n, m, bk;
             int temp_delay = 0;
             int sb, maxsb;
-            int[] temp_delay_ser = new int[PSConstants.NO_ALLPASS_LINKS];
+            int[] temp_delay_ser = _tmp_temp_delay_ser;
+            Array.Clear(temp_delay_ser, 0, temp_delay_ser.Length);
             float P_SmoothPeakDecayDiffNrg, nrg;
-            float[,] P = new float[32, 34];
-            float[,] G_TransientRatio = new float[32, 34];
-            float[] inputLeft = new float[2];
+            float[,] P = _tmp_P;
+            Array.Clear(P, 0, P.Length);
+            float[,] G_TransientRatio = _tmp_G_TransientRatio;
+            Array.Clear(G_TransientRatio, 0, G_TransientRatio.Length);
+            float[] inputLeft = _tmp_inputLeft;
+            Array.Clear(inputLeft, 0, inputLeft.Length);
 
 
             /* chose hybrid filterbank: 20 or 34 band case */
@@ -826,7 +862,8 @@ namespace SharpJaad.AAC.Ps
                 for (sb = _groupBorder[gr]; sb < maxsb; sb++)
                 {
                     float g_DecaySlope;
-                    float[] g_DecaySlope_filt = new float[PSConstants.NO_ALLPASS_LINKS];
+                    float[] g_DecaySlope_filt = _tmp_g_DecaySlope_filt;
+                    Array.Clear(g_DecaySlope_filt, 0, g_DecaySlope_filt.Length);
 
                     /* g_DecaySlope: [0..1] */
                     if (gr < _numHybridGroups || sb <= _decayCutoff)
@@ -863,7 +900,10 @@ namespace SharpJaad.AAC.Ps
 
                     for (n = _borderPosition[0]; n < _borderPosition[_numEnv]; n++)
                     {
-                        float[] tmp = new float[2], tmp0 = new float[2], R0 = new float[2];
+                        float[] tmp = _tmp_tmp, tmp0 = _tmp_tmp0, R0 = _tmp_R0;
+                        Array.Clear(tmp, 0, tmp.Length);
+                        Array.Clear(tmp0, 0, tmp0.Length);
+                        Array.Clear(R0, 0, R0.Length);
 
                         if (gr < _numHybridGroups)
                         {
@@ -894,7 +934,8 @@ namespace SharpJaad.AAC.Ps
                         {
                             /* allpass filter */
                             //int m;
-                            float[] Phi_Fract = new float[2];
+                            float[] Phi_Fract = _tmp_Phi_Fract;
+                            Array.Clear(Phi_Fract, 0, Phi_Fract.Length);
 
                             /* fetch parameters */
                             if (gr < _numHybridGroups)
@@ -930,7 +971,9 @@ namespace SharpJaad.AAC.Ps
                             R0[1] = tmp[1];
                             for (m = 0; m < PSConstants.NO_ALLPASS_LINKS; m++)
                             {
-                                float[] Q_Fract_allpass = new float[2], tmp2 = new float[2];
+                                float[] Q_Fract_allpass = _tmp_Q_Fract_allpass, tmp2 = _tmp_tmp2;
+                                Array.Clear(Q_Fract_allpass, 0, Q_Fract_allpass.Length);
+                                Array.Clear(tmp2, 0, tmp2.Length);
 
                                 /* fetch parameters */
                                 if (gr < _numHybridGroups)
@@ -1059,13 +1102,29 @@ namespace SharpJaad.AAC.Ps
             int sb, maxsb;
             int env;
             int nr_ipdopd_par;
-            float[] h11 = new float[2], h12 = new float[2], h21 = new float[2], h22 = new float[2];
-            float[] H11 = new float[2], H12 = new float[2], H21 = new float[2], H22 = new float[2];
-            float[] deltaH11 = new float[2], deltaH12 = new float[2], deltaH21 = new float[2], deltaH22 = new float[2];
-            float[] tempLeft = new float[2];
-            float[] tempRight = new float[2];
-            float[] phaseLeft = new float[2];
-            float[] phaseRight = new float[2];
+            float[] h11 = _tmp_h11, h12 = _tmp_h12, h21 = _tmp_h21, h22 = _tmp_h22;
+            Array.Clear(h11, 0, h11.Length);
+            Array.Clear(h12, 0, h12.Length);
+            Array.Clear(h21, 0, h21.Length);
+            Array.Clear(h22, 0, h22.Length);
+            float[] H11 = _tmp_H11, H12 = _tmp_H12, H21 = _tmp_H21, H22 = _tmp_H22;
+            Array.Clear(H11, 0, H11.Length);
+            Array.Clear(H12, 0, H12.Length);
+            Array.Clear(H21, 0, H21.Length);
+            Array.Clear(H22, 0, H22.Length);
+            float[] deltaH11 = _tmp_deltaH11, deltaH12 = _tmp_deltaH12, deltaH21 = _tmp_deltaH21, deltaH22 = _tmp_deltaH22;
+            Array.Clear(deltaH11, 0, deltaH11.Length);
+            Array.Clear(deltaH12, 0, deltaH12.Length);
+            Array.Clear(deltaH21, 0, deltaH21.Length);
+            Array.Clear(deltaH22, 0, deltaH22.Length);
+            float[] tempLeft = _tmp_tempLeft;
+            Array.Clear(tempLeft, 0, tempLeft.Length);
+            float[] tempRight = _tmp_tempRight;
+            Array.Clear(tempRight, 0, tempRight.Length);
+            float[] phaseLeft = _tmp_phaseLeft;
+            Array.Clear(phaseLeft, 0, phaseLeft.Length);
+            float[] phaseRight = _tmp_phaseRight;
+            Array.Clear(phaseRight, 0, phaseRight.Length);
             float L;
             float[] sf_iid;
             int no_iid_steps;
@@ -1350,7 +1409,9 @@ namespace SharpJaad.AAC.Ps
                         /* channel is an alias to the subband */
                         for (sb = _groupBorder[gr]; sb < maxsb; sb++)
                         {
-                            float[] inLeft = new float[2], inRight = new float[2];
+                            float[] inLeft = _tmp_inLeft, inRight = _tmp_inRight;
+                            Array.Clear(inLeft, 0, inLeft.Length);
+                            Array.Clear(inRight, 0, inRight.Length);
 
                             /* load decorrelated samples */
                             if (gr < _numHybridGroups)
@@ -1415,8 +1476,10 @@ namespace SharpJaad.AAC.Ps
         /* main Parametric Stereo decoding function */
         public int Process(float[,,] X_left, float[,,] X_right)
         {
-            float[,,] X_hybrid_left = new float[32, 32, 2];
-            float[,,] X_hybrid_right = new float[32, 32, 2];
+            float[,,] X_hybrid_left = _tmp_X_hybrid_left;
+            Array.Clear(X_hybrid_left, 0, X_hybrid_left.Length);
+            float[,,] X_hybrid_right = _tmp_X_hybrid_right;
+            Array.Clear(X_hybrid_right, 0, X_hybrid_right.Length);
 
             /* delta decoding of the bitstream data */
             PsDataDecode();

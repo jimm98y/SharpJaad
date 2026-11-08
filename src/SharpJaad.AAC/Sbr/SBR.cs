@@ -106,6 +106,10 @@ namespace SharpJaad.AAC.Sbr
         internal readonly HFGeneration.ACorrCoef _aCorrCoef = new HFGeneration.ACorrCoef();
         internal readonly float[,] _alpha_0 = new float[64, 2], _alpha_1 = new float[64, 2];
         internal readonly int[] _t_E_temp = new int[6];
+        // scratch buffers of the frequency band tables (FBT), recalculated when an SBR header changes
+        internal readonly int[] _fbt_vDk = new int[64], _fbt_vDk0 = new int[64], _fbt_vDk1 = new int[64];
+        internal readonly int[] _fbt_vk0 = new int[64], _fbt_vk1 = new int[64];
+        internal readonly int[] _fbt_limTable = new int[100], _fbt_patchBorders = new int[64];
         private readonly float[,,] _X = new float[Constants.MAX_NTSR, 64, 2];
         private float[,,] _XLeft, _XRight; // allocated with the PS decoder
         private readonly int[] _saved_t_E = new int[6], _saved_t_Q = new int[3];
@@ -156,6 +160,15 @@ namespace SharpJaad.AAC.Sbr
         public int[] _bs_num_rel_1 = new int[2];
         public int[,] _bs_df_env = new int[2, 9];
         public int[,] _bs_df_noise = new int[2, 3];
+
+        private void CreatePS()
+        {
+            _ps = new PS(_sampleRate, _numTimeSlotsRate);
+            _XLeft = new float[38, 64, 2];
+            _XRight = new float[38, 64, 2];
+            // the synthesis filterbank of the right channel that PS creates
+            if (_qmfs[1] == null) _qmfs[1] = new SynthesisFilterbank(_downSampledSBR ? 32 : 64);
+        }
 
         public SBR(bool smallFrames, bool stereo, SampleFrequency sample_rate, bool downSampledSBR)
         {
@@ -216,12 +229,15 @@ namespace SharpJaad.AAC.Sbr
                 _qmfa[0] = new AnalysisFilterbank(32);
                 _qmfs[0] = new SynthesisFilterbank(downSampledSBR ? 32 : 64);
                 _qmfs[1] = null;
+                // PS (only in mono SBR) can start in any frame: its decoder is created up front, so that its start allocates
+                // nothing; it is untouched until the first PS data
+                CreatePS();
             }
         }
 
         private void SbrReset()
         {
-            int j = 5;
+            int j;
             if (_qmfa[0] != null) _qmfa[0].Reset();
             if (_qmfa[1] != null) _qmfa[1].Reset();
             if (_qmfs[0] != null) _qmfs[0].Reset();
@@ -234,10 +250,10 @@ namespace SharpJaad.AAC.Sbr
             {
                 for (int k = 0; k < 64; k++)
                 {
-                    _Xsbr[0, i, j, 0] = 0;
-                    _Xsbr[0, i, j, 1] = 0;
-                    _Xsbr[1, i, j, 0] = 0;
-                    _Xsbr[1, i, j, 1] = 0;
+                    _Xsbr[0, i, k, 0] = 0;
+                    _Xsbr[0, i, k, 1] = 0;
+                    _Xsbr[1, i, k, 0] = 0;
+                    _Xsbr[1, i, k, 1] = 0;
                 }
             }
 
@@ -767,9 +783,11 @@ namespace SharpJaad.AAC.Sbr
         }
 
         /* integer log[2](x): input range [0,10) */
+        private static readonly int[] LOG2_TABLE = { 0, 0, 1, 2, 2, 3, 3, 3, 3, 4 };
+
         private int SbrLog2(int val)
         {
-            int[] log2tab = new int[] { 0, 0, 1, 2, 2, 3, 3, 3, 3, 4 };
+            int[] log2tab = LOG2_TABLE;
             if (val < 10 && val >= 0)
                 return log2tab[val];
             else
@@ -945,9 +963,7 @@ namespace SharpJaad.AAC.Sbr
                 case Constants.EXTENSION_ID_PS:
                     if (_ps == null)
                     {
-                        _ps = new PS(_sampleRate, _numTimeSlotsRate);
-                        _XLeft = new float[38, 64, 2];
-                        _XRight = new float[38, 64, 2];
+                        CreatePS();
                     }
                     if (_psResetFlag)
                     {

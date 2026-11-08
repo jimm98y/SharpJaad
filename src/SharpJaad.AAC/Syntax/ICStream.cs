@@ -11,7 +11,7 @@ namespace SharpJaad.AAC.Syntax
         private const int SF_DELTA = 60;
         private const int SF_OFFSET = 200;
         private const int MAX_PULSES = 4; //pulse_count is 2 bits + 1
-        private static int randomState = 0x1F2E3D4C;
+        //the noise of PNS comes from the generator of the decoder (DecoderConfig), shared by its channels in decoding order
         private int _frameLength;
         //always needed
         private ICSInfo _info;
@@ -98,7 +98,7 @@ namespace SharpJaad.AAC.Syntax
                 _longestCodewordLen = Math.Max(input.ReadBits(6), 49);
                 //HCR.decodeReorderedSpectralData(this, in, data, conf.isSectionDataResilienceUsed());
             }
-            else DecodeSpectralData(input);
+            else DecodeSpectralData(input, conf);
         }
 
         public void DecodeSectionData(BitStream input, bool sectionDataResilienceUsed)
@@ -198,7 +198,7 @@ namespace SharpJaad.AAC.Syntax
                                 }
                                 else offset1 += HuffmanDec.DecodeScaleFactor(input) - SF_DELTA;
                                 tmp = Math.Min(Math.Max(offset1, -100), 155);
-                                _scaleFactors[idx] = -ScaleFactorTable.SCALEFACTOR_TABLE[tmp + SF_OFFSET];
+                                _scaleFactors[idx] = ScaleFactorTable.SCALEFACTOR_TABLE[tmp + SF_OFFSET];
                             }
                             break;
                         default:
@@ -214,7 +214,7 @@ namespace SharpJaad.AAC.Syntax
             }
         }
 
-        private void DecodeSpectralData(BitStream input)
+        private void DecodeSpectralData(BitStream input, DecoderConfig conf)
         {
             Arrays.Fill(_data, 0);
             int maxSFB = _info.GetMaxSFB();
@@ -249,8 +249,8 @@ namespace SharpJaad.AAC.Syntax
 
                             for (k = 0; k < width; k++)
                             {
-                                randomState = 1664525 * randomState + 1013904223;
-                                _data[off + k] = randomState;
+                                conf._pnsRandomState = 1664525 * conf._pnsRandomState + 1013904223;
+                                _data[off + k] = conf._pnsRandomState;
                                 energy += _data[off + k] * _data[off + k];
                             }
 
@@ -273,8 +273,9 @@ namespace SharpJaad.AAC.Syntax
                                 //inverse quantization & scaling
                                 for (j = 0; j < num; j++)
                                 {
-                                    _data[off + k + j] = buf[j] > 0 ? IQTable.IQ_TABLE[buf[j]] : -IQTable.IQ_TABLE[-buf[j]];
-                                    _data[off + k + j] *= _scaleFactors[idx];
+                                    int q = buf[j];
+                                    if (_pulseDataPresent) q = ApplyPulses(q, off + k + j);
+                                    _data[off + k + j] = InverseQuantize(q) * _scaleFactors[idx];
                                 }
                             }
                         }
@@ -282,6 +283,23 @@ namespace SharpJaad.AAC.Syntax
                 }
                 groupOff += groupLen << 7;
             }
+        }
+
+        //pulse data: amplitudes added to the quantized values of a long window, away from zero (ISO/IEC 14496-3 4.6.3)
+        private int ApplyPulses(int q, int position)
+        {
+            for (int i = 0; i < _pulseCount; i++)
+            {
+                if (_pulseOffset[i] == position) q += q > 0 ? _pulseAmp[i] : -_pulseAmp[i];
+            }
+            return q;
+        }
+
+        private static float InverseQuantize(int q)
+        {
+            int a = q < 0 ? -q : q;
+            float v = a < IQTable.IQ_TABLE.Length ? IQTable.IQ_TABLE[a] : (float)Math.Pow(a, 4.0 / 3.0);
+            return q < 0 ? -v : v;
         }
 
         /* =========== gets ============ */

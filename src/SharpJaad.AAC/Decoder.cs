@@ -59,7 +59,7 @@ namespace SharpJaad.AAC
             if (!CanDecode(_config.GetProfile())) throw new AACException("unsupported profile: " + _config.GetProfile());
 
             _syntacticElements = new SyntacticElements(_config);
-            _filterBank = new FilterBank(_config.IsSmallFrameUsed(), (int)_config.GetChannelConfiguration());
+            _filterBank = new FilterBank(_config.IsSmallFrameUsed(), _config.GetChannelCount());
 
             _input = new BitStream();
             _input.EnsureCapacity(MAX_FRAME_BYTES);
@@ -76,7 +76,7 @@ namespace SharpJaad.AAC
             if (!CanDecode(_config.GetProfile())) throw new AACException("unsupported profile: " + _config.GetProfile());
 
             _syntacticElements = new SyntacticElements(_config);
-            _filterBank = new FilterBank(_config.IsSmallFrameUsed(), (int)_config.GetChannelConfiguration());
+            _filterBank = new FilterBank(_config.IsSmallFrameUsed(), _config.GetChannelCount());
 
             _input = new BitStream();
             _input.EnsureCapacity(MAX_FRAME_BYTES);
@@ -120,7 +120,7 @@ namespace SharpJaad.AAC
                 PCE pce = _adifHeader.GetFirstPCE();
                 _config.SetProfile(pce.GetProfile());
                 _config.SetSampleFrequency(pce.GetSampleFrequency());
-                _config.SetChannelConfiguration((ChannelConfiguration)pce.GetChannelCount());
+                _config.SetChannelCountFromPCE(pce);
             }
 
             if (!CanDecode(_config.GetProfile())) throw new AACException("unsupported profile: " + _config.GetProfile());
@@ -144,7 +144,7 @@ namespace SharpJaad.AAC
             catch (Exception e)
             {
                 buffer.SetData(Array.Empty<byte>(), 0, 0, 0, 0);
-                throw new AACException(e.Message);
+                throw new AACException(e.Message, e);
             }
         }
     }

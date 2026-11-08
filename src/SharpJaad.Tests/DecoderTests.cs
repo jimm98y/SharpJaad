@@ -6,12 +6,13 @@ namespace SharpJaad.Tests
 {
     public class DecoderTests
     {
-        // the PCM of aac-sample.mp4 as decoded by SharpJaad 0.1.1 (git 3b2014c)
-        private const ulong SampleHash = 0x7BE064D41BC5D10FUL;
+        // the PCM of aac-sample.mp4 as decoded by this version: 0.1.1 decoded it to 0x7BE064D41BC5D10F, without TNS, which
+        // 22 of its frames use; the output of streams with references is checked against FFmpeg by ReferenceTests
+        private const ulong SampleHash = 0x74C42A95F48A1164UL;
         private const long SamplePcmBytes = 3084288;
 
         [Fact]
-        public void SampleDecodesToTheSamePcmAsTheLastRelease()
+        public void SampleDecodesToTheRecordedPcm()
         {
             var stream = TestStreams.Read(TestStreams.SamplePath);
             var decoder = new Decoder(stream.DecoderSpecificInfo);

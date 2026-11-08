@@ -58,6 +58,10 @@ namespace SharpJaad.AAC.Tools
             _predictionUsed[sfb] = false;
         }
 
+        /// <summary>
+        /// Runs the predictors of a long window frame, also of the bands above max_sfb and in frames without prediction
+        /// data: their state must follow the spectrum. The prediction is only added where the frame uses it.
+        /// </summary>
         public void Process(ICStream ics, float[] data, SampleFrequency sf)
         {
             ICSInfo info = ics.GetInfo();
@@ -65,18 +69,31 @@ namespace SharpJaad.AAC.Tools
             if (info.IsEightShortFrame()) ResetAllPredictors();
             else
             {
-                int len = Math.Min(sf.GetMaximalPredictionSFB(), info.GetMaxSFB());
+                bool present = info.IsICPredictionPresent();
+                int len = Math.Min(sf.GetMaximalPredictionSFB(), info.GetSWBCount());
                 int[] swbOffsets = info.GetSWBOffsets();
                 int k;
                 for (int sfb = 0; sfb < len; sfb++)
                 {
+                    bool output = present && _predictionUsed[sfb];
                     for (k = swbOffsets[sfb]; k < swbOffsets[sfb + 1]; k++)
                     {
-                        Predict(data, k, _predictionUsed[sfb]);
+                        Predict(data, k, output);
                     }
                 }
-                if (_predictorReset) ResetPredictorGroup(_predictorResetGroup);
+                if (present && _predictorReset) ResetPredictorGroup(_predictorResetGroup);
             }
+        }
+
+        /// <summary>
+        /// Takes the prediction data of the other channel of a channel pair with a common window. The predictor states
+        /// stay those of this channel.
+        /// </summary>
+        internal void CopyPredictionData(ICPrediction other)
+        {
+            _predictorReset = other._predictorReset;
+            _predictorResetGroup = other._predictorResetGroup;
+            Array.Copy(other._predictionUsed, _predictionUsed, _predictionUsed.Length);
         }
 
         private void ResetPredictState(int index)
@@ -86,8 +103,8 @@ namespace SharpJaad.AAC.Tools
             _states[index]._r1 = 0;
             _states[index]._cor0 = 0;
             _states[index]._cor1 = 0;
-            _states[index]._var0 = 0x3F80;
-            _states[index]._var1 = 0x3F80;
+            _states[index]._var0 = 1.0f;
+            _states[index]._var1 = 1.0f;
         }
 
         private void ResetAllPredictors()
