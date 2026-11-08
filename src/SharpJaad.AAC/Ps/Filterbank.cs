@@ -52,7 +52,7 @@
                 for (n = 0; n < _frameLen; n++)
                 {
                     _work[12 + n, 0] = X[n + 6 /*delay*/, band, 0];
-                    _work[12 + n, 0] = X[n + 6 /*delay*/, band, 0];
+                    _work[12 + n, 1] = X[n + 6 /*delay*/, band, 1];
                 }
 
                 /* store samples */
