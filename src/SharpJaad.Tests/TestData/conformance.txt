@@ -9,7 +9,7 @@ al04_44.mp4: hash=D4CEA4FA3C34A2DF pcmBytes=1454080 sr=44100 ch=2 errors=0
 al04sf_48.mp4: hash=C5A59BB9F60D65AF pcmBytes=1482240 sr=48000 ch=2 errors=0
 al05_44.mp4: hash=2E19CFE8A7C510FB pcmBytes=1310720 sr=44100 ch=2 errors=0
 al06_44.mp4: hash=0914EDA5CBFF8B9B pcmBytes=2181120 sr=44100 ch=3 errors=0
-al07_96.mp4: hash=7AC5C6FE472850D1 pcmBytes=9584640 sr=96000 ch=6 errors=0
+al07_96.mp4: hash=4E71AEB4D3E306A2 pcmBytes=9584640 sr=96000 ch=6 errors=0
 al15_44.mp4: hash=D8D2F3ABAFE6C570 pcmBytes=1597440 sr=44100 ch=6 errors=0
 al17_44.mp4: hash=EDCFA235E525F63F pcmBytes=1323008 sr=44100 ch=2 errors=0
 al18_44.mp4: hash=7984C72CA6698343 pcmBytes=11522048 sr=44100 ch=2 errors=0

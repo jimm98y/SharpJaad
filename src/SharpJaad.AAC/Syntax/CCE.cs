@@ -158,9 +158,11 @@ namespace SharpJaad.AAC.Syntax
             ICSInfo info = _ics.GetInfo();
             float[] iqData = _ics.GetInvQuantData();
             if (profile == Profile.AAC_MAIN && info.GetICPrediction() != null) info.GetICPrediction().Process(_ics, iqData, sf);
+            // the spectrum of a CCE is TNS filtered also for dependent coupling (as the reference decoders of the
+            // conformance streams do: al07_96)
+            if (_ics.IsTNSDataPresent()) _ics.GetTNS().Process(_ics, iqData, sf, false);
             if (_couplingPoint != AFTER_IMDCT) return;
 
-            if (_ics.IsTNSDataPresent()) _ics.GetTNS().Process(_ics, iqData, sf, false);
             if (_filterBank == null)
             {
                 _filterBank = new FilterBank(_config.IsSmallFrameUsed(), 1);
