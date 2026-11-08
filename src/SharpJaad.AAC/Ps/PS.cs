@@ -923,7 +923,7 @@ namespace SharpJaad.AAC.Ps
                             }
 
                             /* z^(-2) * Phi_Fract[k] */
-                            tmp[0] = tmp[0] * Phi_Fract[0] + tmp0[1] * Phi_Fract[1];
+                            tmp[0] = tmp0[0] * Phi_Fract[0] + tmp0[1] * Phi_Fract[1];
                             tmp[1] = tmp0[1] * Phi_Fract[0] - tmp0[0] * Phi_Fract[1];
 
                             R0[0] = tmp[0];
