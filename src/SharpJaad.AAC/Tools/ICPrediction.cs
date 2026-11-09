@@ -37,7 +37,11 @@ namespace SharpJaad.AAC.Tools
         {
             int predictorCount = sf.GetPredictorCount();
 
-            if (_predictorReset = input.ReadBool()) _predictorResetGroup = input.ReadBits(5);
+            if (_predictorReset = input.ReadBool())
+            {
+                _predictorResetGroup = input.ReadBits(5);
+                if (_predictorResetGroup < 1 || _predictorResetGroup > 30) throw new AACException("invalid predictor reset group: " + _predictorResetGroup);
+            }
 
             int maxPredSFB = sf.GetMaximalPredictionSFB();
             int length = Math.Min(maxSFB, maxPredSFB);

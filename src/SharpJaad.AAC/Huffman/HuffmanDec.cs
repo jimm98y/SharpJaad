@@ -45,6 +45,7 @@ namespace SharpJaad.AAC.Huffman
             while (input.ReadBool())
             {
                 i++;
+                if (i > 12) throw new AACException("escape sequence too long"); //values are below 8192 (ISO/IEC 14496-3 4.6.3.3)
             }
             int j = input.ReadBits(i) | 1 << i;
 

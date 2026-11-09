@@ -1,6 +1,7 @@
 ﻿using SharpJaad.MP4.API;
 using SharpJaad.MP4.Boxes;
 using SharpJaad.MP4.Boxes.Impl;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -56,9 +57,21 @@ namespace SharpJaad.MP4
         private void ReadContent()
         {
             //read all boxes
-            Box box = null;
-            long type;
             bool moovFound = false;
+            try
+            {
+                ReadBoxes(ref moovFound);
+            }
+            catch (Exception e) when (MP4Exception.IsMalformedData(e))
+            {
+                throw new MP4Exception("invalid MP4 data: " + e.Message, e);
+            }
+        }
+
+        private void ReadBoxes(ref bool moovFound)
+        {
+            Box box;
+            long type;
             while (_input.HasLeft())
             {
                 box = BoxFactory.ParseBox(null, _input);
@@ -117,7 +130,18 @@ namespace SharpJaad.MP4
         public Movie GetMovie()
         {
             if (_moov == null) return null;
-            else if (_movie == null) _movie = new Movie(_moov, _input);
+            else if (_movie == null)
+            {
+                try
+                {
+                    _movie = new Movie(_moov, _input);
+                }
+                catch (Exception e) when (MP4Exception.IsMalformedData(e))
+                {
+                    throw new MP4Exception("invalid MP4 data: " + e.Message, e);
+                }
+            }
+
             return _movie;
         }
 

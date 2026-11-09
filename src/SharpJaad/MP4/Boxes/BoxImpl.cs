@@ -26,9 +26,24 @@ namespace SharpJaad.MP4.Boxes
             this._offset = offset;
         }
 
+        /// <summary>
+        /// The bytes left in this box: 0 after an overread, at most int.MaxValue (callers use it as a length).
+        /// </summary>
         protected long GetLeft(MP4InputStream input)
         {
-            return (_offset + _size) - input.GetOffset();
+            long left = (_offset + _size) - input.GetOffset();
+            return left < 0 ? 0 : left > int.MaxValue ? int.MaxValue : left;
+        }
+
+        /// <summary>
+        /// An entry count of this box: the entries of entrySize bytes each must fit in the bytes left, so that a count
+        /// from the file cannot allocate more than the file holds.
+        /// </summary>
+        private protected int ReadCount(MP4InputStream input, int countBytes, int entrySize)
+        {
+            long count = input.ReadBytes(countBytes);
+            if (count < 0 || count * entrySize > GetLeft(input)) throw new MP4Exception("invalid entry count in box '" + GetName() + "': " + count);
+            return (int)count;
         }
 
         /**
@@ -132,7 +147,7 @@ namespace SharpJaad.MP4.Boxes
         public void ReadChildren(MP4InputStream input, int len)
         {
             Box box;
-            for (int i = 0; i < len; i++)
+            for (int i = 0; i < len && input.GetOffset() < (_offset + _size); i++)
             {
                 box = BoxFactory.ParseBox(this, input);
                 _children.Add(box);

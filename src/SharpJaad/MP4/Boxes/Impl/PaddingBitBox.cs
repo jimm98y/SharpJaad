@@ -19,7 +19,10 @@
         {
             base.Decode(input);
 
-            int sampleCount = (int)(input.ReadBytes(4) + 1) / 2;
+            long count = input.ReadBytes(4);
+            if ((count + 1) / 2 > GetLeft(input)) throw new MP4Exception("invalid sample count: " + count);
+            int sampleCount = (int)((count + 1) / 2);
+
             _pad1 = new int[sampleCount];
             _pad2 = new int[sampleCount];
 

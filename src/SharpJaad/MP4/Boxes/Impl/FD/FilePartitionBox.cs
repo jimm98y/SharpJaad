@@ -27,7 +27,7 @@ namespace SharpJaad.MP4.Boxes.Impl.FD
             _maxNumberOfEncodingSymbols = (int)input.ReadBytes(2);
             _schemeSpecificInfo = Encoding.UTF8.GetString(Base64Decoder.Decode(input.ReadTerminated((int)GetLeft(input), 0)));
 
-            int entryCount = (int)input.ReadBytes(2);
+            int entryCount = ReadCount(input, 2, 6);
             _blockCounts = new int[entryCount];
             _blockSizes = new long[entryCount];
             for (int i = 0; i < entryCount; i++)

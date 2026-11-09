@@ -194,6 +194,7 @@ namespace SharpJaad.AAC
         /// <exception cref="AACException"></exception>
         public static DecoderConfig ParseMP4DecoderSpecificInfo(byte[] data)
         {
+            if (data == null) throw new System.ArgumentNullException(nameof(data));
             BitStream input = new BitStream(data);
             DecoderConfig config = new DecoderConfig();
 

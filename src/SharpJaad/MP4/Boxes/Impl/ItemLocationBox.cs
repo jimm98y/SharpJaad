@@ -1,4 +1,5 @@
-﻿namespace SharpJaad.MP4.Boxes.Impl
+﻿using System;
+namespace SharpJaad.MP4.Boxes.Impl
 {
     /**
      * The item location box provides a directory of resources in this or other
@@ -61,7 +62,7 @@
             int lengthSize = (int)(l >> 8) & 0xF;
             int baseOffsetSize = (int)(l >> 4) & 0xF;
 
-            int itemCount = (int)input.ReadBytes(2);
+            int itemCount = ReadCount(input, 2, 6 + baseOffsetSize);
             _dataReferenceIndex = new int[itemCount];
             _baseOffset = new long[itemCount];
             _extentOffset = new long[itemCount][];
@@ -75,7 +76,8 @@
                 _dataReferenceIndex[i] = (int)input.ReadBytes(2);
                 _baseOffset[i] = input.ReadBytes(baseOffsetSize);
 
-                extentCount = (int)input.ReadBytes(2);
+                extentCount = ReadCount(input, 2, Math.Max(1, offsetSize + lengthSize));
+
                 _extentOffset[i] = new long[extentCount];
                 _extentLength[i] = new long[extentCount];
 

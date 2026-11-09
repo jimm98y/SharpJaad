@@ -20,7 +20,7 @@ namespace SharpJaad.AAC.Syntax
         {
             Profile profile = conf.GetProfile();
             SampleFrequency sf = conf.GetSampleFrequency();
-            if (sf == SampleFrequency.SAMPLE_FREQUENCY_NONE) throw new AACException("invalid sample frequency");
+            if ((int)sf < 0 || (int)sf >= ScaleFactorBands.SWB_LONG_WINDOW_COUNT.Length) throw new AACException("invalid sample frequency: " + sf); //also 12..15, which have no tables
 
             ReadElementInstanceTag(input);
 

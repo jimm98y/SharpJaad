@@ -11,7 +11,7 @@
         {
             base.Decode(input);
 
-            int entryCount = (int)input.ReadBytes(4);
+            int entryCount = ReadCount(input, 4, 12);
             _firstChunks = new long[entryCount];
             _samplesPerChunk = new long[entryCount];
             _sampleDescriptionIndex = new long[entryCount];

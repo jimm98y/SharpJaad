@@ -20,9 +20,6 @@ namespace SharpJaad.AAC.Syntax
         private readonly SCE_LFE[] sces = new SCE_LFE[MAX_TAGS], lfes = new SCE_LFE[MAX_TAGS];
         private readonly CPE[] cpes = new CPE[MAX_TAGS];
         private readonly CCE[] cceByTag = new CCE[MAX_TAGS];
-        //for an instance tag used twice in a frame (invalid, but decodable)
-        private SCE_LFE[] spareSCEs;
-        private CPE[] spareCPEs;
         private const int MAX_TAGS = 16; //element_instance_tag is 4 bits
         private CCE[] cces;
         private DSE[] dses;
@@ -38,8 +35,6 @@ namespace SharpJaad.AAC.Syntax
             pce = new PCE();
             elements = new Element[4 * Constants.MAX_ELEMENTS];
             elementIsLFE = new bool[elements.Length];
-            spareSCEs = new SCE_LFE[elements.Length];
-            spareCPEs = new CPE[elements.Length];
             cces = new CCE[Constants.MAX_ELEMENTS];
             dses = new DSE[Constants.MAX_ELEMENTS];
             fils = new FIL[Constants.MAX_ELEMENTS];
@@ -175,7 +170,7 @@ namespace SharpJaad.AAC.Syntax
             SCE_LFE[] pool = lfe ? lfes : sces;
             SCE_LFE e = pool[tag];
             if (e == null) e = pool[tag] = new SCE_LFE(config);
-            else if (IsInFrame(e)) e = spareSCEs[curElem] ?? (spareSCEs[curElem] = new SCE_LFE(config));
+            else if (IsInFrame(e)) throw new AACException("element instance tag used twice in a frame: " + tag);
             e.Decode(input, config);
             elements[curElem] = e;
             elementIsLFE[curElem] = lfe;
@@ -189,7 +184,8 @@ namespace SharpJaad.AAC.Syntax
             int tag = input.PeekBits(4);
             CPE e = cpes[tag];
             if (e == null) e = cpes[tag] = new CPE(config);
-            else if (IsInFrame(e)) e = spareCPEs[curElem] ?? (spareCPEs[curElem] = new CPE(config));
+            else if (IsInFrame(e)) throw new AACException("element instance tag used twice in a frame: " + tag);
+
             e.Decode(input, config);
             elements[curElem] = e;
             elementIsLFE[curElem] = false;
@@ -232,9 +228,9 @@ namespace SharpJaad.AAC.Syntax
 
         private void DecodePCE(BitStream input)
         {
+            // a PCE in the raw data only maps the channels (as FAAD2 and FFmpeg): its profile and sample rate do not
+            // change the configuration, which one frame could otherwise make undecodable
             pce.Decode(input);
-            config.SetProfile(pce.GetProfile());
-            config.SetSampleFrequency(pce.GetSampleFrequency());
             config.SetChannelCountFromPCE(pce);
         }
 
@@ -260,6 +256,8 @@ namespace SharpJaad.AAC.Syntax
             //final ChannelConfiguration channels = config.getChannelConfiguration();
 
             int chs = config.GetChannelCount();
+            if (chs < 1) throw new AACException("no channels");
+            filterBank.EnsureChannels(chs);
             if (chs == 1 && psPresent) chs++;
             int mult = sbrPresent && !IsSBRDownSampled() ? 2 : 1;
             int length = mult * config.GetFrameLength();

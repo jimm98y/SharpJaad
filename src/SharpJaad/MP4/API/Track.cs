@@ -89,6 +89,7 @@ namespace SharpJaad.MP4.API
         private void ParseSampleTable(Box stbl)
         {
             double timeScale = _mdhd.GetTimeScale();
+            if (timeScale <= 0) timeScale = 1; // no NaN timestamps, which cannot be sorted
             Type type = GetTrackType();
 
             //sample sizes
@@ -114,12 +115,13 @@ namespace SharpJaad.MP4.API
             int off = 0;
             for (int i = 0; i < sampleCounts.Length; i++)
             {
-                for (int j = 0; j < sampleCounts[i]; j++)
+                // the time table may describe more samples than there are
+                for (int j = 0; j < sampleCounts[i] && off + j < timeOffsets.Length; j++)
                 {
                     timeOffsets[off + j] = tmp;
                     tmp += sampleDeltas[i];
                 }
-                off += (int)sampleCounts[i];
+                off = (int)Math.Min(off + sampleCounts[i], timeOffsets.Length);
             }
 
             //create samples
@@ -128,18 +130,19 @@ namespace SharpJaad.MP4.API
             double timeStamp;
             long offset = 0;
             //iterate over all chunk groups
-            for (int i = 0; i < firstChunks.Length; i++)
+            // the tables come from the file: no more samples than sizes, no chunks that are not there
+            for (int i = 0; i < firstChunks.Length && current < sampleSizes.Length; i++)
             {
-                if (i < firstChunks.Length - 1) lastChunk = (int)firstChunks[i + 1] - 1;
+                if (i < firstChunks.Length - 1) lastChunk = (int)Math.Min(firstChunks[i + 1] - 1, chunkOffsets.Length);
                 else lastChunk = chunkOffsets.Length;
 
                 //iterate over all chunks in current group
-                for (int j = (int)firstChunks[i] - 1; j < lastChunk; j++)
+                for (int j = (int)Math.Max(firstChunks[i] - 1, 0); j < lastChunk && current < sampleSizes.Length; j++)
                 {
                     offset = chunkOffsets[j];
 
                     //iterate over all samples in current chunk
-                    for (int k = 0; k < samplesPerChunk[i]; k++)
+                    for (int k = 0; k < samplesPerChunk[i] && current < sampleSizes.Length; k++)
                     {
                         //create samples
                         timeStamp = ((double)timeOffsets[current]) / timeScale;
@@ -243,9 +246,9 @@ namespace SharpJaad.MP4.API
          * track contains a <code>DecoderInfo</code>.
          *
          * @see #getDecoderInfo() 
-         * @return the decoder specific info
+         * @return the decoder specific info, null if it is not present
          */
-        public byte[] GetDecoderSpecificInfo() => _decoderSpecificInfo.GetData();
+        public byte[] GetDecoderSpecificInfo() => _decoderSpecificInfo?.GetData();
 
         /**
          * Returns the <code>DecoderInfo</code>, if present. It contains 
@@ -294,13 +297,14 @@ namespace SharpJaad.MP4.API
                     if (_input.HasRandomAccess()) _input.Seek(frame.GetOffset());
                     else {
                         //Logger.getLogger("MP4 API").log(Level.WARNING, "readNextFrame failed: frame {0} already skipped, offset:{1}, stream:{2}", new Object[]{currentFrame, frame.getOffset(), in.getOffset()});
-                        throw new Exception("frame already skipped and no random access");
+                        throw new MP4Exception("frame already skipped and no random access");
                     }
                 }
 
-                byte[] b = new byte[(int)frame.GetSize()];
-                _input.ReadBytes(b);
-                frame.SetData(b);
+                // the size comes from the file: the frame must be in the stream (ReadFully does not allocate more)
+                if (frame.GetSize() < 0 || frame.GetSize() > int.MaxValue) throw new MP4Exception("invalid frame size: " + frame.GetSize());
+                frame.SetData(_input.ReadFully((int)frame.GetSize()));
+
                 _currentFrame++;
             }
             return frame;

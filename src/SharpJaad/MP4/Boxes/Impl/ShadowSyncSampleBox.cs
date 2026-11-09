@@ -43,7 +43,7 @@
         {
             base.Decode(input);
 
-            int entryCount = (int)input.ReadBytes(4);
+            int entryCount = ReadCount(input, 4, 8);
             _sampleNumbers = new long[entryCount, 2];
 
             for (int i = 0; i < entryCount; i++)

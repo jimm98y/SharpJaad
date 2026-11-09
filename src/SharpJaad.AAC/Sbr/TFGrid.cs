@@ -59,7 +59,7 @@
                         {
                             border += sbr._bs_rel_bord[ch, l];
 
-                            if (sbr._rate * border + sbr._tHFAdj > sbr._numTimeSlotsRate + sbr._tHFGen)
+                            if (border > sbr._abs_bord_trail[ch] || sbr._rate * border + sbr._tHFAdj > sbr._numTimeSlotsRate + sbr._tHFGen) //as FAAD2: the borders stay ordered
                                 return 1;
 
                             t_E_temp[i++] = sbr._rate * border;
@@ -77,7 +77,7 @@
                         {
                             border += sbr._bs_rel_bord_0[ch, l];
 
-                            if (sbr._rate * border + sbr._tHFAdj > sbr._numTimeSlotsRate + sbr._tHFGen)
+                            if (border > sbr._abs_bord_trail[ch] || sbr._rate * border + sbr._tHFAdj > sbr._numTimeSlotsRate + sbr._tHFGen) //as FAAD2: the borders stay ordered
                                 return 1;
 
                             t_E_temp[i++] = sbr._rate * border;

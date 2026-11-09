@@ -17,8 +17,7 @@
         public override void Decode(MP4InputStream input)
         {
             base.Decode(input);
-            _data = new byte[(int)GetLeft(input)];
-            input.ReadBytes(_data);
+            _data = input.ReadFully((int)GetLeft(input));
         }
 
         /**

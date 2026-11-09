@@ -83,6 +83,8 @@ namespace SharpJaad.AAC.Syntax
             _gainControlPresent = input.ReadBool();
             if (_gainControlPresent)
             {
+                // only the SSR profile, which is not supported, has gain control: its decoding is not functional
+                if (conf.GetProfile() != Profile.AAC_SSR) throw new AACException("gain control data in a profile without gain control");
                 if (_gainControl == null) _gainControl = new GainControl(_frameLength);
                 //LOGGER.log(Level.FINE, "GAIN");
                 _gainControl.Decode(input, _info.GetWindowSequence());
@@ -205,7 +207,7 @@ namespace SharpJaad.AAC.Syntax
                             for (; sfb < end; sfb++, idx++)
                             {
                                 offset0 += HuffmanDec.DecodeScaleFactor(input) - SF_DELTA;
-                                if (offset0 > 255) throw new AACException("scalefactor out of range: " + offset0);
+                                if (offset0 < 0 || offset0 > 255) throw new AACException("scalefactor out of range: " + offset0);
                                 _scaleFactors[idx] = ScaleFactorTable.SCALEFACTOR_TABLE[offset0 - 100 + SF_OFFSET];
                             }
                             break;

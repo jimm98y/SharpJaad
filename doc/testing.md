@@ -11,6 +11,10 @@ runs `src/SharpJaad.Tests` on net481, net8.0 and net10.0:
 - **BitStreamTests** check the bit reader, also when it is given shorter data after longer data.
 - **FftTests** check the FFT of the filterbank against a direct DFT, also the mixed radix lengths of frames of 960
   samples.
+- **MalformedInputTests** feed the MP4 and ADTS readers and the decoder truncated, mutated and crafted input (deeply
+  nested boxes and descriptors, entry counts and sizes far beyond the data): they must fail with an `IOException`
+  (`MP4Exception`, `AACException`, `EndOfStreamException`) within a time limit, without allocating more than the input
+  holds.
 - **AllocationTests** (.NET only, .NET Framework cannot count allocations) check that decoding allocates nothing once
   the first frame of a stream is decoded: the first frame allocates the elements of the stream and the output buffer,
   every later frame reuses them.

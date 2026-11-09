@@ -413,7 +413,8 @@ namespace SharpJaad.AAC.Sbr
                     /* if an error occured with the new header values revert to the old ones */
                     if (rt > 0)
                     {
-                        CalcSbrTables(saved_start_freq, saved_stop_freq,
+                        // tables that cannot be calculated from the saved values either are unusable (as FAAD2)
+                        result += CalcSbrTables(saved_start_freq, saved_stop_freq,
                             saved_samplerate_mode, saved_freq_scale,
                             saved_alter_scale, saved_xover_band);
                     }
@@ -451,6 +452,10 @@ namespace SharpJaad.AAC.Sbr
             /* check if we read more bits then were available for sbr */
             if (bits < num_sbr_bits2)
             {
+                // nothing of this frame is used: no SBR processing, and no PS that garbage may have switched on
+                _ret = 1;
+                _ps_used = false;
+
                 throw new AACException("frame overread");
                 //faad_resetbits(ld, num_sbr_bits1+8*cnt);
                 //num_sbr_bits2 = 8*cnt;
@@ -470,6 +475,8 @@ namespace SharpJaad.AAC.Sbr
                 ld.SkipBits(num_align_bits);
             }
 
+            // the processing of this frame only upsamples if its SBR data has errors (as FAAD2)
+            _ret = result;
             return result;
         }
 
@@ -835,7 +842,7 @@ namespace SharpJaad.AAC.Sbr
                         _bs_rel_bord[ch, rel] = 2 * ld.ReadBits(2) + 2;
                     }
                     i = SbrLog2(bs_num_env + 1);
-                    _bs_pointer[ch] = ld.ReadBits(i);
+                    _bs_pointer[ch] = Math.Min(ld.ReadBits(i), bs_num_env); //as FAAD2: a pointer past the envelopes indexes past the borders
 
                     for (env = 0; env < bs_num_env; env++)
                     {
@@ -857,7 +864,7 @@ namespace SharpJaad.AAC.Sbr
                         _bs_rel_bord[ch, rel] = 2 * ld.ReadBits(2) + 2;
                     }
                     i = SbrLog2(bs_num_env + 1);
-                    _bs_pointer[ch] = ld.ReadBits(i);
+                    _bs_pointer[ch] = Math.Min(ld.ReadBits(i), bs_num_env); //as FAAD2: a pointer past the envelopes indexes past the borders
 
                     for (env = 0; env < bs_num_env; env++)
                     {
@@ -887,7 +894,7 @@ namespace SharpJaad.AAC.Sbr
                         _bs_rel_bord_1[ch, rel] = 2 * ld.ReadBits(2) + 2;
                     }
                     i = SbrLog2(_bs_num_rel_0[ch] + _bs_num_rel_1[ch] + 2);
-                    _bs_pointer[ch] = ld.ReadBits(i);
+                    _bs_pointer[ch] = Math.Min(ld.ReadBits(i), _bs_num_rel_0[ch] + _bs_num_rel_1[ch] + 1); //as FAAD2
 
                     for (env = 0; env < bs_num_env; env++)
                     {

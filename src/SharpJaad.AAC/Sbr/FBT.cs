@@ -307,6 +307,8 @@ namespace SharpJaad.AAC.Sbr
                 return 1;
             if (sbr._kx + sbr._M > 64)
                 return 1;
+            if (sbr._M > Constants.MAX_M) //the buffers of the gains hold MAX_M bands (as FAAD2)
+                return 1;
 
             minus = (sbr._N_high & 1) != 0 ? 1 : 0;
 

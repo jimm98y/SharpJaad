@@ -114,21 +114,23 @@ namespace SharpJaad.AAC
 
         private void Decode(SampleBuffer buffer)
         {
-            if (ADIFHeader.IsPresent(_input))
-            {
-                _adifHeader = ADIFHeader.ReadHeader(_input);
-                PCE pce = _adifHeader.GetFirstPCE();
-                _config.SetProfile(pce.GetProfile());
-                _config.SetSampleFrequency(pce.GetSampleFrequency());
-                _config.SetChannelCountFromPCE(pce);
-            }
-
-            if (!CanDecode(_config.GetProfile())) throw new AACException("unsupported profile: " + _config.GetProfile());
-
-            _syntacticElements.StartNewFrame();
-
             try
             {
+                // inside the try: a frame too short for this check also yields no samples, not the previous ones
+                if (ADIFHeader.IsPresent(_input))
+                {
+                    _adifHeader = ADIFHeader.ReadHeader(_input);
+                    PCE pce = _adifHeader.GetFirstPCE();
+                    _config.SetProfile(pce.GetProfile());
+                    _config.SetSampleFrequency(pce.GetSampleFrequency());
+                    _config.SetChannelCountFromPCE(pce);
+                }
+
+                if (!CanDecode(_config.GetProfile())) throw new AACException("unsupported profile: " + _config.GetProfile());
+
+                _syntacticElements.StartNewFrame();
+
+
                 //1: bitstream parsing and noiseless coding
                 _syntacticElements.Decode(_input);
                 //2: spectral processing

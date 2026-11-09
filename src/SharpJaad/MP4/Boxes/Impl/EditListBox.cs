@@ -32,7 +32,7 @@
         {
             base.Decode(input);
 
-            int entryCount = (int)input.ReadBytes(4);
+            int entryCount = ReadCount(input, 4, 12);
             int len = (_version == 1) ? 8 : 4;
 
             _segmentDuration = new long[entryCount];
@@ -42,7 +42,7 @@
             for (int i = 0; i < entryCount; i++)
             {
                 _segmentDuration[i] = input.ReadBytes(len);
-                _mediaTime[i] = input.ReadBytes(len);
+                _mediaTime[i] = len == 4 ? (int)input.ReadBytes(4) : input.ReadBytes(8); //signed: -1 is an empty edit
 
                 //int(16) mediaRate_integer;
                 //int(16) media_rate_fraction = 0;

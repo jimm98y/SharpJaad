@@ -287,8 +287,6 @@ namespace SharpJaad.AAC.Sbr
                         /* V is defined, not calculated */
                         Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0] = G_filt * Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0]
                             + Q_filt * NoiseTable.NOISE_TABLE[fIndexNoise, 0];
-                        if (sbr._bs_extension_id == 3 && sbr._bs_extension_data == 42)
-                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0] = 16428320;
                         Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 1] = G_filt * Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 1]
                             + Q_filt * NoiseTable.NOISE_TABLE[fIndexNoise, 1];
 
@@ -341,7 +339,7 @@ namespace SharpJaad.AAC.Sbr
 
                 S_mapped = GetSMapped(sbr, ch, l, current_res_band2);
 
-                if (sbr._t_E[ch, l + 1] > sbr._t_Q[ch, current_t_noise_band + 1])
+                if (current_t_noise_band + 1 < sbr._L_Q[ch] && sbr._t_E[ch, l + 1] > sbr._t_Q[ch, current_t_noise_band + 1]) //no noise floor past the last one
                 {
                     current_t_noise_band++;
                 }
@@ -358,6 +356,8 @@ namespace SharpJaad.AAC.Sbr
 
                     ml1 = sbr._f_table_lim[sbr._bs_limiter_bands, k];
                     ml2 = sbr._f_table_lim[sbr._bs_limiter_bands, k + 1];
+                    if (ml1 > Constants.MAX_M) ml1 = Constants.MAX_M; //as FAAD2
+                    if (ml2 > Constants.MAX_M) ml2 = Constants.MAX_M;
 
 
                     /* calculate the accumulated E_orig and E_curr over the limiter band */

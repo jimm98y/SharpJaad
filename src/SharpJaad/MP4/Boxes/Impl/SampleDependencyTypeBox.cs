@@ -45,8 +45,10 @@
 			base.Decode(input);
 
 			//get number of samples from SampleSizeBox
-			long sampleCount = -1;
-			if (_parent.HasChild(BoxTypes.SAMPLE_SIZE_BOX)) sampleCount = ((SampleSizeBox)_parent.GetChild(BoxTypes.SAMPLE_SIZE_BOX)).GetSampleCount();
+			// one byte per sample: no more samples than bytes in the box, none without a SampleSizeBox
+			long sampleCount = 0;
+			if (_parent != null && _parent.HasChild(BoxTypes.SAMPLE_SIZE_BOX)) sampleCount = ((SampleSizeBox)_parent.GetChild(BoxTypes.SAMPLE_SIZE_BOX)).GetSampleCount();
+			sampleCount = System.Math.Min(sampleCount, GetLeft(input));
 			//TODO: uncomment when CompactSampleSizeBox is implemented
 			//else if(parent.containsChild(BoxTypes.COMPACT_SAMPLE_SIZE_BOX)) sampleCount = ((CompactSampleSizeBox)parent.getChild(BoxTypes.SAMPLE_SIZE_BOX)).getSampleSize();
 			_sampleHasRedundancy = new int[(int)sampleCount];

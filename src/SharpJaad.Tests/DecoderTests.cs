@@ -103,19 +103,20 @@ namespace SharpJaad.Tests
         }
 
         [Fact]
-        public void FrameTooShortForTheHeaderCheckKeepsThePreviousSamples()
+        public void FrameTooShortForTheHeaderCheckYieldsNoSamples()
         {
-            // the end of a frame of less than 4 bytes is reached while checking for an ADIF header, before decoding
-            // starts: the buffer keeps the previous frame, as it always has
+            // the end of a frame of less than 4 bytes is reached while checking for an ADIF header: like any truncated
+            // frame it yields no samples (up to 0.2.0 the buffer kept the previous frame) and decoding continues
             var stream = TestStreams.Read(TestStreams.SamplePath);
             var decoder = new Decoder(stream.DecoderSpecificInfo);
             var buffer = new SampleBuffer();
             decoder.DecodeFrame(stream.Frames[0], buffer);
-            byte[] previous = (byte[])buffer.Data.Clone();
 
             decoder.DecodeFrame(new byte[] { stream.Frames[1][0], stream.Frames[1][1], stream.Frames[1][2] }, buffer);
+            Assert.Empty(buffer.Data);
 
-            Assert.Equal(previous, buffer.Data);
+            decoder.DecodeFrame(stream.Frames[2], buffer);
+            Assert.Equal(4096, buffer.Data.Length);
         }
 
         [Fact]

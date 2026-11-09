@@ -1179,6 +1179,12 @@ namespace SharpJaad.AAC.Ps
 
                 for (env = 0; env < _numEnv; env++)
                 {
+                    // indexes kept from frames of another resolution can be out of the range of the tables (as FAAD2)
+                    if (_iidIndex[env][bk] < -no_iid_steps) _iidIndex[env][bk] = -no_iid_steps;
+                    else if (_iidIndex[env][bk] > no_iid_steps) _iidIndex[env][bk] = no_iid_steps;
+                    if (_iccIndex[env][bk] < 0) _iccIndex[env][bk] = 0;
+                    else if (_iccIndex[env][bk] > 7) _iccIndex[env][bk] = 7;
+
                     if (_iccMode < 3)
                     {
                         /* type 'A' mixing as described in 8.6.4.6.2.1 */

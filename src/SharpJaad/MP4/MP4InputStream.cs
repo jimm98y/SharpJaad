@@ -101,7 +101,8 @@ namespace SharpJaad.MP4
 				if (_input != null) i = _input.Read(b, off + read, len - read);
 
 				//else if (fin != null) i = fin.read(b, off + read, len - read);
-				if (i < 0) throw new EndOfStreamException();
+				// Stream.Read returns 0 (not -1) at the end of the stream
+				if (i <= 0) throw new EndOfStreamException();
 				else read += i;
 			}
 
@@ -122,14 +123,12 @@ namespace SharpJaad.MP4
 		 */
 		public long ReadBytes(int n)
 		{
-			if (n < 1 || n > 8) throw new IndexOutOfRangeException("invalid number of bytes to read: " + n);
-			byte[] b = new byte[n];
-			Read(b, 0, n);
-
+			if (n < 1 || n > 8) throw new MP4Exception("invalid number of bytes to read: " + n);
+			// unsigned, also for 4 bytes; 8 bytes above long.MaxValue wrap and are rejected by the callers as negative
 			long result = 0;
 			for (int i = 0; i < n; i++)
 			{
-				result = ((int)result << 8) | (b[i] & 0xFF);
+				result = (result << 8) | (long)Read();
 			}
 			return result;
 		}
@@ -163,17 +162,14 @@ namespace SharpJaad.MP4
 		 */
 		public string ReadString(int n)
 		{
-			int i = -1;
-			int pos = 0;
-			char[]
-			c = new char[n];
-			while (pos < n)
+			if (n < 0) throw new MP4Exception("invalid string length: " + n);
+			// grows with the bytes that are actually there: a length from the file allocates nothing up front
+			var c = new StringBuilder(Math.Min(n, 256));
+			for (int pos = 0; pos < n; pos++)
 			{
-				i = Read();
-				c[pos] = (char)i;
-				pos++;
+				c.Append((char)Read());
 			}
-			return new string(c, 0, pos);
+			return c.ToString();
 		}
 
 		/**
@@ -224,7 +220,7 @@ namespace SharpJaad.MP4
 			int i = (bom[0] << 8) | bom[1];
 
 			//read null-terminated
-			byte[] b = ReadTerminated(max - 2, 0);
+			byte[] b = ReadTerminated(Math.Max(max - 2, 0), 0);
 			//copy bom
 			byte[] b2 = new byte[b.Length + bom.Length];
 			System.Array.Copy(bom, 0, b2, 0, bom.Length);
@@ -252,19 +248,15 @@ namespace SharpJaad.MP4
 		 */
 		public byte[] ReadTerminated(int max, int terminator)
 		{
-			byte[]
-			b = new byte[max];
-			int pos = 0;
-			int i = 0;
-			while (pos < max && i != -1)
+			// up to the terminator (which is consumed) or max bytes; grows with the bytes that are actually there
+			var b = new MemoryStream(Math.Max(0, Math.Min(max, 256)));
+			for (int pos = 0; pos < max; pos++)
 			{
-				i = Read();
-				if (i != -1) b[pos++] = (byte)i;
+				int i = Read();
+				if (i == terminator) break;
+				b.WriteByte((byte)i);
 			}
-
-			byte[] ret = new byte[pos];
-			Array.Copy(b, ret, Math.Min(b.Length, pos));
-			return ret;
+			return b.ToArray();
 		}
 
 		/**
@@ -301,25 +293,40 @@ namespace SharpJaad.MP4
 		 */
 		public void SkipBytes(long n)
 		{
+			if (n <= 0) return;
 			long l = 0;
-			if (_peeked >= 0 && n > 0) 
+			if (_peeked >= 0)
 			{
 				_peeked = -1;
 				l++;
 			}
 
-			while (l < n) 
+			if (_input.CanSeek)
 			{
-				int skipped = 0;
-				for (int i = 0; i < n - l; i++)
+				// seek instead of reading; past the end is the end of the stream
+				long left = _input.Length - _input.Position;
+				if (n - l > left)
 				{
-					if(_input.ReadByte() != -1)
-						skipped++;
+					_input.Seek(0, SeekOrigin.End);
+					_offset += l + left;
+					throw new EndOfStreamException();
 				}
-
-				if (_input != null) l += skipped;
-
-				//else if (fin != null) l += fin.skipBytes((int)(n - l));
+				_input.Seek(n - l, SeekOrigin.Current);
+				l = n;
+			}
+			else
+			{
+				byte[] skip = new byte[(int)Math.Min(n - l, 4096)];
+				while (l < n)
+				{
+					int i = _input.Read(skip, 0, (int)Math.Min(n - l, skip.Length));
+					if (i <= 0)
+					{
+						_offset += l;
+						throw new EndOfStreamException();
+					}
+					l += i;
+				}
 			}
 
 			_offset += l;
@@ -356,7 +363,10 @@ namespace SharpJaad.MP4
 			//else throw new IOException("could not seek: no random access");
 			if (_input.CanSeek)
 			{
+				if (pos < 0) throw new MP4Exception("invalid offset: " + pos);
 				_input.Seek(pos, SeekOrigin.Begin);
+				_offset = pos;
+				_peeked = -1;
 			}
 			else
 			{
@@ -371,6 +381,51 @@ namespace SharpJaad.MP4
 		 * 
 		 * @return true if random access is available
 		 */
+		/// <summary>
+		/// Reads n bytes into a new array that grows with the data actually read, so that a length from the file
+		/// allocates no more than the stream holds.
+		/// </summary>
+		internal byte[] ReadFully(int n)
+		{
+			if (n < 0) throw new MP4Exception("invalid length: " + n);
+			long remaining = GetRemaining();
+			if (remaining != long.MaxValue && n > remaining) throw new EndOfStreamException();
+			if (n <= 65536 || remaining != long.MaxValue)
+			{
+				// small, or known to be in the stream
+				byte[] b = new byte[n];
+				Read(b, 0, n);
+				return b;
+			}
+			var m = new MemoryStream();
+			byte[] chunk = new byte[65536];
+			for (int left = n; left > 0;)
+			{
+				int c = Math.Min(left, chunk.Length);
+				Read(chunk, 0, c);
+				m.Write(chunk, 0, c);
+				left -= c;
+			}
+			return m.ToArray();
+		}
+
+		/// <summary>
+		/// The length of the stream, long.MaxValue if that is not known (a stream that cannot seek).
+		/// </summary>
+		internal long GetLength()
+		{
+			return _input.CanSeek ? _input.Length : long.MaxValue;
+		}
+
+		/// <summary>
+		/// The bytes left in the stream, long.MaxValue if that is not known (a stream that cannot seek).
+		/// </summary>
+		internal long GetRemaining()
+		{
+			if (!_input.CanSeek) return long.MaxValue;
+			return _input.Length - _input.Position + (_peeked >= 0 ? 1 : 0);
+		}
+
 		public bool HasRandomAccess()
 		{
 			//return fin != null;

@@ -70,7 +70,7 @@ namespace SharpJaad.AAC.Syntax
         public void Decode(BitStream input, DecoderConfig conf, bool commonWindow)
         {
             SampleFrequency sf = conf.GetSampleFrequency();
-            if (sf == SampleFrequency.SAMPLE_FREQUENCY_NONE) throw new AACException("invalid sample frequency");
+            if ((int)sf < 0 || (int)sf >= ScaleFactorBands.SWB_LONG_WINDOW_COUNT.Length) throw new AACException("invalid sample frequency: " + sf); //also 12..15, which have no tables
 
             input.SkipBit(); //reserved
             _windowSequence = (WindowSequence)input.ReadBits(2);
@@ -83,6 +83,7 @@ namespace SharpJaad.AAC.Syntax
             if (_windowSequence == WindowSequence.EIGHT_SHORT_SEQUENCE)
             {
                 _maxSFB = input.ReadBits(4);
+                if (_maxSFB > (_smallFrames ? ScaleFactorBands.SWB_COUNT_120[(int)sf] : ScaleFactorBands.SWB_SHORT_WINDOW_COUNT[(int)sf])) throw new AACException("max_sfb out of range: " + _maxSFB);
                 int i;
                 for (i = 0; i < 7; i++)
                 {
@@ -100,6 +101,8 @@ namespace SharpJaad.AAC.Syntax
             else
             {
                 _maxSFB = input.ReadBits(6);
+                if (_maxSFB > (_smallFrames ? ScaleFactorBands.SWB_COUNT_960[(int)sf] : ScaleFactorBands.SWB_LONG_WINDOW_COUNT[(int)sf])) throw new AACException("max_sfb out of range: " + _maxSFB);
+
                 _windowCount = 1;
                 _swbOffsets = _smallFrames ? ScaleFactorBands.SWB_OFFSET_960[(int)sf] : ScaleFactorBands.SWB_OFFSET_LONG_WINDOW[(int)sf];
                 _swbCount = _smallFrames ? ScaleFactorBands.SWB_COUNT_960[(int)sf] : ScaleFactorBands.SWB_LONG_WINDOW_COUNT[(int)sf];

@@ -183,7 +183,7 @@ namespace SharpJaad.Tools
         public void ReadFully(byte[] b, int off, int len)
         {
             if (len < 0)
-                throw new Exception("IndexOutOfBounds");
+                throw new ArgumentOutOfRangeException("len");
             int n = 0;
             while (n < len)
             {
@@ -213,7 +213,7 @@ namespace SharpJaad.Tools
         {
             int ch = _in.ReadByte();
             if (ch < 0)
-                throw new Exception("EOF");
+                throw new EndOfStreamException("EOF");
             return (ch != 0);
         }
 
@@ -238,7 +238,7 @@ namespace SharpJaad.Tools
         {
             int ch = _in.ReadByte();
             if (ch < 0)
-                throw new Exception("EOF");
+                throw new EndOfStreamException("EOF");
             return (byte)(ch);
         }
 
@@ -263,7 +263,7 @@ namespace SharpJaad.Tools
         {
             int ch = _in.ReadByte();
             if (ch < 0)
-                throw new Exception("EOF");
+                throw new EndOfStreamException("EOF");
             return ch;
         }
 
@@ -290,7 +290,7 @@ namespace SharpJaad.Tools
             int ch1 = _in.ReadByte();
             int ch2 = _in.ReadByte();
             if ((ch1 | ch2) < 0)
-                throw new Exception("EOF");
+                throw new EndOfStreamException("EOF");
             return (short)((ch1 << 8) + (ch2 << 0));
         }
 
@@ -317,7 +317,7 @@ namespace SharpJaad.Tools
             int ch1 = _in.ReadByte();
             int ch2 = _in.ReadByte();
             if ((ch1 | ch2) < 0)
-                throw new Exception("EOF");
+                throw new EndOfStreamException("EOF");
             return (ch1 << 8) + (ch2 << 0);
         }
 
@@ -344,7 +344,7 @@ namespace SharpJaad.Tools
             int ch1 = _in.ReadByte();
             int ch2 = _in.ReadByte();
             if ((ch1 | ch2) < 0)
-                throw new Exception("EOF");
+                throw new EndOfStreamException("EOF");
             return (char)((ch1 << 8) + (ch2 << 0));
         }
 
@@ -373,7 +373,7 @@ namespace SharpJaad.Tools
             int ch3 = _in.ReadByte();
             int ch4 = _in.ReadByte();
             if ((ch1 | ch2 | ch3 | ch4) < 0)
-                throw new Exception("EOF");
+                throw new EndOfStreamException("EOF");
             return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
         }
 

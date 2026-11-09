@@ -22,25 +22,37 @@ namespace SharpJaad.MP4.OD
 
         public static Descriptor CreateDescriptor(MP4InputStream input)
         {
-            //read tag and size
+            return CreateDescriptor(input, long.MaxValue, 0);
+        }
+
+        private const int MAX_DEPTH = 16; //real descriptors nest 3 deep; the parsing is recursive
+
+        // limit: the bytes left in the parent descriptor
+        private static Descriptor CreateDescriptor(MP4InputStream input, long limit, int depth)
+        {
+            if (depth >= MAX_DEPTH) throw new MP4Exception("descriptors nested too deep");
+            //read tag and size: at most 4 bytes of 7 bits (ISO/IEC 14496-1 8.3.3)
             int type = input.Read();
             int read = 1;
             int size = 0;
             int b = 0;
             do
             {
+                if (read == 5) throw new MP4Exception("invalid descriptor size");
                 b = input.Read();
                 size <<= 7;
                 size |= b & 0x7f;
                 read++;
             }
             while ((b & 0x80) == 0x80);
+            if (read + (long)size > limit) throw new MP4Exception("descriptor larger than its parent: " + size);
 
             //create descriptor
             Descriptor desc = ForTag(type);
             desc._type = type;
             desc._size = size;
             desc._start = input.GetOffset();
+            desc._depth = depth;
 
             //decode
             desc.Decode(input);
@@ -88,6 +100,7 @@ namespace SharpJaad.MP4.OD
             return desc;
         }
         protected int _type, _size;
+        private int _depth;
         protected long _start;
         private List<Descriptor> _children;
 
@@ -104,7 +117,8 @@ namespace SharpJaad.MP4.OD
             Descriptor desc;
             while ((_size - (input.GetOffset() - _start)) > 0)
             {
-                desc = CreateDescriptor(input);
+                desc = CreateDescriptor(input, _size - (input.GetOffset() - _start), _depth + 1);
+
                 _children.Add(desc);
             }
         }

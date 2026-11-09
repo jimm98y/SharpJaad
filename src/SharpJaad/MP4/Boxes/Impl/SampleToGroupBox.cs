@@ -28,7 +28,7 @@
             base.Decode(input);
 
             _groupingType = input.ReadBytes(4);
-            int entryCount = (int)input.ReadBytes(4);
+            int entryCount = ReadCount(input, 4, 8);
             _sampleCount = new long[entryCount];
             _groupDescriptionIndex = new long[entryCount];
 

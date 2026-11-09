@@ -316,13 +316,26 @@ namespace SharpJaad.AAC.Sbr
                 return;
             }
 
+            // the loop ends when the patches reach kx + M: tables from a bad header may never get there (FAAD2
+            // also only loops while they are valid); every pass adds a patch or moves on, so it ends within a few
+            int passes = 0;
             do
             {
+                if (++passes > 64 || sbr._noPatches >= sbr._patchNoSubbands.Length)
+                {
+                    sbr._noPatches = 0;
+                    return;
+                }
                 int j = k + 1;
 
                 do
                 {
                     j--;
+                    if (j < 0)
+                    {
+                        sbr._noPatches = 0;
+                        return;
+                    }
 
                     sb = sbr._f_master[j];
                     odd = (sb - 2 + sbr._k0) % 2;
@@ -349,7 +362,8 @@ namespace SharpJaad.AAC.Sbr
             }
             while (sb != sbr._kx + sbr._M);
 
-            if (sbr._patchNoSubbands[sbr._noPatches - 1] < 3 && sbr._noPatches > 1)
+            if (sbr._noPatches > 1 && sbr._patchNoSubbands[sbr._noPatches - 1] < 3)
+
             {
                 sbr._noPatches--;
             }

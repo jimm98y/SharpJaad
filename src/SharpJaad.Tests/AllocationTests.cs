@@ -11,6 +11,7 @@ namespace SharpJaad.Tests
     /// elements of the stream and the output buffer). GC.GetAllocatedBytesForCurrentThread is not available on
     /// .NET Framework, so these tests run on .NET only.
     /// </summary>
+    [Collection(nameof(AllocationTests))]
     public class AllocationTests
     {
         [Fact]
@@ -50,10 +51,14 @@ namespace SharpJaad.Tests
         {
             List<byte[]> frames = stream.Frames;
 
-            // warm up: static tables and JIT compilation are done once per process, not per frame
-            var warmup = TestStreams.CreateDecoder(stream.DecoderSpecificInfo);
-            var warmupBuffer = new SampleBuffer();
-            for (int i = 0; i < frameCount; i++) warmup.DecodeFrame(frames[i], warmupBuffer);
+            // warm up: static tables and JIT compilation are done once per process, not per frame; twice, so that the
+            // tiered JIT has compiled the hot methods again before the measurement
+            for (int pass = 0; pass < 2; pass++)
+            {
+                var warmup = TestStreams.CreateDecoder(stream.DecoderSpecificInfo);
+                var warmupBuffer = new SampleBuffer();
+                for (int i = 0; i < frameCount; i++) warmup.DecodeFrame(frames[i], warmupBuffer);
+            }
 
             var decoder = TestStreams.CreateDecoder(stream.DecoderSpecificInfo);
             var buffer = new SampleBuffer();
@@ -76,6 +81,20 @@ namespace SharpJaad.Tests
                 Assert.Fail($"{total} bytes allocated in frames 1..{frameCount - 1}, the first {perFrame[first]} bytes in frame {first}");
             }
         }
+    }
+}
+#endif
+
+#if NET
+namespace SharpJaad.Tests
+{
+    /// <summary>
+    /// The allocation tests run alone: allocations of the runtime on the test thread (the tiered JIT compiling while
+    /// other tests run) would otherwise count as allocations of the decoder.
+    /// </summary>
+    [CollectionDefinition(nameof(AllocationTests), DisableParallelization = true)]
+    public class AllocationTestsCollection
+    {
     }
 }
 #endif
