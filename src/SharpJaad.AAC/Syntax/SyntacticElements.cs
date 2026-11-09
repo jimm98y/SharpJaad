@@ -26,7 +26,10 @@ namespace SharpJaad.AAC.Syntax
         private FIL[] fils;
         private int curElem, curCCE, curDSE, curFIL;
         private float[][] data;
-        private float[][] dataMono, dataStereo; //the buffers for one and two channels, sharing the first
+        private readonly float[][][] channelPool = new float[2][][]; //per frame length: without and with SBR
+        private readonly float[][][][] channelArrays = new float[2][][][]; //per frame length and channel count
+        private readonly byte[][] outputBuffers = new byte[4][]; //output arrays of the last sizes
+        private int nextOutputBuffer;
 
         public SyntacticElements(DecoderConfig config)
         {
@@ -261,26 +264,10 @@ namespace SharpJaad.AAC.Syntax
             if (chs == 1 && psPresent) chs++;
             int mult = sbrPresent && !IsSBRDownSampled() ? 2 : 1;
             int length = mult * config.GetFrameLength();
-            //only reallocate if needed
+            //only change the buffers if needed
             if (data == null || chs != data.Length || length != data[0].Length)
             {
-                if (chs <= 2 && dataStereo != null && dataStereo[0].Length == length)
-                {
-                    // mono to PS stereo: the buffers are ready (each is overwritten in full by every frame)
-                    data = chs == 1 ? dataMono : dataStereo;
-                }
-                else
-                {
-                    data = new float[chs][];
-
-                    for (int i = 0; i < chs; i++)
-                    {
-                        data[i] = new float[length];
-                    }
-                    // a mono stream turns stereo when PS starts: the buffers for that are allocated along
-                    dataMono = chs == 1 ? data : chs == 2 ? new float[][] { data[0] } : null;
-                    dataStereo = chs == 1 ? new float[][] { data[0], new float[length] } : chs == 2 ? data : null;
-                }
+                data = GetChannelBuffers(chs, length, mult - 1);
             }
 
             //the coupling channels first: their output is added to the channels they couple to
@@ -307,6 +294,46 @@ namespace SharpJaad.AAC.Syntax
                 }
                 else channel += ProcessSingle((SCE_LFE)e, elementIsLFE[i], filterBank, channel, profile, sf);
             }
+        }
+
+        /// <summary>
+        /// The buffers of the channels, for chs channels of length samples. The channel count changes with a PCE, PS
+        /// or SBR in the stream, possibly in every frame: the buffers come from a pool that only grows (per frame
+        /// length: with and without SBR), and each channel count has its array of them. A change clears the buffers,
+        /// as new ones would be.
+        /// </summary>
+        private float[][] GetChannelBuffers(int chs, int length, int lengthIndex)
+        {
+            // a mono stream turns stereo when PS starts, in any frame: the buffers for that are prepared along
+            if (chs == 1) GetChannelBuffers(2, length, lengthIndex);
+            float[][] pool = channelPool[lengthIndex];
+            if (pool == null || pool.Length < chs)
+            {
+                var grown = new float[chs][];
+
+                int have = pool == null ? 0 : pool.Length;
+                if (pool != null) Array.Copy(pool, grown, have);
+                for (int i = have; i < chs; i++) grown[i] = new float[length];
+                channelPool[lengthIndex] = pool = grown;
+            }
+
+            float[][][] arrays = channelArrays[lengthIndex];
+            if (arrays == null || arrays.Length <= chs)
+            {
+                var grown = new float[chs + 1][][];
+                if (arrays != null) Array.Copy(arrays, grown, arrays.Length);
+                channelArrays[lengthIndex] = arrays = grown;
+            }
+            float[][] buffers = arrays[chs];
+            if (buffers == null)
+            {
+                buffers = new float[chs][];
+                Array.Copy(pool, buffers, chs);
+                arrays[chs] = buffers;
+            }
+
+            for (int i = 0; i < chs; i++) Array.Clear(buffers[i], 0, length);
+            return buffers;
         }
 
         private int ProcessSingle(SCE_LFE scelfe, bool lfe, FilterBank filterBank, int channel, Profile profile, SampleFrequency sf)
@@ -486,6 +513,20 @@ namespace SharpJaad.AAC.Syntax
             }
         }
 
+        // an output array of size bytes: the size changes with the channel count and SBR, possibly in every frame; the
+        // arrays of the last few sizes are kept (the Data of a SampleBuffer is valid until the next frame)
+        private byte[] GetOutputBuffer(int size)
+        {
+            for (int i = 0; i < outputBuffers.Length; i++)
+            {
+                if (outputBuffers[i] != null && outputBuffers[i].Length == size) return outputBuffers[i];
+            }
+            byte[] b = new byte[size];
+            outputBuffers[nextOutputBuffer] = b;
+            nextOutputBuffer = (nextOutputBuffer + 1) % outputBuffers.Length;
+            return b;
+        }
+
         public void SendToOutput(SampleBuffer buffer)
         {
             bool be = buffer.BigEndian;
@@ -499,7 +540,8 @@ namespace SharpJaad.AAC.Syntax
             int freq = mult * config.GetSampleFrequency().GetFrequency();
 
             byte[] b = buffer.Data;
-            if (b.Length != chs * length * 2) b = new byte[chs * length * 2];
+            if (b.Length != chs * length * 2) b = GetOutputBuffer(chs * length * 2);
+
 
             float[] cur;
             int i, j, off;

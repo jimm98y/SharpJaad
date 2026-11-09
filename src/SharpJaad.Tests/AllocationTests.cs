@@ -47,7 +47,48 @@ namespace SharpJaad.Tests
             return stream.Frames.Count;
         }
 
+        [Fact]
+        public void ChangingTheChannelsWithPCEsAllocatesNothing()
+        {
+            // frames of only a PCE, alternating between 2 and 93 channels (the most a PCE can describe): the output
+            // changes size in every frame, the buffers of both sizes are reused
+            var stream = TestStreams.Read(TestStreams.SamplePath);
+            byte[] two = PceFrame(1, 0, 0, 0), many = PceFrame(15, 15, 15, 3);
+            var decoder = new Decoder(stream.DecoderSpecificInfo);
+            var buffer = new SampleBuffer();
+            for (int i = 0; i < 6; i++) decoder.DecodeFrame(i % 2 == 0 ? two : many, buffer);
+            Assert.Equal(93, buffer.Channels);
+
+            long before = GC.GetAllocatedBytesForCurrentThread();
+            for (int i = 0; i < 40; i++) decoder.DecodeFrame(i % 2 == 0 ? two : many, buffer);
+            long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+
+            Assert.Equal(93, buffer.Channels);
+            Assert.Equal(0, allocated);
+        }
+
+        // a raw data block of a PCE with front, side and back CPEs and LFEs, then END
+        private static byte[] PceFrame(int front, int side, int back, int lfe)
+        {
+            var bits = new List<int>();
+            void Put(int value, int n) { for (int i = n - 1; i >= 0; i--) bits.Add((value >> i) & 1); }
+            Put(5, 3); // ID_PCE
+            Put(0, 4); Put(1, 2); Put(3, 4); // tag, object type (LC), sample rate index (48 kHz)
+            Put(front, 4); Put(side, 4); Put(back, 4); Put(lfe, 2); Put(0, 3); Put(0, 4);
+            Put(0, 1); Put(0, 1); Put(0, 1); // no mixdowns
+            for (int i = 0; i < front + side + back; i++) { Put(1, 1); Put(i % 16, 4); } // CPEs
+            for (int i = 0; i < lfe; i++) Put(i, 4);
+            while (bits.Count % 8 != 0) bits.Add(0); // byte_align
+            Put(0, 8); // no comment
+            Put(7, 3); // ID_END
+            while (bits.Count % 8 != 0) bits.Add(0);
+            var frame = new byte[bits.Count / 8];
+            for (int i = 0; i < bits.Count; i++) frame[i / 8] |= (byte)(bits[i] << (7 - i % 8));
+            return frame;
+        }
+
         private static void AssertNoAllocationsAfterFirstFrame(TestStreams.Stream stream, int frameCount)
+
         {
             List<byte[]> frames = stream.Frames;
 
