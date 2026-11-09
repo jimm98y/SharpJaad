@@ -11,8 +11,7 @@
         {
             //base.Decode(input);
 
-            _data = new byte[(int)GetLeft(input)];
-            input.ReadBytes(_data);
+            _data = input.ReadFully((int)GetLeft(input));
         }
 
         public byte[] GetData()

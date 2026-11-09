@@ -15,6 +15,8 @@ namespace SharpJaad.MP4.Boxes.Impl
             base.Decode(input);
 
             bool compact = _type == BoxTypes.COMPACT_SAMPLE_SIZE_BOX;
+            const long MAX_CONSTANT_SIZE_SAMPLES = 1 << 24; // when the stream length is not known: about 100 hours of AAC
+
 
             int sampleSize;
             if (compact) {
@@ -24,6 +26,12 @@ namespace SharpJaad.MP4.Boxes.Impl
             else sampleSize = (int)input.ReadBytes(4);
 
             _sampleCount = input.ReadBytes(4);
+            // the sizes must be in the box; with one size for all samples, the samples must fit in the stream
+            long tableBytes = !compact ? (sampleSize == 0 ? _sampleCount * 4 : 0) : sampleSize == 4 ? (_sampleCount + 1) / 2 : _sampleCount * (sampleSize / 8);
+            if (compact && sampleSize != 4 && sampleSize != 8 && sampleSize != 16) throw new MP4Exception("invalid compact sample size: " + sampleSize);
+            if (tableBytes > GetLeft(input) || _sampleCount > int.MaxValue
+                || (!compact && sampleSize != 0 && (_sampleCount * sampleSize > input.GetLength() || _sampleCount > MAX_CONSTANT_SIZE_SAMPLES)))
+                throw new MP4Exception("invalid sample count: " + _sampleCount);
             _sampleSizes = new long[(int)_sampleCount];
 
             if (compact)
@@ -36,7 +44,7 @@ namespace SharpJaad.MP4.Boxes.Impl
                     {
                         x = input.Read();
                         _sampleSizes[i] = (x >> 4) & 0xF;
-                        _sampleSizes[i + 1] = x & 0xF;
+                        if (i + 1 < _sampleCount) _sampleSizes[i + 1] = x & 0xF;
                     }
                 }
                 else

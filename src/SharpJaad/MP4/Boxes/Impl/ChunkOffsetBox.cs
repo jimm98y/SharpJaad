@@ -12,7 +12,7 @@
             base.Decode(input);
 
             int len = (_type == BoxTypes.CHUNK_LARGE_OFFSET_BOX) ? 8 : 4;
-            int entryCount = (int)input.ReadBytes(4);
+            int entryCount = ReadCount(input, 4, 4);
             _chunks = new long[entryCount];
 
             for (int i = 0; i < entryCount; i++)

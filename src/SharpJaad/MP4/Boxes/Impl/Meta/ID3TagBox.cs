@@ -15,8 +15,7 @@
 
             _language = Utils.GetLanguageCode(input.ReadBytes(2));
 
-            _id3Data = new byte[(int)GetLeft(input)];
-            input.ReadBytes(_id3Data);
+            _id3Data = input.ReadFully((int)GetLeft(input));
         }
 
         public byte[] GetID3Data()

@@ -7,7 +7,8 @@
         public static int EnvelopeTimeBorderVector(SBR sbr, int ch)
         {
             int l, border, temp;
-            int[] t_E_temp = new int[6];
+            int[] t_E_temp = sbr._t_E_temp;
+            System.Array.Clear(t_E_temp, 0, t_E_temp.Length);
 
             t_E_temp[0] = sbr._rate * sbr._abs_bord_lead[ch];
             t_E_temp[sbr._L_E[ch]] = sbr._rate * sbr._abs_bord_trail[ch];
@@ -58,7 +59,7 @@
                         {
                             border += sbr._bs_rel_bord[ch, l];
 
-                            if (sbr._rate * border + sbr._tHFAdj > sbr._numTimeSlotsRate + sbr._tHFGen)
+                            if (border > sbr._abs_bord_trail[ch] || sbr._rate * border + sbr._tHFAdj > sbr._numTimeSlotsRate + sbr._tHFGen) //as FAAD2: the borders stay ordered
                                 return 1;
 
                             t_E_temp[i++] = sbr._rate * border;
@@ -76,7 +77,7 @@
                         {
                             border += sbr._bs_rel_bord_0[ch, l];
 
-                            if (sbr._rate * border + sbr._tHFAdj > sbr._numTimeSlotsRate + sbr._tHFGen)
+                            if (border > sbr._abs_bord_trail[ch] || sbr._rate * border + sbr._tHFAdj > sbr._numTimeSlotsRate + sbr._tHFGen) //as FAAD2: the borders stay ordered
                                 return 1;
 
                             t_E_temp[i++] = sbr._rate * border;

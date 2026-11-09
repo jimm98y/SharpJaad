@@ -20,7 +20,7 @@ namespace SharpJaad.MP4.Boxes.Impl
         {
             base.Decode(input);
 
-            _esd = (ESDescriptor)ObjectDescriptor.CreateDescriptor(input);
+            _esd = ObjectDescriptor.CreateDescriptor(input) as ESDescriptor ?? throw new MP4Exception("the ESDBox holds no ES descriptor");
         }
 
         public ESDescriptor GetEntryDescriptor()

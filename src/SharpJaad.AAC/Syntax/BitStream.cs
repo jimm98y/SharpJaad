@@ -9,6 +9,7 @@ namespace SharpJaad.AAC.Syntax
         private const int WORD_BYTES = 4;
         private const int BYTE_MASK = 0xff;
         private byte[] _buffer;
+        private int _length; //number of valid bytes in _buffer (the buffer is only ever grown, never shrunk)
         private int _pos; //offset in the buffer array
         private int _cache; //current 4 bytes, that are read from the buffer
         protected int _bitsCached; //remaining bits in current cache
@@ -26,6 +27,20 @@ namespace SharpJaad.AAC.Syntax
         {
             Reset();
             _buffer = null;
+            _length = 0;
+        }
+
+        /// <summary>
+        /// Pre-sizes the internal buffer so that <see cref="SetData(byte[])"/> does not have to grow it later.
+        /// </summary>
+        internal void EnsureCapacity(int size)
+        {
+            if (_buffer == null || _buffer.Length < size)
+            {
+                byte[] newBuffer = new byte[size];
+                if (_buffer != null) Buffer.BlockCopy(_buffer, 0, newBuffer, 0, _length);
+                _buffer = newBuffer;
+            }
         }
 
         public void SetData(byte[] data)
@@ -50,10 +65,11 @@ namespace SharpJaad.AAC.Syntax
             size -= shift;
 
             //only reallocate if needed
-            if (_buffer == null || _buffer.Length != size)
+            if (_buffer == null || _buffer.Length < size)
                 _buffer = new byte[size];
 
-            Buffer.BlockCopy(data, shift, _buffer, 0, _buffer.Length);
+            _length = size;
+            Buffer.BlockCopy(data, shift, _buffer, 0, size);
         }
 
         public void ByteAlign()
@@ -77,7 +93,7 @@ namespace SharpJaad.AAC.Syntax
 
         public int GetBitsLeft()
         {
-            return 8 * (_buffer.Length - _pos) + _bitsCached;
+            return 8 * (_length - _pos) + _bitsCached;
         }
 
         /**
@@ -87,7 +103,7 @@ namespace SharpJaad.AAC.Syntax
         protected int ReadCache(bool peek)
         {
             int i;
-            if (_pos > _buffer.Length - WORD_BYTES) throw new AACException("end of stream", true);
+            if (_pos > _length - WORD_BYTES) throw new AACException("end of stream", true);
             else i = (_buffer[_pos] & BYTE_MASK) << 24
                         | (_buffer[_pos + 1] & BYTE_MASK) << 16
                         | (_buffer[_pos + 2] & BYTE_MASK) << 8

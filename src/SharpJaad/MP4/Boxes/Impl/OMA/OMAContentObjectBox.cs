@@ -11,9 +11,9 @@
         {
             base.Decode(input);
 
-            int len = (int)input.ReadBytes(4);
-            _data = new byte[len];
-            input.ReadBytes(_data);
+            long len = input.ReadBytes(4);
+            if (len > GetLeft(input)) throw new MP4Exception("invalid content object length: " + len);
+            _data = input.ReadFully((int)len);
         }
 
         /**

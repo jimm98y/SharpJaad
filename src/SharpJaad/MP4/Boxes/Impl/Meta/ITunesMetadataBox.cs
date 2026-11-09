@@ -71,8 +71,7 @@ namespace SharpJaad.MP4.Boxes.Impl.Meta
 
             input.SkipBytes(4); //padding?
 
-            _data = new byte[(int)GetLeft(input)];
-            input.ReadBytes(_data);
+            _data = input.ReadFully((int)GetLeft(input));
         }
 
         public DataType GetDataType()

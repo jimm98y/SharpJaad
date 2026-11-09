@@ -20,5 +20,8 @@ namespace SharpJaad.AAC
         {
             _eos = eos;
         }
+
+        internal AACException(string message, System.Exception innerException) : base(message, innerException)
+        { }
     }
 }

@@ -34,7 +34,7 @@ namespace SharpJaad.AAC.Tools
                             scale = c * scaleFactors[idx];
                             for (w = 0; w < info.GetWindowGroupLength(g); w++)
                             {
-                                off = groupOff + w * 128 + offsets[i];
+                                off = groupOff + w * info.GetShortWindowLength() + offsets[i];
                                 for (j = 0; j < offsets[i + 1] - offsets[i]; j++)
                                 {
                                     specR[off + j] = specL[off + j] * scale;
@@ -49,7 +49,7 @@ namespace SharpJaad.AAC.Tools
                         i = end;
                     }
                 }
-                groupOff += info.GetWindowGroupLength(g) * 128;
+                groupOff += info.GetWindowGroupLength(g) * info.GetShortWindowLength();
             }
         }
     }

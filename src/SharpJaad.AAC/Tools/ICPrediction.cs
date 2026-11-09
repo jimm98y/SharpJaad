@@ -13,6 +13,7 @@ namespace SharpJaad.AAC.Tools
         private bool _predictorReset;
         private int _predictorResetGroup;
         private bool[] _predictionUsed;
+        private const int MAX_PREDICTION_SFB = 64; //max_sfb is 6 bits
         private PredictorState[] _states;
 
         private sealed class PredictorState
@@ -28,6 +29,7 @@ namespace SharpJaad.AAC.Tools
         public ICPrediction()
         {
             _states = new PredictorState[MAX_PREDICTORS];
+            _predictionUsed = new bool[MAX_PREDICTION_SFB];
             ResetAllPredictors();
         }
 
@@ -35,11 +37,15 @@ namespace SharpJaad.AAC.Tools
         {
             int predictorCount = sf.GetPredictorCount();
 
-            if (_predictorReset = input.ReadBool()) _predictorResetGroup = input.ReadBits(5);
+            if (_predictorReset = input.ReadBool())
+            {
+                _predictorResetGroup = input.ReadBits(5);
+                if (_predictorResetGroup < 1 || _predictorResetGroup > 30) throw new AACException("invalid predictor reset group: " + _predictorResetGroup);
+            }
 
             int maxPredSFB = sf.GetMaximalPredictionSFB();
             int length = Math.Min(maxSFB, maxPredSFB);
-            _predictionUsed = new bool[length];
+            Array.Clear(_predictionUsed, 0, _predictionUsed.Length);
             for (int sfb = 0; sfb < length; sfb++)
             {
                 _predictionUsed[sfb] = input.ReadBool();
@@ -56,6 +62,10 @@ namespace SharpJaad.AAC.Tools
             _predictionUsed[sfb] = false;
         }
 
+        /// <summary>
+        /// Runs the predictors of a long window frame, also of the bands above max_sfb and in frames without prediction
+        /// data: their state must follow the spectrum. The prediction is only added where the frame uses it.
+        /// </summary>
         public void Process(ICStream ics, float[] data, SampleFrequency sf)
         {
             ICSInfo info = ics.GetInfo();
@@ -63,18 +73,31 @@ namespace SharpJaad.AAC.Tools
             if (info.IsEightShortFrame()) ResetAllPredictors();
             else
             {
-                int len = Math.Min(sf.GetMaximalPredictionSFB(), info.GetMaxSFB());
+                bool present = info.IsICPredictionPresent();
+                int len = Math.Min(sf.GetMaximalPredictionSFB(), info.GetSWBCount());
                 int[] swbOffsets = info.GetSWBOffsets();
                 int k;
                 for (int sfb = 0; sfb < len; sfb++)
                 {
+                    bool output = present && _predictionUsed[sfb];
                     for (k = swbOffsets[sfb]; k < swbOffsets[sfb + 1]; k++)
                     {
-                        Predict(data, k, _predictionUsed[sfb]);
+                        Predict(data, k, output);
                     }
                 }
-                if (_predictorReset) ResetPredictorGroup(_predictorResetGroup);
+                if (present && _predictorReset) ResetPredictorGroup(_predictorResetGroup);
             }
+        }
+
+        /// <summary>
+        /// Takes the prediction data of the other channel of a channel pair with a common window. The predictor states
+        /// stay those of this channel.
+        /// </summary>
+        internal void CopyPredictionData(ICPrediction other)
+        {
+            _predictorReset = other._predictorReset;
+            _predictorResetGroup = other._predictorResetGroup;
+            Array.Copy(other._predictionUsed, _predictionUsed, _predictionUsed.Length);
         }
 
         private void ResetPredictState(int index)
@@ -84,8 +107,8 @@ namespace SharpJaad.AAC.Tools
             _states[index]._r1 = 0;
             _states[index]._cor0 = 0;
             _states[index]._cor1 = 0;
-            _states[index]._var0 = 0x3F80;
-            _states[index]._var1 = 0x3F80;
+            _states[index]._var0 = 1.0f;
+            _states[index]._var1 = 1.0f;
         }
 
         private void ResetAllPredictors()
@@ -149,14 +172,15 @@ namespace SharpJaad.AAC.Tools
             return IntBitsToFloat((int)(FloatToIntBits(pf) & 0xFFFF0000));
         }
 
-        private static int FloatToIntBits(float f)
+        private static unsafe int FloatToIntBits(float f)
         {
-            return BitConverter.ToInt32(BitConverter.GetBytes(f), 0);
+            // reinterprets the bits without the byte[] that BitConverter.GetBytes allocates
+            return *(int*)&f;
         }
 
-        private static float IntBitsToFloat(int i)
+        private static unsafe float IntBitsToFloat(int i)
         {
-            return BitConverter.ToSingle(BitConverter.GetBytes(i), 0);
+            return *(float*)&i;
         }
     }
 }

@@ -29,7 +29,7 @@
             base.Decode(input);
 
             int len = (_version == 1) ? 4 : 2;
-            int entryCount = (int)input.ReadBytes(4);
+            int entryCount = ReadCount(input, 4, 6);
             _sampleDelta = new long[entryCount];
             _subsampleSize = new long[entryCount][];
             _subsamplePriority = new int[entryCount][];
@@ -39,7 +39,7 @@
             for (int i = 0; i < entryCount; i++)
             {
                 _sampleDelta[i] = input.ReadBytes(4);
-                subsampleCount = (int)input.ReadBytes(2);
+                subsampleCount = ReadCount(input, 2, len + 6);
                 _subsampleSize[i] = new long[subsampleCount];
                 _subsamplePriority[i] = new int[subsampleCount];
                 _discardable[i] = new bool[subsampleCount];

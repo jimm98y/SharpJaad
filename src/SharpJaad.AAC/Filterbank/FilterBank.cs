@@ -37,13 +37,25 @@ namespace SharpJaad.AAC.Filterbank
             _mdctShort = new MDCT(_shortLen * 2);
             _mdctLong = new MDCT(_length * 2);
 
-            _overlaps = new float[channels][];
+            _overlaps = new float[System.Math.Max(channels, 0)][];
             for (int i = 0; i < channels; i++)
             {
                 _overlaps[i] = new float[_length];
             }
 
             _buf = new float[2 * _length];
+        }
+
+        /// <summary>
+        /// Grows the overlap buffers to the channels of the stream, which a PCE can change.
+        /// </summary>
+        internal void EnsureChannels(int channels)
+        {
+            if (channels <= _overlaps.Length) return;
+            var overlaps = new float[channels][];
+            System.Array.Copy(_overlaps, overlaps, _overlaps.Length);
+            for (int i = _overlaps.Length; i < channels; i++) overlaps[i] = new float[_length];
+            _overlaps = overlaps;
         }
 
         public void Process(WindowSequence windowSequence, int windowShape, int windowShapePrev, float[] input, float[] output, int channel)

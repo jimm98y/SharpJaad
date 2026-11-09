@@ -21,7 +21,7 @@
         {
             base.Decode(input);
 
-            int entryCount = (int)input.ReadBytes(2);
+            int entryCount = ReadCount(input, 2, 6);
             _itemIDs = new int[entryCount];
             _symbolCounts = new long[entryCount];
             for (int i = 0; i < entryCount; i++)

@@ -1,5 +1,5 @@
 ﻿using SharpJaad.AAC.Tools;
-using System.Linq;
+using System;
 
 namespace SharpJaad.AAC.Syntax
 {
@@ -32,10 +32,28 @@ namespace SharpJaad.AAC.Syntax
         private int[] _windowGroupLength;
         private int _swbCount;
         private int[] _swbOffsets;
+        private readonly bool _smallFrames; //frames of 960 samples, short windows of 120
+
+        /// <summary>
+        /// The number of coefficients of one short window: 128, or 120 in frames of 960 samples.
+        /// </summary>
+        internal int GetShortWindowLength()
+        {
+            return _smallFrames ? 120 : 128;
+        }
+
+        /// <summary>
+        /// The number of coefficients of a frame: 1024 or 960.
+        /// </summary>
+        internal int GetFrameLength()
+        {
+            return _frameLength;
+        }
 
         public ICSInfo(DecoderConfig config)
         {
             _frameLength = config.GetFrameLength();
+            _smallFrames = config.IsSmallFrameUsed();
             _windowShape = new int[2];
             _windowSequence = WindowSequence.ONLY_LONG_SEQUENCE;
             _windowGroupLength = new int[Constants.MAX_WINDOW_GROUP_COUNT];
@@ -44,13 +62,15 @@ namespace SharpJaad.AAC.Syntax
                 _ltPredict = new LTPrediction(_frameLength);
             else
                 _ltPredict = null;
+            // allocated up front instead of on the first frame with prediction data; it is untouched until then
+            if (config.GetProfile() == Profile.AAC_MAIN) _icPredict = new ICPrediction();
         }
 
         /* ========== decoding ========== */
         public void Decode(BitStream input, DecoderConfig conf, bool commonWindow)
         {
             SampleFrequency sf = conf.GetSampleFrequency();
-            if (sf.Equals(SampleFrequency.SAMPLE_FREQUENCY_NONE)) throw new AACException("invalid sample frequency");
+            if ((int)sf < 0 || (int)sf >= ScaleFactorBands.SWB_LONG_WINDOW_COUNT.Length) throw new AACException("invalid sample frequency: " + sf); //also 12..15, which have no tables
 
             input.SkipBit(); //reserved
             _windowSequence = (WindowSequence)input.ReadBits(2);
@@ -60,9 +80,10 @@ namespace SharpJaad.AAC.Syntax
             _windowGroupCount = 1;
             _windowGroupLength[0] = 1;
 
-            if (_windowSequence.Equals(WindowSequence.EIGHT_SHORT_SEQUENCE))
+            if (_windowSequence == WindowSequence.EIGHT_SHORT_SEQUENCE)
             {
                 _maxSFB = input.ReadBits(4);
+                if (_maxSFB > (_smallFrames ? ScaleFactorBands.SWB_COUNT_120[(int)sf] : ScaleFactorBands.SWB_SHORT_WINDOW_COUNT[(int)sf])) throw new AACException("max_sfb out of range: " + _maxSFB);
                 int i;
                 for (i = 0; i < 7; i++)
                 {
@@ -74,15 +95,17 @@ namespace SharpJaad.AAC.Syntax
                     }
                 }
                 _windowCount = 8;
-                _swbOffsets = ScaleFactorBands.SWB_OFFSET_SHORT_WINDOW[(int)sf];
-                _swbCount = ScaleFactorBands.SWB_SHORT_WINDOW_COUNT[(int)sf];
+                _swbOffsets = _smallFrames ? ScaleFactorBands.SWB_OFFSET_120[(int)sf] : ScaleFactorBands.SWB_OFFSET_SHORT_WINDOW[(int)sf];
+                _swbCount = _smallFrames ? ScaleFactorBands.SWB_COUNT_120[(int)sf] : ScaleFactorBands.SWB_SHORT_WINDOW_COUNT[(int)sf];
             }
             else
             {
                 _maxSFB = input.ReadBits(6);
+                if (_maxSFB > (_smallFrames ? ScaleFactorBands.SWB_COUNT_960[(int)sf] : ScaleFactorBands.SWB_LONG_WINDOW_COUNT[(int)sf])) throw new AACException("max_sfb out of range: " + _maxSFB);
+
                 _windowCount = 1;
-                _swbOffsets = ScaleFactorBands.SWB_OFFSET_LONG_WINDOW[(int)sf];
-                _swbCount = ScaleFactorBands.SWB_LONG_WINDOW_COUNT[(int)sf];
+                _swbOffsets = _smallFrames ? ScaleFactorBands.SWB_OFFSET_960[(int)sf] : ScaleFactorBands.SWB_OFFSET_LONG_WINDOW[(int)sf];
+                _swbCount = _smallFrames ? ScaleFactorBands.SWB_COUNT_960[(int)sf] : ScaleFactorBands.SWB_LONG_WINDOW_COUNT[(int)sf];
                 _predictionDataPresent = input.ReadBool();
                 if (_predictionDataPresent) ReadPredictionData(input, conf.GetProfile(), sf, commonWindow);
             }
@@ -153,7 +176,7 @@ namespace SharpJaad.AAC.Syntax
 
         public bool IsEightShortFrame()
         {
-            return _windowSequence.Equals(WindowSequence.EIGHT_SHORT_SEQUENCE);
+            return (_windowSequence == WindowSequence.EIGHT_SHORT_SEQUENCE);
         }
 
         public int GetWindowShape(int index)
@@ -189,15 +212,17 @@ namespace SharpJaad.AAC.Syntax
             _windowShape[CURRENT] = info._windowShape[CURRENT];
             _maxSFB = info._maxSFB;
             _predictionDataPresent = info._predictionDataPresent;
-            if (_predictionDataPresent) _icPredict = info._icPredict;
+            // the prediction data is common, the predictors are not: each channel keeps its own states
+            if (_predictionDataPresent && _icPredict != null && info._icPredict != null) _icPredict.CopyPredictionData(info._icPredict);
 
             _windowCount = info._windowCount;
             _windowGroupCount = info._windowGroupCount;
-            _windowGroupLength = info._windowGroupLength.ToArray();
+            Array.Copy(info._windowGroupLength, _windowGroupLength, _windowGroupLength.Length);
             _swbCount = info._swbCount;
-            _swbOffsets = info._swbOffsets.ToArray();
+            _swbOffsets = info._swbOffsets; // static read-only table, safe to share
 
-            if (_predictionDataPresent)
+            //the LTP profile has LTP data for the second channel too; in AAC Main the prediction data is common
+            if (_predictionDataPresent && _ltPredict != null)
             {
                 _ltPredict.Decode(input, this, conf.GetProfile());
             }

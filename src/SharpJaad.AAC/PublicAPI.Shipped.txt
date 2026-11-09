@@ -1,0 +1,708 @@
+const SharpJaad.AAC.Gain.GCConstants.BANDS = 4 -> int
+const SharpJaad.AAC.Gain.GCConstants.ID_GAIN = 16 -> int
+const SharpJaad.AAC.Gain.GCConstants.MAX_CHANNELS = 5 -> int
+const SharpJaad.AAC.Gain.GCConstants.NPEPARTS = 64 -> int
+const SharpJaad.AAC.Gain.GCConstants.NPQFTAPS = 96 -> int
+const SharpJaad.AAC.Huffman.HCB.ESCAPE_HCB = 11 -> int
+const SharpJaad.AAC.Huffman.HCB.FIRST_PAIR_HCB = 5 -> int
+const SharpJaad.AAC.Huffman.HCB.INTENSITY_HCB = 15 -> int
+const SharpJaad.AAC.Huffman.HCB.INTENSITY_HCB2 = 14 -> int
+const SharpJaad.AAC.Huffman.HCB.NOISE_HCB = 13 -> int
+const SharpJaad.AAC.Huffman.HCB.ZERO_HCB = 0 -> int
+const SharpJaad.AAC.Ps.PSConstants.COEF_SQRT2 = 1.4142135 -> float
+const SharpJaad.AAC.Ps.PSConstants.DECAY_SLOPE = 0.05 -> float
+const SharpJaad.AAC.Ps.PSConstants.MAX_PS_ENVELOPES = 5 -> int
+const SharpJaad.AAC.Ps.PSConstants.NEGATE_IPD_MASK = 4096 -> int
+const SharpJaad.AAC.Ps.PSConstants.NO_ALLPASS_LINKS = 3 -> int
+const SharpJaad.AAC.Sbr.Constants.EXTENSION_ID_PS = 2 -> int
+const SharpJaad.AAC.Sbr.Constants.EXT_SBR_DATA = 13 -> int
+const SharpJaad.AAC.Sbr.Constants.EXT_SBR_DATA_CRC = 14 -> int
+const SharpJaad.AAC.Sbr.Constants.FIXFIX = 0 -> int
+const SharpJaad.AAC.Sbr.Constants.FIXVAR = 1 -> int
+const SharpJaad.AAC.Sbr.Constants.HI_RES = 1 -> int
+const SharpJaad.AAC.Sbr.Constants.LO_RES = 0 -> int
+const SharpJaad.AAC.Sbr.Constants.MAX_L_E = 5 -> int
+const SharpJaad.AAC.Sbr.Constants.MAX_M = 49 -> int
+const SharpJaad.AAC.Sbr.Constants.MAX_NTSR = 32 -> int
+const SharpJaad.AAC.Sbr.Constants.MAX_NTSRHFG = 40 -> int
+const SharpJaad.AAC.Sbr.Constants.NOISE_FLOOR_OFFSET = 6 -> int
+const SharpJaad.AAC.Sbr.Constants.NO_TIME_SLOTS = 16 -> int
+const SharpJaad.AAC.Sbr.Constants.NO_TIME_SLOTS_960 = 15 -> int
+const SharpJaad.AAC.Sbr.Constants.RATE = 2 -> int
+const SharpJaad.AAC.Sbr.Constants.T_HFADJ = 2 -> int
+const SharpJaad.AAC.Sbr.Constants.T_HFGEN = 8 -> int
+const SharpJaad.AAC.Sbr.Constants.VARFIX = 2 -> int
+const SharpJaad.AAC.Sbr.Constants.VARVAR = 3 -> int
+const SharpJaad.AAC.Syntax.CCE.AFTER_IMDCT = 2 -> int
+const SharpJaad.AAC.Syntax.CCE.AFTER_TNS = 1 -> int
+const SharpJaad.AAC.Syntax.CCE.BEFORE_TNS = 0 -> int
+const SharpJaad.AAC.Syntax.Constants.BYTE_MASK = 255 -> int
+const SharpJaad.AAC.Syntax.Constants.ELEMENT_CCE = 2 -> int
+const SharpJaad.AAC.Syntax.Constants.ELEMENT_CPE = 1 -> int
+const SharpJaad.AAC.Syntax.Constants.ELEMENT_DSE = 4 -> int
+const SharpJaad.AAC.Syntax.Constants.ELEMENT_END = 7 -> int
+const SharpJaad.AAC.Syntax.Constants.ELEMENT_FIL = 6 -> int
+const SharpJaad.AAC.Syntax.Constants.ELEMENT_LFE = 3 -> int
+const SharpJaad.AAC.Syntax.Constants.ELEMENT_PCE = 5 -> int
+const SharpJaad.AAC.Syntax.Constants.ELEMENT_SCE = 0 -> int
+const SharpJaad.AAC.Syntax.Constants.MAX_ELEMENTS = 16 -> int
+const SharpJaad.AAC.Syntax.Constants.MAX_LTP_SFB = 40 -> int
+const SharpJaad.AAC.Syntax.Constants.MAX_MS_MASK = 128 -> int
+const SharpJaad.AAC.Syntax.Constants.MAX_SECTIONS = 120 -> int
+const SharpJaad.AAC.Syntax.Constants.MAX_WINDOW_COUNT = 8 -> int
+const SharpJaad.AAC.Syntax.Constants.MAX_WINDOW_GROUP_COUNT = 8 -> int
+const SharpJaad.AAC.Syntax.Constants.MIN_INPUT_SIZE = 768 -> int
+const SharpJaad.AAC.Syntax.Constants.SQRT2 = 1.4142135 -> float
+const SharpJaad.AAC.Syntax.Constants.WINDOW_LEN_LONG = 1024 -> int
+const SharpJaad.AAC.Syntax.Constants.WINDOW_LEN_SHORT = 128 -> int
+const SharpJaad.AAC.Syntax.Constants.WINDOW_SMALL_LEN_LONG = 960 -> int
+const SharpJaad.AAC.Syntax.Constants.WINDOW_SMALL_LEN_SHORT = 120 -> int
+const SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo.MAX_NBR_BANDS = 7 -> int
+const SharpJaad.AAC.Syntax.ICSInfo.CURRENT = 1 -> int
+const SharpJaad.AAC.Syntax.ICSInfo.PREVIOUS = 0 -> int
+const SharpJaad.AAC.Syntax.ICSInfo.WINDOW_SHAPE_KAISER = 1 -> int
+const SharpJaad.AAC.Syntax.ICSInfo.WINDOW_SHAPE_SINE = 0 -> int
+SharpJaad.AAC.AACException
+SharpJaad.AAC.AACException.AACException(string message) -> void
+SharpJaad.AAC.AACException.AACException(string message, bool eos) -> void
+SharpJaad.AAC.AACException.IsEndOfStream.get -> bool
+SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.ChannelConfiguration.CHANNEL_CONFIG_FIVE = 5 -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.ChannelConfiguration.CHANNEL_CONFIG_FIVE_PLUS_ONE = 6 -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.ChannelConfiguration.CHANNEL_CONFIG_MONO = 1 -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.ChannelConfiguration.CHANNEL_CONFIG_NONE = 0 -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.ChannelConfiguration.CHANNEL_CONFIG_SEVEN_PLUS_ONE = 7 -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.ChannelConfiguration.CHANNEL_CONFIG_STEREO = 2 -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.ChannelConfiguration.CHANNEL_CONFIG_STEREO_PLUS_CENTER = 3 -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.ChannelConfiguration.CHANNEL_CONFIG_STEREO_PLUS_CENTER_PLUS_REAR_MONO = 4 -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.ChannelConfiguration.CHANNEL_CONFIG_UNSUPPORTED = -1 -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.Decoder
+SharpJaad.AAC.Decoder.DecodeFrame(byte[] frame, SharpJaad.AAC.SampleBuffer buffer) -> void
+SharpJaad.AAC.Decoder.Decoder(byte[] decoderSpecificInfo) -> void
+SharpJaad.AAC.Decoder.Decoder(SharpJaad.AAC.DecoderConfig cfg) -> void
+SharpJaad.AAC.Decoder.GetConfig() -> SharpJaad.AAC.DecoderConfig
+SharpJaad.AAC.DecoderConfig
+SharpJaad.AAC.DecoderConfig.DecoderConfig() -> void
+SharpJaad.AAC.DecoderConfig.GetChannelConfiguration() -> SharpJaad.AAC.ChannelConfiguration
+SharpJaad.AAC.DecoderConfig.GetCoreCoderDelay() -> int
+SharpJaad.AAC.DecoderConfig.GetExtObjectType() -> SharpJaad.AAC.Profile
+SharpJaad.AAC.DecoderConfig.GetFrameLength() -> int
+SharpJaad.AAC.DecoderConfig.GetProfile() -> SharpJaad.AAC.Profile
+SharpJaad.AAC.DecoderConfig.GetSampleFrequency() -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.DecoderConfig.IetSBREnabled(bool enabled) -> void
+SharpJaad.AAC.DecoderConfig.IsDependsOnCoreCoder() -> bool
+SharpJaad.AAC.DecoderConfig.IsSBRDownSampled() -> bool
+SharpJaad.AAC.DecoderConfig.IsSBREnabled() -> bool
+SharpJaad.AAC.DecoderConfig.IsSBRPresent() -> bool
+SharpJaad.AAC.DecoderConfig.IsScalefactorResilienceUsed() -> bool
+SharpJaad.AAC.DecoderConfig.IsSectionDataResilienceUsed() -> bool
+SharpJaad.AAC.DecoderConfig.IsSmallFrameUsed() -> bool
+SharpJaad.AAC.DecoderConfig.IsSpectralDataResilienceUsed() -> bool
+SharpJaad.AAC.DecoderConfig.SetChannelConfiguration(SharpJaad.AAC.ChannelConfiguration channelConfiguration) -> void
+SharpJaad.AAC.DecoderConfig.SetCoreCoderDelay(int coreCoderDelay) -> void
+SharpJaad.AAC.DecoderConfig.SetDependsOnCoreCoder(bool dependsOnCoreCoder) -> void
+SharpJaad.AAC.DecoderConfig.SetExtObjectType(SharpJaad.AAC.Profile extObjectType) -> void
+SharpJaad.AAC.DecoderConfig.SetProfile(SharpJaad.AAC.Profile profile) -> void
+SharpJaad.AAC.DecoderConfig.SetSampleFrequency(SharpJaad.AAC.SampleFrequency sampleFrequency) -> void
+SharpJaad.AAC.DecoderConfig.SetSBRDownsampled(bool sbr) -> void
+SharpJaad.AAC.DecoderConfig.SetSBRPresent(bool sbr) -> void
+SharpJaad.AAC.DecoderConfig.SetSmallFrameUsed(bool shortFrame) -> void
+SharpJaad.AAC.Error.BitsBuffer
+SharpJaad.AAC.Error.BitsBuffer.BitsBuffer() -> void
+SharpJaad.AAC.Error.BitsBuffer.ConcatBits(SharpJaad.AAC.Error.BitsBuffer a) -> void
+SharpJaad.AAC.Error.BitsBuffer.FlushBits(int bits) -> bool
+SharpJaad.AAC.Error.BitsBuffer.GetBit() -> int
+SharpJaad.AAC.Error.BitsBuffer.GetBits(int n) -> int
+SharpJaad.AAC.Error.BitsBuffer.GetLength() -> int
+SharpJaad.AAC.Error.BitsBuffer.ReadSegment(int segwidth, SharpJaad.AAC.Syntax.BitStream input) -> void
+SharpJaad.AAC.Error.BitsBuffer.RewindReverse() -> void
+SharpJaad.AAC.Error.BitsBuffer.ShowBits(int bits) -> int
+SharpJaad.AAC.Error.BitsBuffer._bufa -> int
+SharpJaad.AAC.Error.BitsBuffer._bufb -> int
+SharpJaad.AAC.Error.BitsBuffer._len -> int
+SharpJaad.AAC.Error.HCR
+SharpJaad.AAC.Error.HCR.HCR() -> void
+SharpJaad.AAC.Error.RVLC
+SharpJaad.AAC.Error.RVLC.Decode(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.Syntax.ICStream ics, int[][] scaleFactors) -> void
+SharpJaad.AAC.Error.RVLC.RVLC() -> void
+SharpJaad.AAC.Error.RVLCTables
+SharpJaad.AAC.Filterbank.FFT
+SharpJaad.AAC.Filterbank.FFT.FFT(int length) -> void
+SharpJaad.AAC.Filterbank.FFT.Process(float[,] input, bool forward) -> void
+SharpJaad.AAC.Filterbank.FFTables
+SharpJaad.AAC.Filterbank.FilterBank
+SharpJaad.AAC.Filterbank.FilterBank.FilterBank(bool smallFrames, int channels) -> void
+SharpJaad.AAC.Filterbank.FilterBank.GetOverlap(int channel) -> float[]
+SharpJaad.AAC.Filterbank.FilterBank.Process(SharpJaad.AAC.Syntax.ICSInfo.WindowSequence windowSequence, int windowShape, int windowShapePrev, float[] input, float[] output, int channel) -> void
+SharpJaad.AAC.Filterbank.FilterBank.ProcessLTP(SharpJaad.AAC.Syntax.ICSInfo.WindowSequence windowSequence, int windowShape, int windowShapePrev, float[] input, float[] output) -> void
+SharpJaad.AAC.Filterbank.KBDWindows
+SharpJaad.AAC.Filterbank.MDCT
+SharpJaad.AAC.Filterbank.MDCT.MDCT(int length) -> void
+SharpJaad.AAC.Filterbank.MDCT.Process(float[] input, int inOff, float[] output, int outOff) -> void
+SharpJaad.AAC.Filterbank.MDCT.ProcessForward(float[] input, float[] output) -> void
+SharpJaad.AAC.Filterbank.MDCTTables
+SharpJaad.AAC.Filterbank.SineWindows
+SharpJaad.AAC.Gain.FFT
+SharpJaad.AAC.Gain.GainControl
+SharpJaad.AAC.Gain.GainControl.Decode(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.Syntax.ICSInfo.WindowSequence winSeq) -> void
+SharpJaad.AAC.Gain.GainControl.GainControl(int frameLen) -> void
+SharpJaad.AAC.Gain.GainControl.Process(float[] data, int winShape, int winShapePrev, SharpJaad.AAC.Syntax.ICSInfo.WindowSequence winSeq) -> void
+SharpJaad.AAC.Gain.GCConstants
+SharpJaad.AAC.Gain.GCConstants.GCConstants() -> void
+SharpJaad.AAC.Gain.IMDCT
+SharpJaad.AAC.Gain.IMDCT.IMDCT(int frameLen) -> void
+SharpJaad.AAC.Gain.IMDCT.Process(float[] input, float[] output, int winShape, int winShapePrev, SharpJaad.AAC.Syntax.ICSInfo.WindowSequence winSeq) -> void
+SharpJaad.AAC.Gain.IMDCTTables
+SharpJaad.AAC.Gain.IPQF
+SharpJaad.AAC.Gain.IPQF.IPQF() -> void
+SharpJaad.AAC.Gain.IPQF.Process(float[][] input, int frameLen, int maxBand, float[] output) -> void
+SharpJaad.AAC.Gain.PQFTables
+SharpJaad.AAC.Gain.Windows
+SharpJaad.AAC.Huffman.Codebooks
+SharpJaad.AAC.Huffman.HCB
+SharpJaad.AAC.Huffman.HuffmanDec
+SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.AAC_LC = 2 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.AAC_LD = 11 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.AAC_LTP = 4 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.AAC_MAIN = 1 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.AAC_SBR = 5 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.AAC_SCALABLE = 6 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.AAC_SSR = 3 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.ER_AAC_LC = 17 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.ER_AAC_LD = 23 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.ER_AAC_LTP = 19 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.ER_AAC_SCALABLE = 20 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.ER_AAC_SSR = 18 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.ER_BSAC = 22 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.ER_TWIN_VQ = 21 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.TWIN_VQ = 7 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Profile.UNKNOWN = -1 -> SharpJaad.AAC.Profile
+SharpJaad.AAC.ProfileExtensions
+SharpJaad.AAC.Ps.Filterbank
+SharpJaad.AAC.Ps.Filterbank.Filterbank(int numTimeSlotsRate) -> void
+SharpJaad.AAC.Ps.Filterbank.HybridAnalysis(float[,,] X, float[,,] X_hybrid, bool use34, int numTimeSlotsRate) -> void
+SharpJaad.AAC.Ps.Filterbank.HybridSynthesis(float[,,] X, float[,,] X_hybrid, bool use34, int numTimeSlotsRate) -> void
+SharpJaad.AAC.Ps.HuffmanTables
+SharpJaad.AAC.Ps.PS
+SharpJaad.AAC.Ps.PS.Decode(SharpJaad.AAC.Syntax.BitStream ld) -> int
+SharpJaad.AAC.Ps.PS.Process(float[,,] X_left, float[,,] X_right) -> int
+SharpJaad.AAC.Ps.PS.PS(SharpJaad.AAC.SampleFrequency sr, int numTimeSlotsRate) -> void
+SharpJaad.AAC.Ps.PS._headerRead -> bool
+SharpJaad.AAC.Ps.PSConstants
+SharpJaad.AAC.Ps.PSTables
+SharpJaad.AAC.SampleBuffer
+SharpJaad.AAC.SampleBuffer.BigEndian.get -> bool
+SharpJaad.AAC.SampleBuffer.Bitrate.get -> double
+SharpJaad.AAC.SampleBuffer.BitsPerSample.get -> int
+SharpJaad.AAC.SampleBuffer.Channels.get -> int
+SharpJaad.AAC.SampleBuffer.Data.get -> byte[]
+SharpJaad.AAC.SampleBuffer.EncodedBitrate.get -> double
+SharpJaad.AAC.SampleBuffer.Length.get -> double
+SharpJaad.AAC.SampleBuffer.SampleBuffer() -> void
+SharpJaad.AAC.SampleBuffer.SampleRate.get -> int
+SharpJaad.AAC.SampleBuffer.SetBigEndian(bool bigEndian) -> void
+SharpJaad.AAC.SampleBuffer.SetData(byte[] data, int sampleRate, int channels, int bitsPerSample, int bitsRead) -> void
+SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_11025 = 10 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_12000 = 9 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_16000 = 8 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_22050 = 7 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_24000 = 6 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_32000 = 5 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_44100 = 4 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_48000 = 3 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_64000 = 2 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_8000 = 11 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_88200 = 1 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_96000 = 0 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequency.SAMPLE_FREQUENCY_NONE = -1 -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.SampleFrequencyExtensions
+SharpJaad.AAC.Sbr.AnalysisFilterbank
+SharpJaad.AAC.Sbr.AnalysisFilterbank.AnalysisFilterbank(int channels) -> void
+SharpJaad.AAC.Sbr.AnalysisFilterbank.Reset() -> void
+SharpJaad.AAC.Sbr.AnalysisFilterbank.SbrQmfAnalysis32(SharpJaad.AAC.Sbr.SBR sbr, float[] input, float[,,,] X, int ch, int offset, int kx) -> void
+SharpJaad.AAC.Sbr.Constants
+SharpJaad.AAC.Sbr.DCT
+SharpJaad.AAC.Sbr.FBT
+SharpJaad.AAC.Sbr.FilterbankTable
+SharpJaad.AAC.Sbr.HFAdjustment
+SharpJaad.AAC.Sbr.HFAdjustment.HFAdjustment() -> void
+SharpJaad.AAC.Sbr.HFGeneration
+SharpJaad.AAC.Sbr.HFGeneration.HFGeneration() -> void
+SharpJaad.AAC.Sbr.HuffmanTables
+SharpJaad.AAC.Sbr.NoiseEnvelope
+SharpJaad.AAC.Sbr.NoiseTable
+SharpJaad.AAC.Sbr.SBR
+SharpJaad.AAC.Sbr.SBR.Decode(SharpJaad.AAC.Syntax.BitStream ld, int bits, bool crc) -> int
+SharpJaad.AAC.Sbr.SBR.IsPSUsed() -> bool
+SharpJaad.AAC.Sbr.SBR.Process(float[] channel, bool just_seeked) -> int
+SharpJaad.AAC.Sbr.SBR.Process(float[] left_chan, float[] right_chan, bool just_seeked) -> int
+SharpJaad.AAC.Sbr.SBR.ProcessPS(float[] left_channel, float[] right_channel, bool just_seeked) -> int
+SharpJaad.AAC.Sbr.SBR.SBR(bool smallFrames, bool stereo, SharpJaad.AAC.SampleFrequency sample_rate, bool downSampledSBR) -> void
+SharpJaad.AAC.Sbr.SBR._abs_bord_lead -> int[]
+SharpJaad.AAC.Sbr.SBR._abs_bord_trail -> int[]
+SharpJaad.AAC.Sbr.SBR._ampRes -> bool[]
+SharpJaad.AAC.Sbr.SBR._bsco -> int
+SharpJaad.AAC.Sbr.SBR._bsco_prev -> int
+SharpJaad.AAC.Sbr.SBR._bs_abs_bord_0 -> int[]
+SharpJaad.AAC.Sbr.SBR._bs_abs_bord_1 -> int[]
+SharpJaad.AAC.Sbr.SBR._bs_add_harmonic -> int[,]
+SharpJaad.AAC.Sbr.SBR._bs_add_harmonic_flag -> bool[]
+SharpJaad.AAC.Sbr.SBR._bs_add_harmonic_flag_prev -> bool[]
+SharpJaad.AAC.Sbr.SBR._bs_add_harmonic_prev -> int[,]
+SharpJaad.AAC.Sbr.SBR._bs_alter_scale -> bool
+SharpJaad.AAC.Sbr.SBR._bs_alter_scale_prev -> bool
+SharpJaad.AAC.Sbr.SBR._bs_amp_res -> bool
+SharpJaad.AAC.Sbr.SBR._bs_coupling -> bool
+SharpJaad.AAC.Sbr.SBR._bs_crc_flag -> int
+SharpJaad.AAC.Sbr.SBR._bs_df_env -> int[,]
+SharpJaad.AAC.Sbr.SBR._bs_df_noise -> int[,]
+SharpJaad.AAC.Sbr.SBR._bs_extended_data -> bool
+SharpJaad.AAC.Sbr.SBR._bs_extension_data -> int
+SharpJaad.AAC.Sbr.SBR._bs_extension_id -> int
+SharpJaad.AAC.Sbr.SBR._bs_frame_class -> int[]
+SharpJaad.AAC.Sbr.SBR._bs_freq_scale -> int
+SharpJaad.AAC.Sbr.SBR._bs_freq_scale_prev -> int
+SharpJaad.AAC.Sbr.SBR._bs_header_flag -> bool
+SharpJaad.AAC.Sbr.SBR._bs_interpol_freq -> bool
+SharpJaad.AAC.Sbr.SBR._bs_invf_mode -> int[,]
+SharpJaad.AAC.Sbr.SBR._bs_invf_mode_prev -> int[,]
+SharpJaad.AAC.Sbr.SBR._bs_limiter_bands -> int
+SharpJaad.AAC.Sbr.SBR._bs_limiter_gains -> int
+SharpJaad.AAC.Sbr.SBR._bs_noise_bands -> int
+SharpJaad.AAC.Sbr.SBR._bs_noise_bands_prev -> int
+SharpJaad.AAC.Sbr.SBR._bs_num_rel_0 -> int[]
+SharpJaad.AAC.Sbr.SBR._bs_num_rel_1 -> int[]
+SharpJaad.AAC.Sbr.SBR._bs_pointer -> int[]
+SharpJaad.AAC.Sbr.SBR._bs_protocol_version -> int
+SharpJaad.AAC.Sbr.SBR._bs_rel_bord -> int[,]
+SharpJaad.AAC.Sbr.SBR._bs_rel_bord_0 -> int[,]
+SharpJaad.AAC.Sbr.SBR._bs_rel_bord_1 -> int[,]
+SharpJaad.AAC.Sbr.SBR._bs_samplerate_mode -> int
+SharpJaad.AAC.Sbr.SBR._bs_sbr_crc_bits -> int
+SharpJaad.AAC.Sbr.SBR._bs_smoothing_mode -> bool
+SharpJaad.AAC.Sbr.SBR._bs_start_freq -> int
+SharpJaad.AAC.Sbr.SBR._bs_start_freq_prev -> int
+SharpJaad.AAC.Sbr.SBR._bs_stop_freq -> int
+SharpJaad.AAC.Sbr.SBR._bs_stop_freq_prev -> int
+SharpJaad.AAC.Sbr.SBR._bs_xover_band -> int
+SharpJaad.AAC.Sbr.SBR._bs_xover_band_prev -> int
+SharpJaad.AAC.Sbr.SBR._bwArray -> float[,]
+SharpJaad.AAC.Sbr.SBR._bwArray_prev -> float[,]
+SharpJaad.AAC.Sbr.SBR._E -> int[,,]
+SharpJaad.AAC.Sbr.SBR._E_curr -> float[,,]
+SharpJaad.AAC.Sbr.SBR._E_orig -> float[,,]
+SharpJaad.AAC.Sbr.SBR._E_prev -> int[,]
+SharpJaad.AAC.Sbr.SBR._f -> int[,]
+SharpJaad.AAC.Sbr.SBR._frame -> int
+SharpJaad.AAC.Sbr.SBR._f_master -> int[]
+SharpJaad.AAC.Sbr.SBR._f_prev -> int[]
+SharpJaad.AAC.Sbr.SBR._f_table_lim -> int[,]
+SharpJaad.AAC.Sbr.SBR._f_table_noise -> int[]
+SharpJaad.AAC.Sbr.SBR._f_table_res -> int[,]
+SharpJaad.AAC.Sbr.SBR._GQ_ringbuf_index -> int[]
+SharpJaad.AAC.Sbr.SBR._G_temp_prev -> float[,,]
+SharpJaad.AAC.Sbr.SBR._header_count -> int
+SharpJaad.AAC.Sbr.SBR._index_noise_prev -> int[]
+SharpJaad.AAC.Sbr.SBR._justSeeked -> bool
+SharpJaad.AAC.Sbr.SBR._k0 -> int
+SharpJaad.AAC.Sbr.SBR._kx -> int
+SharpJaad.AAC.Sbr.SBR._kx_prev -> int
+SharpJaad.AAC.Sbr.SBR._l_A -> int[]
+SharpJaad.AAC.Sbr.SBR._l_A_prev -> int[]
+SharpJaad.AAC.Sbr.SBR._L_E -> int[]
+SharpJaad.AAC.Sbr.SBR._L_E_prev -> int[]
+SharpJaad.AAC.Sbr.SBR._L_Q -> int[]
+SharpJaad.AAC.Sbr.SBR._M -> int
+SharpJaad.AAC.Sbr.SBR._maxAACLine -> int
+SharpJaad.AAC.Sbr.SBR._M_prev -> int
+SharpJaad.AAC.Sbr.SBR._n -> int[]
+SharpJaad.AAC.Sbr.SBR._noPatches -> int
+SharpJaad.AAC.Sbr.SBR._numTimeSlots -> int
+SharpJaad.AAC.Sbr.SBR._numTimeSlotsRate -> int
+SharpJaad.AAC.Sbr.SBR._N_high -> int
+SharpJaad.AAC.Sbr.SBR._N_L -> int[]
+SharpJaad.AAC.Sbr.SBR._N_low -> int
+SharpJaad.AAC.Sbr.SBR._N_master -> int
+SharpJaad.AAC.Sbr.SBR._N_Q -> int
+SharpJaad.AAC.Sbr.SBR._n_rel_lead -> int[]
+SharpJaad.AAC.Sbr.SBR._n_rel_trail -> int[]
+SharpJaad.AAC.Sbr.SBR._patchNoSubbands -> int[]
+SharpJaad.AAC.Sbr.SBR._patchStartSubband -> int[]
+SharpJaad.AAC.Sbr.SBR._prevEnvIsShort -> int[]
+SharpJaad.AAC.Sbr.SBR._ps -> SharpJaad.AAC.Ps.PS
+SharpJaad.AAC.Sbr.SBR._psi_is_prev -> int[]
+SharpJaad.AAC.Sbr.SBR._psResetFlag -> bool
+SharpJaad.AAC.Sbr.SBR._ps_used -> bool
+SharpJaad.AAC.Sbr.SBR._Q -> int[,,]
+SharpJaad.AAC.Sbr.SBR._qmfa -> SharpJaad.AAC.Sbr.AnalysisFilterbank[]
+SharpJaad.AAC.Sbr.SBR._qmfs -> SharpJaad.AAC.Sbr.SynthesisFilterbank[]
+SharpJaad.AAC.Sbr.SBR._Q_div -> float[,,]
+SharpJaad.AAC.Sbr.SBR._Q_div2 -> float[,,]
+SharpJaad.AAC.Sbr.SBR._Q_prev -> int[,]
+SharpJaad.AAC.Sbr.SBR._Q_temp_prev -> float[,,]
+SharpJaad.AAC.Sbr.SBR._rate -> int
+SharpJaad.AAC.Sbr.SBR._Reset -> bool
+SharpJaad.AAC.Sbr.SBR._ret -> int
+SharpJaad.AAC.Sbr.SBR._sampleRate -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.Sbr.SBR._stereo -> bool
+SharpJaad.AAC.Sbr.SBR._table_map_k_to_g -> int[]
+SharpJaad.AAC.Sbr.SBR._tHFAdj -> int
+SharpJaad.AAC.Sbr.SBR._tHFGen -> int
+SharpJaad.AAC.Sbr.SBR._t_E -> int[,]
+SharpJaad.AAC.Sbr.SBR._t_Q -> int[,]
+SharpJaad.AAC.Sbr.SBR._Xsbr -> float[,,,]
+SharpJaad.AAC.Sbr.SynthesisFilterbank
+SharpJaad.AAC.Sbr.SynthesisFilterbank.Reset() -> void
+SharpJaad.AAC.Sbr.SynthesisFilterbank.SbrQmfSynthesis32(SharpJaad.AAC.Sbr.SBR sbr, float[,,] X, float[] output) -> void
+SharpJaad.AAC.Sbr.SynthesisFilterbank.SbrQmfSynthesis64(SharpJaad.AAC.Sbr.SBR sbr, float[,,] X, float[] output) -> void
+SharpJaad.AAC.Sbr.SynthesisFilterbank.SynthesisFilterbank(int channels) -> void
+SharpJaad.AAC.Sbr.TFGrid
+SharpJaad.AAC.Sbr.TFGrid.TFGrid() -> void
+SharpJaad.AAC.Syntax.BitStream
+SharpJaad.AAC.Syntax.BitStream.BitStream() -> void
+SharpJaad.AAC.Syntax.BitStream.BitStream(byte[] data) -> void
+SharpJaad.AAC.Syntax.BitStream.ByteAlign() -> void
+SharpJaad.AAC.Syntax.BitStream.Destroy() -> void
+SharpJaad.AAC.Syntax.BitStream.GetBitsLeft() -> int
+SharpJaad.AAC.Syntax.BitStream.GetPosition() -> int
+SharpJaad.AAC.Syntax.BitStream.MaskBits(int n) -> int
+SharpJaad.AAC.Syntax.BitStream.PeekBit() -> int
+SharpJaad.AAC.Syntax.BitStream.PeekBits(int n) -> int
+SharpJaad.AAC.Syntax.BitStream.ReadBit() -> int
+SharpJaad.AAC.Syntax.BitStream.ReadBits(int n) -> int
+SharpJaad.AAC.Syntax.BitStream.ReadBool() -> bool
+SharpJaad.AAC.Syntax.BitStream.ReadCache(bool peek) -> int
+SharpJaad.AAC.Syntax.BitStream.Reset() -> void
+SharpJaad.AAC.Syntax.BitStream.SetData(byte[] data) -> void
+SharpJaad.AAC.Syntax.BitStream.SkipBit() -> void
+SharpJaad.AAC.Syntax.BitStream.SkipBits(int n) -> void
+SharpJaad.AAC.Syntax.BitStream._bitsCached -> int
+SharpJaad.AAC.Syntax.BitStream._position -> int
+SharpJaad.AAC.Syntax.CCE
+SharpJaad.AAC.Syntax.CCE.ApplyDependentCoupling(int index, float[] data) -> void
+SharpJaad.AAC.Syntax.CCE.ApplyIndependentCoupling(int index, float[] data) -> void
+SharpJaad.AAC.Syntax.CCE.CCE(SharpJaad.AAC.DecoderConfig config) -> void
+SharpJaad.AAC.Syntax.CCE.Decode(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.DecoderConfig conf) -> void
+SharpJaad.AAC.Syntax.CCE.GetCHSelect(int index) -> int
+SharpJaad.AAC.Syntax.CCE.GetCoupledCount() -> int
+SharpJaad.AAC.Syntax.CCE.GetCouplingPoint() -> int
+SharpJaad.AAC.Syntax.CCE.GetIDSelect(int index) -> int
+SharpJaad.AAC.Syntax.CCE.IsChannelPair(int index) -> bool
+SharpJaad.AAC.Syntax.CCE.Process() -> void
+SharpJaad.AAC.Syntax.Constants
+SharpJaad.AAC.Syntax.Constants.Constants() -> void
+SharpJaad.AAC.Syntax.CPE
+SharpJaad.AAC.Syntax.CPE.CPE(SharpJaad.AAC.DecoderConfig config) -> void
+SharpJaad.AAC.Syntax.CPE.Decode(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.DecoderConfig conf) -> void
+SharpJaad.AAC.Syntax.CPE.GetLeftChannel() -> SharpJaad.AAC.Syntax.ICStream
+SharpJaad.AAC.Syntax.CPE.GetMSMask() -> SharpJaad.AAC.Tools.MSMask
+SharpJaad.AAC.Syntax.CPE.GetRightChannel() -> SharpJaad.AAC.Syntax.ICStream
+SharpJaad.AAC.Syntax.CPE.IsCommonWindow() -> bool
+SharpJaad.AAC.Syntax.CPE.IsMSMaskPresent() -> bool
+SharpJaad.AAC.Syntax.CPE.IsMSUsed(int off) -> bool
+SharpJaad.AAC.Syntax.DSE
+SharpJaad.AAC.Syntax.DSE.Decode(SharpJaad.AAC.Syntax.BitStream input) -> void
+SharpJaad.AAC.Syntax.DSE.DSE() -> void
+SharpJaad.AAC.Syntax.Element
+SharpJaad.AAC.Syntax.Element.DecodeSBR(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.SampleFrequency sf, int count, bool stereo, bool crc, bool downSampled, bool smallFrames) -> void
+SharpJaad.AAC.Syntax.Element.Element() -> void
+SharpJaad.AAC.Syntax.Element.GetElementInstanceTag() -> int
+SharpJaad.AAC.Syntax.Element.GetSBR() -> SharpJaad.AAC.Sbr.SBR
+SharpJaad.AAC.Syntax.Element.IsSBRPresent() -> bool
+SharpJaad.AAC.Syntax.Element.ReadElementInstanceTag(SharpJaad.AAC.Syntax.BitStream input) -> void
+SharpJaad.AAC.Syntax.FIL
+SharpJaad.AAC.Syntax.FIL.Decode(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.Syntax.Element prev, SharpJaad.AAC.SampleFrequency sf, bool sbrEnabled, bool smallFrames) -> void
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo.DynamicRangeInfo() -> void
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._additionalExcludedChannels -> bool[]
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._bandsIncrement -> int
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._bandsPresent -> bool
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._bandTop -> int[]
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._dynRngCtl -> int[]
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._dynRngSgn -> bool[]
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._excludedChannelsPresent -> bool
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._excludeMask -> bool[]
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._interpolationScheme -> int
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._pceInstanceTag -> int
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._pceTagPresent -> bool
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._progRefLevel -> int
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._progRefLevelPresent -> bool
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._progRefLevelReservedBits -> int
+SharpJaad.AAC.Syntax.FIL.DynamicRangeInfo._tagReservedBits -> int
+SharpJaad.AAC.Syntax.FIL.FIL(bool downSampledSBR) -> void
+SharpJaad.AAC.Syntax.ICSInfo
+SharpJaad.AAC.Syntax.ICSInfo.Decode(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.DecoderConfig conf, bool commonWindow) -> void
+SharpJaad.AAC.Syntax.ICSInfo.GetICPrediction() -> SharpJaad.AAC.Tools.ICPrediction
+SharpJaad.AAC.Syntax.ICSInfo.GetLTPrediction() -> SharpJaad.AAC.Tools.LTPrediction
+SharpJaad.AAC.Syntax.ICSInfo.GetMaxSFB() -> int
+SharpJaad.AAC.Syntax.ICSInfo.GetSWBCount() -> int
+SharpJaad.AAC.Syntax.ICSInfo.GetSWBOffsetMax() -> int
+SharpJaad.AAC.Syntax.ICSInfo.GetSWBOffsets() -> int[]
+SharpJaad.AAC.Syntax.ICSInfo.GetWindowCount() -> int
+SharpJaad.AAC.Syntax.ICSInfo.GetWindowGroupCount() -> int
+SharpJaad.AAC.Syntax.ICSInfo.GetWindowGroupLength(int g) -> int
+SharpJaad.AAC.Syntax.ICSInfo.GetWindowSequence() -> SharpJaad.AAC.Syntax.ICSInfo.WindowSequence
+SharpJaad.AAC.Syntax.ICSInfo.GetWindowShape(int index) -> int
+SharpJaad.AAC.Syntax.ICSInfo.ICSInfo(SharpJaad.AAC.DecoderConfig config) -> void
+SharpJaad.AAC.Syntax.ICSInfo.IsEightShortFrame() -> bool
+SharpJaad.AAC.Syntax.ICSInfo.IsICPredictionPresent() -> bool
+SharpJaad.AAC.Syntax.ICSInfo.SetData(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.DecoderConfig conf, SharpJaad.AAC.Syntax.ICSInfo info) -> void
+SharpJaad.AAC.Syntax.ICSInfo.UnsetPredictionSFB(int sfb) -> void
+SharpJaad.AAC.Syntax.ICSInfo.WindowSequence
+SharpJaad.AAC.Syntax.ICSInfo.WindowSequence.EIGHT_SHORT_SEQUENCE = 2 -> SharpJaad.AAC.Syntax.ICSInfo.WindowSequence
+SharpJaad.AAC.Syntax.ICSInfo.WindowSequence.LONG_START_SEQUENCE = 1 -> SharpJaad.AAC.Syntax.ICSInfo.WindowSequence
+SharpJaad.AAC.Syntax.ICSInfo.WindowSequence.LONG_STOP_SEQUENCE = 3 -> SharpJaad.AAC.Syntax.ICSInfo.WindowSequence
+SharpJaad.AAC.Syntax.ICSInfo.WindowSequence.ONLY_LONG_SEQUENCE = 0 -> SharpJaad.AAC.Syntax.ICSInfo.WindowSequence
+SharpJaad.AAC.Syntax.ICStream
+SharpJaad.AAC.Syntax.ICStream.Decode(SharpJaad.AAC.Syntax.BitStream input, bool commonWindow, SharpJaad.AAC.DecoderConfig conf) -> void
+SharpJaad.AAC.Syntax.ICStream.DecodeScaleFactors(SharpJaad.AAC.Syntax.BitStream input) -> void
+SharpJaad.AAC.Syntax.ICStream.DecodeSectionData(SharpJaad.AAC.Syntax.BitStream input, bool sectionDataResilienceUsed) -> void
+SharpJaad.AAC.Syntax.ICStream.GetGainControl() -> SharpJaad.AAC.Gain.GainControl
+SharpJaad.AAC.Syntax.ICStream.GetGlobalGain() -> int
+SharpJaad.AAC.Syntax.ICStream.GetInfo() -> SharpJaad.AAC.Syntax.ICSInfo
+SharpJaad.AAC.Syntax.ICStream.GetInvQuantData() -> float[]
+SharpJaad.AAC.Syntax.ICStream.GetLongestCodewordLength() -> int
+SharpJaad.AAC.Syntax.ICStream.GetReorderedSpectralDataLength() -> int
+SharpJaad.AAC.Syntax.ICStream.GetScaleFactors() -> float[]
+SharpJaad.AAC.Syntax.ICStream.GetSectEnd() -> int[]
+SharpJaad.AAC.Syntax.ICStream.getSfbCB() -> int[]
+SharpJaad.AAC.Syntax.ICStream.GetTNS() -> SharpJaad.AAC.Tools.TNS
+SharpJaad.AAC.Syntax.ICStream.ICStream(SharpJaad.AAC.DecoderConfig config) -> void
+SharpJaad.AAC.Syntax.ICStream.IsGainControlPresent() -> bool
+SharpJaad.AAC.Syntax.ICStream.IsNoiseUsed() -> bool
+SharpJaad.AAC.Syntax.ICStream.IsTNSDataPresent() -> bool
+SharpJaad.AAC.Syntax.IQTable
+SharpJaad.AAC.Syntax.PCE
+SharpJaad.AAC.Syntax.PCE.CCE
+SharpJaad.AAC.Syntax.PCE.CCE.CCE(bool isIndSW, int tag) -> void
+SharpJaad.AAC.Syntax.PCE.CCE.GetTag() -> int
+SharpJaad.AAC.Syntax.PCE.CCE.IsIsIndSW() -> bool
+SharpJaad.AAC.Syntax.PCE.CCE._isIndSW -> bool
+SharpJaad.AAC.Syntax.PCE.CCE._tag -> int
+SharpJaad.AAC.Syntax.PCE.Decode(SharpJaad.AAC.Syntax.BitStream input) -> void
+SharpJaad.AAC.Syntax.PCE.GetChannelCount() -> int
+SharpJaad.AAC.Syntax.PCE.GetProfile() -> SharpJaad.AAC.Profile
+SharpJaad.AAC.Syntax.PCE.GetSampleFrequency() -> SharpJaad.AAC.SampleFrequency
+SharpJaad.AAC.Syntax.PCE.PCE() -> void
+SharpJaad.AAC.Syntax.PCE.TaggedElement
+SharpJaad.AAC.Syntax.PCE.TaggedElement.GetTag() -> int
+SharpJaad.AAC.Syntax.PCE.TaggedElement.IsIsCPE() -> bool
+SharpJaad.AAC.Syntax.PCE.TaggedElement.TaggedElement(bool isCPE, int tag) -> void
+SharpJaad.AAC.Syntax.PCE.TaggedElement._isCPE -> bool
+SharpJaad.AAC.Syntax.PCE.TaggedElement._tag -> int
+SharpJaad.AAC.Syntax.ScaleFactorBands
+SharpJaad.AAC.Syntax.ScaleFactorTable
+SharpJaad.AAC.Syntax.SCE_LFE
+SharpJaad.AAC.Syntax.SCE_LFE.Decode(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.DecoderConfig conf) -> void
+SharpJaad.AAC.Syntax.SCE_LFE.GetICStream() -> SharpJaad.AAC.Syntax.ICStream
+SharpJaad.AAC.Syntax.SCE_LFE.SCE_LFE(SharpJaad.AAC.DecoderConfig config) -> void
+SharpJaad.AAC.Syntax.SyntacticElements
+SharpJaad.AAC.Syntax.SyntacticElements.Decode(SharpJaad.AAC.Syntax.BitStream input) -> void
+SharpJaad.AAC.Syntax.SyntacticElements.Process(SharpJaad.AAC.Filterbank.FilterBank filterBank) -> void
+SharpJaad.AAC.Syntax.SyntacticElements.SendToOutput(SharpJaad.AAC.SampleBuffer buffer) -> void
+SharpJaad.AAC.Syntax.SyntacticElements.StartNewFrame() -> void
+SharpJaad.AAC.Syntax.SyntacticElements.SyntacticElements(SharpJaad.AAC.DecoderConfig config) -> void
+SharpJaad.AAC.Tools.ICPrediction
+SharpJaad.AAC.Tools.ICPrediction.Decode(SharpJaad.AAC.Syntax.BitStream input, int maxSFB, SharpJaad.AAC.SampleFrequency sf) -> void
+SharpJaad.AAC.Tools.ICPrediction.ICPrediction() -> void
+SharpJaad.AAC.Tools.ICPrediction.Process(SharpJaad.AAC.Syntax.ICStream ics, float[] data, SharpJaad.AAC.SampleFrequency sf) -> void
+SharpJaad.AAC.Tools.ICPrediction.SetPredictionUnused(int sfb) -> void
+SharpJaad.AAC.Tools.IS
+SharpJaad.AAC.Tools.IS.IS() -> void
+SharpJaad.AAC.Tools.ISScaleTable
+SharpJaad.AAC.Tools.LTPrediction
+SharpJaad.AAC.Tools.LTPrediction.Copy(SharpJaad.AAC.Tools.LTPrediction ltp) -> void
+SharpJaad.AAC.Tools.LTPrediction.Decode(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.Syntax.ICSInfo info, SharpJaad.AAC.Profile profile) -> void
+SharpJaad.AAC.Tools.LTPrediction.IsPresent() -> bool
+SharpJaad.AAC.Tools.LTPrediction.LTPrediction(int frameLength) -> void
+SharpJaad.AAC.Tools.LTPrediction.Process(SharpJaad.AAC.Syntax.ICStream ics, float[] data, SharpJaad.AAC.Filterbank.FilterBank filterBank, SharpJaad.AAC.SampleFrequency sf) -> void
+SharpJaad.AAC.Tools.LTPrediction.SetPredictionUnused(int sfb) -> void
+SharpJaad.AAC.Tools.LTPrediction.UpdateState(float[] time, float[] overlap, SharpJaad.AAC.Profile profile) -> void
+SharpJaad.AAC.Tools.MS
+SharpJaad.AAC.Tools.MS.MS() -> void
+SharpJaad.AAC.Tools.MSMask
+SharpJaad.AAC.Tools.MSMask.TYPE_ALL_0 = 0 -> SharpJaad.AAC.Tools.MSMask
+SharpJaad.AAC.Tools.MSMask.TYPE_ALL_1 = 2 -> SharpJaad.AAC.Tools.MSMask
+SharpJaad.AAC.Tools.MSMask.TYPE_RESERVED = 3 -> SharpJaad.AAC.Tools.MSMask
+SharpJaad.AAC.Tools.MSMask.TYPE_USED = 1 -> SharpJaad.AAC.Tools.MSMask
+SharpJaad.AAC.Tools.TNS
+SharpJaad.AAC.Tools.TNS.Decode(SharpJaad.AAC.Syntax.BitStream input, SharpJaad.AAC.Syntax.ICSInfo info) -> void
+SharpJaad.AAC.Tools.TNS.Process(SharpJaad.AAC.Syntax.ICStream ics, float[] spec, SharpJaad.AAC.SampleFrequency sf, bool decode) -> void
+SharpJaad.AAC.Tools.TNS.TNS() -> void
+SharpJaad.AAC.Tools.TNSTables
+SharpJaad.AAC.Transport.ADIFHeader
+SharpJaad.AAC.Transport.ADIFHeader.GetFirstPCE() -> SharpJaad.AAC.Syntax.PCE
+static SharpJaad.AAC.Decoder.CanDecode(SharpJaad.AAC.Profile profile) -> bool
+static SharpJaad.AAC.DecoderConfig.ParseMP4DecoderSpecificInfo(byte[] data) -> SharpJaad.AAC.DecoderConfig
+static SharpJaad.AAC.Error.HCR.DecodeReorderedSpectralData(SharpJaad.AAC.Syntax.ICStream ics, SharpJaad.AAC.Syntax.BitStream input, short[] spectralData, bool sectionDataResilience) -> void
+static SharpJaad.AAC.Error.HCR.RewindReverse64(int hi, int lo, int len) -> int[]
+static SharpJaad.AAC.Error.RVLCTables.ESCAPE_BOOK -> int[][]
+static SharpJaad.AAC.Error.RVLCTables.RVLC_BOOK -> int[][]
+static SharpJaad.AAC.Filterbank.FFTables.FFT_TABLE_480 -> float[,]
+static SharpJaad.AAC.Filterbank.FFTables.FFT_TABLE_512 -> float[,]
+static SharpJaad.AAC.Filterbank.FFTables.FFT_TABLE_60 -> float[,]
+static SharpJaad.AAC.Filterbank.FFTables.FFT_TABLE_64 -> float[,]
+static SharpJaad.AAC.Filterbank.KBDWindows.KBD_1024 -> float[]
+static SharpJaad.AAC.Filterbank.KBDWindows.KBD_120 -> float[]
+static SharpJaad.AAC.Filterbank.KBDWindows.KBD_128 -> float[]
+static SharpJaad.AAC.Filterbank.KBDWindows.KBD_960 -> float[]
+static SharpJaad.AAC.Filterbank.MDCTTables.MDCT_TABLE_128 -> float[][]
+static SharpJaad.AAC.Filterbank.MDCTTables.MDCT_TABLE_1920 -> float[][]
+static SharpJaad.AAC.Filterbank.MDCTTables.MDCT_TABLE_2048 -> float[][]
+static SharpJaad.AAC.Filterbank.MDCTTables.MDCT_TABLE_240 -> float[][]
+static SharpJaad.AAC.Filterbank.SineWindows.SINE_1024 -> float[]
+static SharpJaad.AAC.Filterbank.SineWindows.SINE_120 -> float[]
+static SharpJaad.AAC.Filterbank.SineWindows.SINE_128 -> float[]
+static SharpJaad.AAC.Filterbank.SineWindows.SINE_960 -> float[]
+static SharpJaad.AAC.Gain.FFT.FFT_TABLE_128 -> float[][]
+static SharpJaad.AAC.Gain.FFT.FFT_TABLE_16 -> float[][]
+static SharpJaad.AAC.Gain.FFT.Process(float[][] input, int n) -> void
+static SharpJaad.AAC.Gain.GCConstants.LN_GAIN -> int[]
+static SharpJaad.AAC.Gain.IMDCTTables.IMDCT_POST_TABLE_256 -> float[][]
+static SharpJaad.AAC.Gain.IMDCTTables.IMDCT_POST_TABLE_32 -> float[][]
+static SharpJaad.AAC.Gain.IMDCTTables.IMDCT_TABLE_256 -> float[][]
+static SharpJaad.AAC.Gain.IMDCTTables.IMDCT_TABLE_32 -> float[][]
+static SharpJaad.AAC.Gain.PQFTables.COEFS_Q0 -> float[][]
+static SharpJaad.AAC.Gain.PQFTables.COEFS_Q1 -> float[][]
+static SharpJaad.AAC.Gain.PQFTables.COEFS_T0 -> float[][]
+static SharpJaad.AAC.Gain.PQFTables.COEFS_T1 -> float[][]
+static SharpJaad.AAC.Gain.PQFTables.PROTO_TABLE -> float[]
+static SharpJaad.AAC.Gain.Windows.KBD_256 -> float[]
+static SharpJaad.AAC.Gain.Windows.KBD_32 -> float[]
+static SharpJaad.AAC.Gain.Windows.SINE_256 -> float[]
+static SharpJaad.AAC.Gain.Windows.SINE_32 -> float[]
+static SharpJaad.AAC.Huffman.Codebooks.CODEBOOKS -> int[][][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB1 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB10 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB11 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB2 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB3 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB4 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB5 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB6 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB7 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB8 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB9 -> int[][]
+static SharpJaad.AAC.Huffman.Codebooks.HCB_SF -> int[][]
+static SharpJaad.AAC.Huffman.HuffmanDec.DecodeScaleFactor(SharpJaad.AAC.Syntax.BitStream input) -> int
+static SharpJaad.AAC.Huffman.HuffmanDec.DecodeSpectralData(SharpJaad.AAC.Syntax.BitStream input, int cb, int[] data, int off) -> void
+static SharpJaad.AAC.ProfileExtensions.IsDecodingSupported(this SharpJaad.AAC.Profile profile) -> bool
+static SharpJaad.AAC.ProfileExtensions.IsErrorResilientProfile(this SharpJaad.AAC.Profile profile) -> bool
+static SharpJaad.AAC.Ps.HuffmanTables.f_huff_icc -> int[][]
+static SharpJaad.AAC.Ps.HuffmanTables.f_huff_iid_def -> int[][]
+static SharpJaad.AAC.Ps.HuffmanTables.f_huff_iid_fine -> int[][]
+static SharpJaad.AAC.Ps.HuffmanTables.f_huff_ipd -> int[][]
+static SharpJaad.AAC.Ps.HuffmanTables.f_huff_opd -> int[][]
+static SharpJaad.AAC.Ps.HuffmanTables.t_huff_icc -> int[][]
+static SharpJaad.AAC.Ps.HuffmanTables.t_huff_iid_def -> int[][]
+static SharpJaad.AAC.Ps.HuffmanTables.t_huff_iid_fine -> int[][]
+static SharpJaad.AAC.Ps.HuffmanTables.t_huff_ipd -> int[][]
+static SharpJaad.AAC.Ps.HuffmanTables.t_huff_opd -> int[][]
+static SharpJaad.AAC.Ps.PSTables.cos_alphas -> float[]
+static SharpJaad.AAC.Ps.PSTables.cos_betas_fine -> float[][]
+static SharpJaad.AAC.Ps.PSTables.cos_betas_normal -> float[][]
+static SharpJaad.AAC.Ps.PSTables.cos_gammas_fine -> float[][]
+static SharpJaad.AAC.Ps.PSTables.cos_gammas_normal -> float[][]
+static SharpJaad.AAC.Ps.PSTables.delay_length_d -> int[]
+static SharpJaad.AAC.Ps.PSTables.filter_a -> float[]
+static SharpJaad.AAC.Ps.PSTables.group_border20 -> int[]
+static SharpJaad.AAC.Ps.PSTables.group_border34 -> int[]
+static SharpJaad.AAC.Ps.PSTables.ipdopd_cos_tab -> float[]
+static SharpJaad.AAC.Ps.PSTables.ipdopd_sin_tab -> float[]
+static SharpJaad.AAC.Ps.PSTables.map_group2bk20 -> int[]
+static SharpJaad.AAC.Ps.PSTables.map_group2bk34 -> int[]
+static SharpJaad.AAC.Ps.PSTables.nr_icc_par_tab -> int[]
+static SharpJaad.AAC.Ps.PSTables.nr_iid_par_tab -> int[]
+static SharpJaad.AAC.Ps.PSTables.nr_ipdopd_par_tab -> int[]
+static SharpJaad.AAC.Ps.PSTables.num_env_tab -> int[][]
+static SharpJaad.AAC.Ps.PSTables.p12_13_34 -> float[]
+static SharpJaad.AAC.Ps.PSTables.p2_13_20 -> float[]
+static SharpJaad.AAC.Ps.PSTables.p4_13_34 -> float[]
+static SharpJaad.AAC.Ps.PSTables.p8_13_20 -> float[]
+static SharpJaad.AAC.Ps.PSTables.p8_13_34 -> float[]
+static SharpJaad.AAC.Ps.PSTables.Phi_Fract_Qmf -> float[][]
+static SharpJaad.AAC.Ps.PSTables.Phi_Fract_SubQmf20 -> float[][]
+static SharpJaad.AAC.Ps.PSTables.Phi_Fract_SubQmf34 -> float[][]
+static SharpJaad.AAC.Ps.PSTables.Q_Fract_allpass_Qmf -> float[][][]
+static SharpJaad.AAC.Ps.PSTables.Q_Fract_allpass_SubQmf20 -> float[][][]
+static SharpJaad.AAC.Ps.PSTables.Q_Fract_allpass_SubQmf34 -> float[][][]
+static SharpJaad.AAC.Ps.PSTables.sf_iid_fine -> float[]
+static SharpJaad.AAC.Ps.PSTables.sf_iid_normal -> float[]
+static SharpJaad.AAC.Ps.PSTables.sincos_alphas_B_fine -> float[][]
+static SharpJaad.AAC.Ps.PSTables.sincos_alphas_B_normal -> float[][]
+static SharpJaad.AAC.Ps.PSTables.sin_alphas -> float[]
+static SharpJaad.AAC.Ps.PSTables.sin_betas_fine -> float[][]
+static SharpJaad.AAC.Ps.PSTables.sin_betas_normal -> float[][]
+static SharpJaad.AAC.Ps.PSTables.sin_gammas_fine -> float[][]
+static SharpJaad.AAC.Ps.PSTables.sin_gammas_normal -> float[][]
+static SharpJaad.AAC.SampleFrequencyExtensions.FromFrequency(int frequency) -> SharpJaad.AAC.SampleFrequency
+static SharpJaad.AAC.SampleFrequencyExtensions.GetFrequency(this SharpJaad.AAC.SampleFrequency frequency) -> int
+static SharpJaad.AAC.SampleFrequencyExtensions.GetMaximalPredictionSFB(this SharpJaad.AAC.SampleFrequency frequency) -> int
+static SharpJaad.AAC.SampleFrequencyExtensions.GetMaximalTNS_SFB(this SharpJaad.AAC.SampleFrequency frequency, bool shortWindow) -> int
+static SharpJaad.AAC.SampleFrequencyExtensions.GetPredictorCount(this SharpJaad.AAC.SampleFrequency frequency) -> int
+static SharpJaad.AAC.Sbr.Constants.OFFSET -> int[][]
+static SharpJaad.AAC.Sbr.Constants.offsetIndexTable -> int[]
+static SharpJaad.AAC.Sbr.Constants.startMinTable -> int[]
+static SharpJaad.AAC.Sbr.DCT.Dct4Kernel(float[] in_real, float[] in_imag, float[] out_real, float[] out_imag) -> void
+static SharpJaad.AAC.Sbr.FBT.DerivedFrequencyTable(SharpJaad.AAC.Sbr.SBR sbr, int bs_xover_band, int k2) -> int
+static SharpJaad.AAC.Sbr.FBT.FindBands(int warp, int bands, int a0, int a1) -> int
+static SharpJaad.AAC.Sbr.FBT.FindInitialPower(int bands, int a0, int a1) -> float
+static SharpJaad.AAC.Sbr.FBT.LimiterFrequencyTable(SharpJaad.AAC.Sbr.SBR sbr) -> void
+static SharpJaad.AAC.Sbr.FBT.MasterFrequencyTable(SharpJaad.AAC.Sbr.SBR sbr, int k0, int k2, int bs_freq_scale, bool bs_alter_scale) -> int
+static SharpJaad.AAC.Sbr.FBT.MasterFrequencyTableFs0(SharpJaad.AAC.Sbr.SBR sbr, int k0, int k2, bool bs_alter_scale) -> int
+static SharpJaad.AAC.Sbr.FBT.QmfStartChannel(int bs_start_freq, int bs_samplerate_mode, SharpJaad.AAC.SampleFrequency sample_rate) -> int
+static SharpJaad.AAC.Sbr.FBT.QmfStopChannel(int bs_stop_freq, SharpJaad.AAC.SampleFrequency sample_rate, int k0) -> int
+static SharpJaad.AAC.Sbr.FilterbankTable.qmf_c -> float[]
+static SharpJaad.AAC.Sbr.HFAdjustment.HfAdjustment(SharpJaad.AAC.Sbr.SBR sbr, float[,,,] Xsbr, int ch) -> int
+static SharpJaad.AAC.Sbr.HFGeneration.HfGeneration(SharpJaad.AAC.Sbr.SBR sbr, float[,,,] Xlow, float[,,,] Xhigh, int ch) -> void
+static SharpJaad.AAC.Sbr.HuffmanTables.F_HUFFMAN_ENV_1_5DB -> int[][]
+static SharpJaad.AAC.Sbr.HuffmanTables.F_HUFFMAN_ENV_3_0DB -> int[][]
+static SharpJaad.AAC.Sbr.HuffmanTables.F_HUFFMAN_ENV_BAL_1_5DB -> int[][]
+static SharpJaad.AAC.Sbr.HuffmanTables.F_HUFFMAN_ENV_BAL_3_0DB -> int[][]
+static SharpJaad.AAC.Sbr.HuffmanTables.T_HUFFMAN_ENV_1_5DB -> int[][]
+static SharpJaad.AAC.Sbr.HuffmanTables.T_HUFFMAN_ENV_3_0DB -> int[][]
+static SharpJaad.AAC.Sbr.HuffmanTables.T_HUFFMAN_ENV_BAL_1_5DB -> int[][]
+static SharpJaad.AAC.Sbr.HuffmanTables.T_HUFFMAN_ENV_BAL_3_0DB -> int[][]
+static SharpJaad.AAC.Sbr.HuffmanTables.T_HUFFMAN_NOISE_3_0DB -> int[][]
+static SharpJaad.AAC.Sbr.HuffmanTables.T_HUFFMAN_NOISE_BAL_3_0DB -> int[][]
+static SharpJaad.AAC.Sbr.NoiseEnvelope.CalcQDiv(SharpJaad.AAC.Sbr.SBR sbr, int ch, int m, int l) -> float
+static SharpJaad.AAC.Sbr.NoiseEnvelope.CalcQDiv2(SharpJaad.AAC.Sbr.SBR sbr, int ch, int m, int l) -> float
+static SharpJaad.AAC.Sbr.NoiseEnvelope.DequantChannel(SharpJaad.AAC.Sbr.SBR sbr, int ch) -> void
+static SharpJaad.AAC.Sbr.NoiseEnvelope.ExtractEnvelopeData(SharpJaad.AAC.Sbr.SBR sbr, int ch) -> void
+static SharpJaad.AAC.Sbr.NoiseEnvelope.ExtractNoiseFloorData(SharpJaad.AAC.Sbr.SBR sbr, int ch) -> void
+static SharpJaad.AAC.Sbr.NoiseEnvelope.Unmap(SharpJaad.AAC.Sbr.SBR sbr) -> void
+static SharpJaad.AAC.Sbr.NoiseTable.NOISE_TABLE -> float[,]
+static SharpJaad.AAC.Sbr.TFGrid.EnvelopeTimeBorderVector(SharpJaad.AAC.Sbr.SBR sbr, int ch) -> int
+static SharpJaad.AAC.Sbr.TFGrid.NoiseFloorTimeBorderVector(SharpJaad.AAC.Sbr.SBR sbr, int ch) -> void
+static SharpJaad.AAC.Syntax.IQTable.IQ_TABLE -> float[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_LONG_WINDOW_COUNT -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_1024_16 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_1024_24 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_1024_32 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_1024_48 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_1024_64 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_1024_8 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_1024_96 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_128_16 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_128_24 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_128_48 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_128_64 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_128_8 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_128_96 -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_LONG_WINDOW -> int[][]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_OFFSET_SHORT_WINDOW -> int[][]
+static SharpJaad.AAC.Syntax.ScaleFactorBands.SWB_SHORT_WINDOW_COUNT -> int[]
+static SharpJaad.AAC.Syntax.ScaleFactorTable.SCALEFACTOR_TABLE -> float[]
+static SharpJaad.AAC.Tools.IS.Process(SharpJaad.AAC.Syntax.CPE cpe, float[] specL, float[] specR) -> void
+static SharpJaad.AAC.Tools.ISScaleTable.SCALE_TABLE -> float[]
+static SharpJaad.AAC.Tools.LTPrediction.IsLTPProfile(SharpJaad.AAC.Profile profile) -> bool
+static SharpJaad.AAC.Tools.MS.Process(SharpJaad.AAC.Syntax.CPE cpe, float[] specL, float[] specR) -> void
+static SharpJaad.AAC.Tools.TNSTables.TNS_COEF_0_3 -> float[]
+static SharpJaad.AAC.Tools.TNSTables.TNS_COEF_0_4 -> float[]
+static SharpJaad.AAC.Tools.TNSTables.TNS_COEF_1_3 -> float[]
+static SharpJaad.AAC.Tools.TNSTables.TNS_COEF_1_4 -> float[]
+static SharpJaad.AAC.Tools.TNSTables.TNS_TABLES -> float[][]
+static SharpJaad.AAC.Transport.ADIFHeader.IsPresent(SharpJaad.AAC.Syntax.BitStream input) -> bool
+static SharpJaad.AAC.Transport.ADIFHeader.ReadHeader(SharpJaad.AAC.Syntax.BitStream input) -> SharpJaad.AAC.Transport.ADIFHeader

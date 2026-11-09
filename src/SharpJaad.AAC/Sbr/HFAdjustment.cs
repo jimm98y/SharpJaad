@@ -16,6 +16,10 @@ namespace SharpJaad.AAC.Sbr
         private float[][] G_lim_boost = new float[Constants.MAX_L_E][];
         private float[][] Q_M_lim_boost = new float[Constants.MAX_L_E][];
         private float[][] S_M_boost = new float[Constants.MAX_L_E][];
+        // scratch buffers of CalculateGain, reused to avoid per-frame allocations
+        private readonly float[] _Q_M_lim = new float[Constants.MAX_M];
+        private readonly float[] _G_lim = new float[Constants.MAX_M];
+        private readonly float[] _S_M = new float[Constants.MAX_M];
 
         public HFAdjustment()
         {
@@ -27,9 +31,21 @@ namespace SharpJaad.AAC.Sbr
             }
         }
 
+        // restores the state of a newly constructed instance, so that one instance can be reused for every frame
+        internal void Reset()
+        {
+            for (int i = 0; i < Constants.MAX_L_E; i++)
+            {
+                Array.Clear(G_lim_boost[i], 0, Constants.MAX_M);
+                Array.Clear(Q_M_lim_boost[i], 0, Constants.MAX_M);
+                Array.Clear(S_M_boost[i], 0, Constants.MAX_M);
+            }
+        }
+
         public static int HfAdjustment(SBR sbr, float[,,,] Xsbr, int ch)
         {
-            HFAdjustment adj = new HFAdjustment();
+            HFAdjustment adj = sbr._hfAdjustment;
+            adj.Reset();
             int ret = 0;
 
             if (sbr._bs_frame_class[ch] == Constants.FIXFIX)
@@ -178,6 +194,17 @@ namespace SharpJaad.AAC.Sbr
             return 0;
         }
 
+        // stores the gains of envelope l in slot n of the smoothing ring buffer of the channel
+        private static void SaveGains(SBR sbr, HFAdjustment adj, int ch, int n, int l)
+        {
+            float[] g = adj.G_lim_boost[l], q = adj.Q_M_lim_boost[l];
+            for (int m = 0; m < sbr._M; m++)
+            {
+                sbr._G_temp_prev[ch, n, m] = g[m];
+                sbr._Q_temp_prev[ch, n, m] = q[m];
+            }
+        }
+
         private static void HfAssembly(SBR sbr, HFAdjustment adj,
             float[,,,] Xsbr, int ch)
         {
@@ -213,8 +240,7 @@ namespace SharpJaad.AAC.Sbr
                 {
                     for (n = 0; n < 4; n++)
                     {
-                        Array.Copy(adj.G_lim_boost[l], 0, sbr._G_temp_prev, 2 * 5 * ch + 5 * n + 0, sbr._M);
-                        Array.Copy(adj.Q_M_lim_boost[l], 0, sbr._Q_temp_prev, 2 * 5 * ch + 5 * n + 0, sbr._M);
+                        SaveGains(sbr, adj, ch, n, l);
                     }
                     /* reset ringbuffer index */
                     sbr._GQ_ringbuf_index[ch] = 4;
@@ -224,12 +250,11 @@ namespace SharpJaad.AAC.Sbr
                 for (i = sbr._t_E[ch, l]; i < sbr._t_E[ch, l + 1]; i++)
                 {
                     /* load new values into ringbuffer */
-                    Array.Copy(adj.G_lim_boost[l], 0, sbr._G_temp_prev, 2 * 5 * ch + 5 * sbr._GQ_ringbuf_index[ch] + 0, sbr._M);
-                    Array.Copy(adj.Q_M_lim_boost[l], 0, sbr._Q_temp_prev, 2 * 5 * ch + 5 * sbr._GQ_ringbuf_index[ch] + 0, sbr._M);
+                    SaveGains(sbr, adj, ch, sbr._GQ_ringbuf_index[ch], l);
 
                     for (m = 0; m < sbr._M; m++)
                     {
-                        float[] psi = new float[2];
+                        float psi0, psi1;
 
                         G_filt = 0;
                         Q_filt = 0;
@@ -262,18 +287,16 @@ namespace SharpJaad.AAC.Sbr
                         /* V is defined, not calculated */
                         Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0] = G_filt * Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0]
                             + Q_filt * NoiseTable.NOISE_TABLE[fIndexNoise, 0];
-                        if (sbr._bs_extension_id == 3 && sbr._bs_extension_data == 42)
-                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0] = 16428320;
                         Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 1] = G_filt * Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 1]
                             + Q_filt * NoiseTable.NOISE_TABLE[fIndexNoise, 1];
 
                         {
                             int rev = (m + sbr._kx & 1) != 0 ? -1 : 1;
-                            psi[0] = adj.S_M_boost[l][m] * phi_re[fIndexSine];
-                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0] += psi[0];
+                            psi0 = adj.S_M_boost[l][m] * phi_re[fIndexSine];
+                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 0] += psi0;
 
-                            psi[1] = rev * adj.S_M_boost[l][m] * phi_im[fIndexSine];
-                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 1] += psi[1];
+                            psi1 = rev * adj.S_M_boost[l][m] * phi_im[fIndexSine];
+                            Xsbr[ch, i + sbr._tHFAdj, m + sbr._kx, 1] += psi1;
                         }
                     }
 
@@ -297,10 +320,13 @@ namespace SharpJaad.AAC.Sbr
             int current_t_noise_band = 0;
             int S_mapped;
 
-            float[] Q_M_lim = new float[Constants.MAX_M];
-            float[] G_lim = new float[Constants.MAX_M];
+            float[] Q_M_lim = adj._Q_M_lim;
+            Array.Clear(Q_M_lim, 0, Q_M_lim.Length);
+            float[] G_lim = adj._G_lim;
+            Array.Clear(G_lim, 0, G_lim.Length);
             float G_boost;
-            float[] S_M = new float[Constants.MAX_M];
+            float[] S_M = adj._S_M;
+            Array.Clear(S_M, 0, S_M.Length);
 
             for (l = 0; l < sbr._L_E[ch]; l++)
             {
@@ -313,7 +339,7 @@ namespace SharpJaad.AAC.Sbr
 
                 S_mapped = GetSMapped(sbr, ch, l, current_res_band2);
 
-                if (sbr._t_E[ch, l + 1] > sbr._t_Q[ch, current_t_noise_band + 1])
+                if (current_t_noise_band + 1 < sbr._L_Q[ch] && sbr._t_E[ch, l + 1] > sbr._t_Q[ch, current_t_noise_band + 1]) //no noise floor past the last one
                 {
                     current_t_noise_band++;
                 }
@@ -330,6 +356,8 @@ namespace SharpJaad.AAC.Sbr
 
                     ml1 = sbr._f_table_lim[sbr._bs_limiter_bands, k];
                     ml2 = sbr._f_table_lim[sbr._bs_limiter_bands, k + 1];
+                    if (ml1 > Constants.MAX_M) ml1 = Constants.MAX_M; //as FAAD2
+                    if (ml2 > Constants.MAX_M) ml2 = Constants.MAX_M;
 
 
                     /* calculate the accumulated E_orig and E_curr over the limiter band */

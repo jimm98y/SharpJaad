@@ -2,7 +2,8 @@
 {
     public class DSE : Element
     {
-        private byte[] _dataStreamBytes;
+        private const int MAX_DATA_STREAM_BYTES = 255 + 255; //count is 8 bits, plus 8 more bits when it is 255
+        private readonly byte[] _dataStreamBytes = new byte[MAX_DATA_STREAM_BYTES];
 
         public void Decode(BitStream input)
         {
@@ -14,7 +15,6 @@
 
             if (byteAlign) input.ByteAlign();
 
-            _dataStreamBytes = new byte[count];
             for (int i = 0; i < count; i++)
             {
                 _dataStreamBytes[i] = (byte)input.ReadBits(8);

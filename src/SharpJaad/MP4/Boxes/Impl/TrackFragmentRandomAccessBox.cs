@@ -19,7 +19,7 @@
             int trafNumberLen = (int)((l >> 4) & 0x3) + 1;
             int trunNumberLen = (int)((l >> 2) & 0x3) + 1;
             int sampleNumberLen = (int)(l & 0x3) + 1;
-            _entryCount = (int)input.ReadBytes(4);
+            _entryCount = ReadCount(input, 4, 11);
 
             int len = (_version == 1) ? 8 : 4;
 

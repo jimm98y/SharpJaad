@@ -6,7 +6,7 @@ namespace SharpJaad.AAC.Sbr
     {
         private static int[] goalSbTab = { 21, 23, 32, 43, 46, 64, 85, 93, 128, 0, 0, 0 };
 
-        private class ACorrCoef
+        internal class ACorrCoef
         {
             public float[] _r01 = new float[2];
             public float[] _r02 = new float[2];
@@ -14,12 +14,25 @@ namespace SharpJaad.AAC.Sbr
             public float[] _r12 = new float[2];
             public float[] _r22 = new float[2];
             public float _det;
+
+            // restores the state of a newly constructed instance
+            public void Clear()
+            {
+                Array.Clear(_r01, 0, 2);
+                Array.Clear(_r02, 0, 2);
+                Array.Clear(_r11, 0, 2);
+                Array.Clear(_r12, 0, 2);
+                Array.Clear(_r22, 0, 2);
+                _det = 0;
+            }
         }
 
         public static void HfGeneration(SBR sbr, float[,,,] Xlow, float[,,,] Xhigh, int ch)
         {
             int l, i, x;
-            float[,] alpha_0 = new float[64, 2], alpha_1 = new float[64, 2];
+            float[,] alpha_0 = sbr._alpha_0, alpha_1 = sbr._alpha_1;
+            Array.Clear(alpha_0, 0, alpha_0.Length);
+            Array.Clear(alpha_1, 0, alpha_1.Length);
 
             int offset = sbr._tHFAdj;
             int first = sbr._t_E[ch, 0];
@@ -178,7 +191,8 @@ namespace SharpJaad.AAC.Sbr
         private static void CalcPredictionCoef(SBR sbr, float[,,,] Xlow, int ch, float[,] alpha_0, float[,] alpha_1, int k)
         {
             float tmp;
-            ACorrCoef ac = new ACorrCoef();
+            ACorrCoef ac = sbr._aCorrCoef;
+            ac.Clear();
 
             AutoCorrelation(sbr, ac, Xlow, ch, k, sbr._numTimeSlotsRate + 6);
 
@@ -302,13 +316,26 @@ namespace SharpJaad.AAC.Sbr
                 return;
             }
 
+            // the loop ends when the patches reach kx + M: tables from a bad header may never get there (FAAD2
+            // also only loops while they are valid); every pass adds a patch or moves on, so it ends within a few
+            int passes = 0;
             do
             {
+                if (++passes > 64 || sbr._noPatches >= sbr._patchNoSubbands.Length)
+                {
+                    sbr._noPatches = 0;
+                    return;
+                }
                 int j = k + 1;
 
                 do
                 {
                     j--;
+                    if (j < 0)
+                    {
+                        sbr._noPatches = 0;
+                        return;
+                    }
 
                     sb = sbr._f_master[j];
                     odd = (sb - 2 + sbr._k0) % 2;
@@ -335,7 +362,8 @@ namespace SharpJaad.AAC.Sbr
             }
             while (sb != sbr._kx + sbr._M);
 
-            if (sbr._patchNoSubbands[sbr._noPatches - 1] < 3 && sbr._noPatches > 1)
+            if (sbr._noPatches > 1 && sbr._patchNoSubbands[sbr._noPatches - 1] < 3)
+
             {
                 sbr._noPatches--;
             }

@@ -1,0 +1,26 @@
+# PCM of the ISO/IEC 14496-26 AAC conformance streams as decoded by SharpJaad: a change to the decoder that is not
+# meant to change its output must keep every line; one that is updates the line and says why. ReferenceTests compares
+# the output with FFmpeg's. The streams are not part of the repository, see ConformanceTests.
+# <stream>: hash=<FNV-1a 64 of the little-endian PCM of all frames> pcmBytes=<total> sr=<last sample rate> ch=<last channels> errors=<frames that threw>
+Fd_2_c1_Ms_0x01.mp4: SETUP-ERR AACException
+Fd_2_c1_Ms_0x04.mp4: SETUP-ERR AACException
+aac-sce-in-stereo.mp4: hash=973401B9BD88106D pcmBytes=888832 sr=44100 ch=2 errors=0
+al04_44.mp4: hash=D4CEA4FA3C34A2DF pcmBytes=1454080 sr=44100 ch=2 errors=0
+al04sf_48.mp4: hash=C5A59BB9F60D65AF pcmBytes=1482240 sr=48000 ch=2 errors=0
+al05_44.mp4: hash=2E19CFE8A7C510FB pcmBytes=1310720 sr=44100 ch=2 errors=0
+al06_44.mp4: hash=0914EDA5CBFF8B9B pcmBytes=2181120 sr=44100 ch=3 errors=0
+al07_96.mp4: hash=4E71AEB4D3E306A2 pcmBytes=9584640 sr=96000 ch=6 errors=0
+al15_44.mp4: hash=D8D2F3ABAFE6C570 pcmBytes=1597440 sr=44100 ch=6 errors=0
+al17_44.mp4: hash=EDCFA235E525F63F pcmBytes=1323008 sr=44100 ch=2 errors=0
+al18_44.mp4: hash=7984C72CA6698343 pcmBytes=11522048 sr=44100 ch=2 errors=0
+al22_chCfg0PCE_44.mp4: hash=4303D79729C7807C pcmBytes=851968 sr=44100 ch=8 errors=0
+al_sbr_cm_48_2.mp4: hash=6221C75CEDE8A92E pcmBytes=6176768 sr=48000 ch=2 errors=0
+al_sbr_cm_48_5.1.mp4: hash=C00F7E8A5C72326C pcmBytes=18530304 sr=48000 ch=6 errors=0
+al_sbr_ps_04_new.mp4: hash=842EC7C6CB072432 pcmBytes=868352 sr=32000 ch=2 errors=0
+al_sbr_ps_06_new.mp4: hash=13256802B856B2AC pcmBytes=1736704 sr=32000 ch=2 errors=0
+al_sbr_sr_48_2_fsaac48.mp4: hash=39C984F4ADED3BD1 pcmBytes=4702208 sr=48000 ch=2 errors=0
+am00_88.mp4: hash=A1451460246DB467 pcmBytes=23126016 sr=88200 ch=2 errors=0
+am05_44.mp4: hash=705EB38BCE1E3EC3 pcmBytes=1597440 sr=44100 ch=6 errors=0
+ap05_48.mp4: hash=B76569D681CB21C2 pcmBytes=3649536 sr=48000 ch=2 errors=0
+ct_faac-adts.aac: hash=26208839012D88B6 pcmBytes=3526656 sr=44100 ch=2 errors=0
+er_ad6000np_44_ep0.mp4: SETUP-ERR AACException

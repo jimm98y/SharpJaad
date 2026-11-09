@@ -42,8 +42,18 @@ short[] pcm = new short[buffer.Data.Length / sizeof(short)];
 Buffer.BlockCopy(buffer.Data, 0, pcm, 0, buffer.Data.Length);
 ```
 
+### Allocations
+After the first frame, `DecodeFrame` allocates nothing for AAC-LC, AAC Main, AAC LTP, HE-AAC (SBR) and HE-AACv2 (PS) streams: the decoder reuses its buffers, and the `SampleBuffer` keeps its `Data` array as long as the frame size stays the same. Reuse one `SampleBuffer` for all frames to keep it that way, and copy `Data` if you need it after the next call. Only a frame that fails to decode allocates (its exception). For this, a mono HE-AAC decoder creates its parametric stereo state (about 130 KB) up front, as PS can start in any frame.
+
+### Untrusted input
+Files and streams from untrusted sources are safe to parse and decode: malformed or malicious input makes the MP4 and ADTS readers and the decoder throw an `IOException` (`MP4Exception`, `AACException` or `EndOfStreamException`), in bounded time and without allocating more than the input holds; nothing recurses without a depth limit. `DecodeFrame` throws only `AACException`. Each `Decoder` has its own state: don't share one `DecoderConfig` object between decoders, as decoding updates it.
+
 ## SharpJaadMain
 A sample application that can extract AAC audio from a (MP4) file and transcode it into a WAV file.
 
 ## Credits
 This is a port of the https://sourceforge.net/projects/jaadec/ into C#. 
+
+## Development
+- [doc/testing.md](doc/testing.md): the tests, the AAC conformance streams they decode, and how to run them.
+- [doc/public-api.md](doc/public-api.md): how the public API is guarded against unintended changes.

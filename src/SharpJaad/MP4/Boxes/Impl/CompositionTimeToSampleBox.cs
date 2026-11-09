@@ -25,14 +25,14 @@
         {
             base.Decode(input);
 
-            int entryCount = (int)input.ReadBytes(4);
+            int entryCount = ReadCount(input, 4, 8);
             _sampleCounts = new long[entryCount];
             _sampleOffsets = new long[entryCount];
 
             for (int i = 0; i < entryCount; i++)
             {
                 _sampleCounts[i] = input.ReadBytes(4);
-                _sampleOffsets[i] = input.ReadBytes(4);
+                _sampleOffsets[i] = (int)input.ReadBytes(4); //signed in version 1
             }
         }
 

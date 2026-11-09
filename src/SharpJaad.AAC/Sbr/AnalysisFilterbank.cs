@@ -1,9 +1,16 @@
 ﻿using SharpJaad.AAC.Tools;
+using System;
 
 namespace SharpJaad.AAC.Sbr
 {
     public class AnalysisFilterbank
     {
+        // scratch buffers reused by every call to avoid per-frame allocations; cleared before each use
+        private readonly float[] _tmp_u = new float[64];
+        private readonly float[] _tmp_in_imag = new float[32];
+        private readonly float[] _tmp_in_real = new float[32];
+        private readonly float[] _tmp_out_imag = new float[32];
+        private readonly float[] _tmp_out_real = new float[32];
         private float[] _x; //x is implemented as double ringbuffer
         private int _xIndex; //ringbuffer index
         private int _channels;
@@ -22,9 +29,14 @@ namespace SharpJaad.AAC.Sbr
 
         public void SbrQmfAnalysis32(SBR sbr, float[] input, float[,,,] X, int ch, int offset, int kx)
         {
-            float[] u = new float[64];
-            float[] in_real = new float[32], in_imag = new float[32];
-            float[] out_real = new float[32], out_imag = new float[32];
+            float[] u = _tmp_u;
+            Array.Clear(u, 0, u.Length);
+            float[] in_real = _tmp_in_real, in_imag = _tmp_in_imag;
+            Array.Clear(in_real, 0, in_real.Length);
+            Array.Clear(in_imag, 0, in_imag.Length);
+            float[] out_real = _tmp_out_real, out_imag = _tmp_out_imag;
+            Array.Clear(out_real, 0, out_real.Length);
+            Array.Clear(out_imag, 0, out_imag.Length);
             int iin = 0;
             int l;
 

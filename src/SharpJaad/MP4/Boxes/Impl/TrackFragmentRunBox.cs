@@ -33,12 +33,15 @@
 
             //optional fields
             _dataOffsetPresent = ((_flags & 1) == 1);
-            if (_dataOffsetPresent) _dataOffset = input.ReadBytes(4);
+            if (_dataOffsetPresent) _dataOffset = (int)input.ReadBytes(4); //signed
 
             _firstSampleFlagsPresent = ((_flags & 4) == 4);
             if (_firstSampleFlagsPresent) _firstSampleFlags = input.ReadBytes(4);
 
-            //all fields are optional
+            //all fields are optional; the fields of all samples must be in the box
+            int fieldBytes = 4 * (((_flags & 0x100) != 0 ? 1 : 0) + ((_flags & 0x200) != 0 ? 1 : 0) + ((_flags & 0x400) != 0 ? 1 : 0) + ((_flags & 0x800) != 0 ? 1 : 0));
+            if (_sampleCount < 0 || (long)_sampleCount * fieldBytes > GetLeft(input)) throw new MP4Exception("invalid sample count: " + _sampleCount);
+
             _sampleDurationPresent = ((_flags & 0x100) == 0x100);
             if (_sampleDurationPresent) _sampleDuration = new long[_sampleCount];
             _sampleSizePresent = ((_flags & 0x200) == 0x200);
@@ -48,12 +51,12 @@
             _sampleCompositionTimeOffsetPresent = ((_flags & 0x800) == 0x800);
             if (_sampleCompositionTimeOffsetPresent) _sampleCompositionTimeOffset = new long[_sampleCount];
 
-            for (int i = 0; i < _sampleCount && GetLeft(input) > 0; i++)
+            for (int i = 0; fieldBytes > 0 && i < _sampleCount && GetLeft(input) > 0; i++)
             {
                 if (_sampleDurationPresent) _sampleDuration[i] = input.ReadBytes(4);
                 if (_sampleSizePresent) _sampleSize[i] = input.ReadBytes(4);
                 if (_sampleFlagsPresent) _sampleFlags[i] = input.ReadBytes(4);
-                if (_sampleCompositionTimeOffsetPresent) _sampleCompositionTimeOffset[i] = input.ReadBytes(4);
+                if (_sampleCompositionTimeOffsetPresent) _sampleCompositionTimeOffset[i] = (int)input.ReadBytes(4); //signed in version 1
             }
         }
 

@@ -75,7 +75,8 @@ namespace SharpJaad.AAC.Sbr
             int dk;
             int nrBands, k2Achieved;
             int k2Diff;
-            int[] vDk = new int[64];
+            int[] vDk = sbr._fbt_vDk;
+            Array.Clear(vDk, 0, vDk.Length);
 
             /* mft only defined for k2 > k0 */
             if (k2 <= k0)
@@ -150,15 +151,20 @@ namespace SharpJaad.AAC.Sbr
         /*
          version for bs_freq_scale > 0
          */
+        private static readonly int[] BANDS_PER_OCTAVE = { 6, 5, 4 }; //by bs_freq_scale
+
         public static int MasterFrequencyTable(SBR sbr, int k0, int k2, int bs_freq_scale, bool bs_alter_scale)
         {
             int k, bands;
             bool twoRegions;
             int k1;
             int nrBand0, nrBand1;
-            int[] vDk0 = new int[64], vDk1 = new int[64];
-            int[] vk0 = new int[64], vk1 = new int[64];
-            int[] temp1 = { 6, 5, 4 };
+            int[] vDk0 = sbr._fbt_vDk0, vDk1 = sbr._fbt_vDk1;
+            Array.Clear(vDk0, 0, vDk0.Length);
+            Array.Clear(vDk1, 0, vDk1.Length);
+            int[] vk0 = sbr._fbt_vk0, vk1 = sbr._fbt_vk1;
+            Array.Clear(vk0, 0, vk0.Length);
+            Array.Clear(vk1, 0, vk1.Length);
             float q, qk;
             int A_1;
 
@@ -169,7 +175,7 @@ namespace SharpJaad.AAC.Sbr
                 return 1;
             }
 
-            bands = temp1[bs_freq_scale - 1];
+            bands = BANDS_PER_OCTAVE[bs_freq_scale - 1];
 
             if (k2 / (float)k0 > 2.2449)
             {
@@ -301,6 +307,8 @@ namespace SharpJaad.AAC.Sbr
                 return 1;
             if (sbr._kx + sbr._M > 64)
                 return 1;
+            if (sbr._M > Constants.MAX_M) //the buffers of the gains hold MAX_M bands (as FAAD2)
+                return 1;
 
             minus = (sbr._N_high & 1) != 0 ? 1 : 0;
 
@@ -374,8 +382,10 @@ namespace SharpJaad.AAC.Sbr
 
             for (s = 1; s < 4; s++)
             {
-                int[] limTable = new int[100 /*TODO*/];
-                int[] patchBorders = new int[64/*??*/];
+                int[] limTable = sbr._fbt_limTable;
+                Array.Clear(limTable, 0, limTable.Length);
+                int[] patchBorders = sbr._fbt_patchBorders;
+                Array.Clear(patchBorders, 0, patchBorders.Length);
 
                 patchBorders[0] = sbr._kx;
                 for (k = 1; k <= sbr._noPatches; k++)

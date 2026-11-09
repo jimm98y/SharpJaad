@@ -30,7 +30,7 @@
         {
             base.Decode(input);
 
-            int entryCount = (int)input.ReadBytes(4);
+            int entryCount = ReadCount(input, 4, 8);
             _sampleCounts = new long[entryCount];
             _sampleDeltas = new long[entryCount];
 

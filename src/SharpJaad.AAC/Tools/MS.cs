@@ -25,7 +25,7 @@ namespace SharpJaad.AAC.Tools
                     {
                         for (w = 0; w < info.GetWindowGroupLength(g); w++)
                         {
-                            int off = groupOff + w * 128 + offsets[i];
+                            int off = groupOff + w * info.GetShortWindowLength() + offsets[i];
                             for (j = 0; j < offsets[i + 1] - offsets[i]; j++)
                             {
                                 float t = specL[off + j] - specR[off + j];
@@ -35,7 +35,7 @@ namespace SharpJaad.AAC.Tools
                         }
                     }
                 }
-                groupOff += info.GetWindowGroupLength(g) * 128;
+                groupOff += info.GetWindowGroupLength(g) * info.GetShortWindowLength();
             }
         }
     }

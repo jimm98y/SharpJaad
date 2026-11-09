@@ -320,18 +320,24 @@ namespace SharpJaad.MP4.Boxes
         public static Box ParseBox(Box parent, MP4InputStream input)
         {
             long offset = input.GetOffset();
+            if (Depth(parent) >= MAX_DEPTH) throw new MP4Exception("boxes nested too deep at offset " + offset);
 
-            long size = input.ReadBytes(4);
-            long type = input.ReadBytes(4);
-            if (size == 1) size = input.ReadBytes(8);
-            if (type == BoxTypes.EXTENDED_TYPE) input.SkipBytes(16);
+            long size = ReadSize(input, offset, out long type);
 
             //error protection
             if (parent != null)
             {
                 long parentLeft = (parent.GetOffset() + parent.GetSize()) - offset;
-                if (size > parentLeft) throw new IOException("error while decoding box '" + TypeToString(type) + "' at offset " + offset + ": box too large for parent");
+                if (size == 0) size = parentLeft; // to the end of the parent
+                if (size > parentLeft) throw new MP4Exception("error while decoding box '" + TypeToString(type) + "' at offset " + offset + ": box too large for parent");
             }
+            else
+            {
+                // at the top level, to the end of the stream; a box that claims more (a truncated file) is cut there
+                long end = input.GetRemaining() == long.MaxValue ? long.MaxValue : input.GetOffset() + input.GetRemaining();
+                if (size == 0 || offset + size > end) size = end == long.MaxValue ? (size == 0 ? long.MaxValue - offset : size) : end - offset;
+            }
+            if (size < input.GetOffset() - offset) throw new MP4Exception("invalid size of box '" + TypeToString(type) + "' at offset " + offset + ": " + size);
 
             //Logger.getLogger("MP4 Boxes").finest(typeToString(type));
             BoxImpl box = ForType(type, input.GetOffset());
@@ -368,10 +374,8 @@ namespace SharpJaad.MP4.Boxes
         {
             long offset = input.GetOffset();
 
-            long size = input.ReadBytes(4);
-            long type = input.ReadBytes(4);
-            if (size == 1) size = input.ReadBytes(8);
-            if (type == BoxTypes.EXTENDED_TYPE) input.SkipBytes(16);
+            long size = ReadSize(input, offset, out long type);
+            if (size < input.GetOffset() - offset) throw new MP4Exception("invalid size of box '" + TypeToString(type) + "' at offset " + offset + ": " + size);
 
             BoxImpl box = null;
             try
@@ -390,6 +394,29 @@ namespace SharpJaad.MP4.Boxes
                 input.SkipBytes(left);
             }
             return box;
+        }
+
+        private const int MAX_DEPTH = 64; //real files nest about 10 deep; the parsing is recursive
+
+        private static int Depth(Box box)
+        {
+            int depth = 0;
+            for (; box != null; box = box.GetParent()) depth++;
+            return depth;
+        }
+
+        // the box header: the size (0: to the end of the parent or stream) and the type
+        private static long ReadSize(MP4InputStream input, long offset, out long type)
+        {
+            long size = input.ReadBytes(4);
+            type = input.ReadBytes(4);
+            if (size == 1)
+            {
+                size = input.ReadBytes(8);
+                if (size < 16) throw new MP4Exception("invalid size of box '" + TypeToString(type) + "' at offset " + offset + ": " + size);
+            }
+            if (type == BoxTypes.EXTENDED_TYPE) input.SkipBytes(16);
+            return size;
         }
 
         private static BoxImpl ForType(long type, long offset)

@@ -19,7 +19,9 @@
             base.Decode(input);
 
             //get number of samples from SampleSizeBox
-            int sampleCount = ((SampleSizeBox)_parent.GetChild(BoxTypes.SAMPLE_SIZE_BOX)).GetSampleCount();
+            // two bytes per sample: no more samples than fit in the box, none without a SampleSizeBox
+            var stsz = _parent?.GetChild(BoxTypes.SAMPLE_SIZE_BOX) as SampleSizeBox;
+            int sampleCount = (int)System.Math.Min(stsz == null ? 0 : stsz.GetSampleCount(), GetLeft(input) / 2);
 
             _priorities = new int[sampleCount];
             for (int i = 0; i < sampleCount; i++)

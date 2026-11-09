@@ -8,6 +8,7 @@
         private const int MAX_LFE_CHANNEL_ELEMENTS = 4;
         private const int MAX_ASSOC_DATA_ELEMENTS = 8;
         private const int MAX_VALID_CC_ELEMENTS = 16;
+        private const int MAX_COMMENT_FIELD_BYTES = 255; //comment_field_bytes is 8 bits
 
         public sealed class TaggedElement
         {
@@ -75,6 +76,12 @@
             _lfeElementTags = new int[MAX_LFE_CHANNEL_ELEMENTS];
             _assocDataElementTags = new int[MAX_ASSOC_DATA_ELEMENTS];
             _ccElements = new CCE[MAX_VALID_CC_ELEMENTS];
+            // the elements are allocated once and overwritten by every decoded PCE
+            for (int i = 0; i < MAX_FRONT_CHANNEL_ELEMENTS; i++) _frontElements[i] = new TaggedElement(false, 0);
+            for (int i = 0; i < MAX_SIDE_CHANNEL_ELEMENTS; i++) _sideElements[i] = new TaggedElement(false, 0);
+            for (int i = 0; i < MAX_BACK_CHANNEL_ELEMENTS; i++) _backElements[i] = new TaggedElement(false, 0);
+            for (int i = 0; i < MAX_VALID_CC_ELEMENTS; i++) _ccElements[i] = new CCE(false, 0);
+            _commentFieldData = new byte[MAX_COMMENT_FIELD_BYTES];
             _sampleFrequency = SampleFrequency.SAMPLE_FREQUENCY_NONE;
         }
 
@@ -82,7 +89,7 @@
         {
             ReadElementInstanceTag(input);
 
-            _profile = (Profile)input.ReadBits(2);
+            _profile = (Profile)(input.ReadBits(2) + 1); //object type: the profile index, 0 is AAC Main
 
             _sampleFrequency = (SampleFrequency)input.ReadBits(4);
 
@@ -129,13 +136,13 @@
 
             for (i = 0; i < _validCCElementsCount; ++i)
             {
-                _ccElements[i] = new CCE(input.ReadBool(), input.ReadBits(4));
+                _ccElements[i]._isIndSW = input.ReadBool();
+                _ccElements[i]._tag = input.ReadBits(4);
             }
 
             input.ByteAlign();
 
             int commentFieldBytes = input.ReadBits(8);
-            _commentFieldData = new byte[commentFieldBytes];
             for (i = 0; i < commentFieldBytes; i++)
             {
                 _commentFieldData[i] = (byte)input.ReadBits(8);
@@ -146,7 +153,8 @@
         {
             for (int i = 0; i < len; ++i)
             {
-                te[i] = new TaggedElement(input.ReadBool(), input.ReadBits(4));
+                te[i]._isCPE = input.ReadBool();
+                te[i]._tag = input.ReadBits(4);
             }
         }
 
@@ -162,7 +170,7 @@
 
         public int GetChannelCount()
         {
-            int count = _lfeChannelElementsCount + _assocDataElementsCount;
+            int count = _lfeChannelElementsCount; //data elements carry no audio
 
             for (int n = 0; n < _frontChannelElementsCount; ++n)
                 count += _frontElements[n]._isCPE ? 2 : 1;
@@ -174,6 +182,40 @@
                 count += _backElements[n]._isCPE ? 2 : 1;
 
             return count;
+        }
+
+        /// <summary>
+        /// The first output channel of an element: the channels follow the order of the front, side, back and LFE
+        /// elements of this PCE. -1 if the PCE does not list the element.
+        /// </summary>
+        internal int FindChannel(bool isCPE, bool isLFE, int tag)
+        {
+            int channel = 0;
+            if (!isLFE)
+            {
+                if (Find(_frontElements, _frontChannelElementsCount, isCPE, tag, ref channel)) return channel;
+                if (Find(_sideElements, _sideChannelElementsCount, isCPE, tag, ref channel)) return channel;
+                if (Find(_backElements, _backChannelElementsCount, isCPE, tag, ref channel)) return channel;
+            }
+            else
+            {
+                channel = GetChannelCount() - _lfeChannelElementsCount;
+                for (int i = 0; i < _lfeChannelElementsCount; i++, channel++)
+                {
+                    if (_lfeElementTags[i] == tag) return channel;
+                }
+            }
+            return -1;
+        }
+
+        private static bool Find(TaggedElement[] elements, int count, bool isCPE, int tag, ref int channel)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (elements[i]._isCPE == isCPE && elements[i]._tag == tag) return true;
+                channel += elements[i]._isCPE ? 2 : 1;
+            }
+            return false;
         }
     }
 }

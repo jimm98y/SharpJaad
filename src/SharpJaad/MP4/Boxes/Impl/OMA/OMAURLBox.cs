@@ -20,8 +20,7 @@ namespace SharpJaad.MP4.Boxes.Impl.OMA
             base.Decode(input);
 
             byte[]
-            b = new byte[(int)GetLeft(input)];
-            input.ReadBytes(b);
+            b = input.ReadFully((int)GetLeft(input));
             content = Encoding.UTF8.GetString(b);
         }
 

@@ -101,6 +101,19 @@ namespace SharpJaad.AAC.Sbr
 
         public float[,,,] _Xsbr = new float[2, Constants.MAX_NTSRHFG, 64, 2];
 
+        // per-frame scratch state, reused to avoid allocations; each buffer is cleared before use
+        internal readonly HFAdjustment _hfAdjustment = new HFAdjustment();
+        internal readonly HFGeneration.ACorrCoef _aCorrCoef = new HFGeneration.ACorrCoef();
+        internal readonly float[,] _alpha_0 = new float[64, 2], _alpha_1 = new float[64, 2];
+        internal readonly int[] _t_E_temp = new int[6];
+        // scratch buffers of the frequency band tables (FBT), recalculated when an SBR header changes
+        internal readonly int[] _fbt_vDk = new int[64], _fbt_vDk0 = new int[64], _fbt_vDk1 = new int[64];
+        internal readonly int[] _fbt_vk0 = new int[64], _fbt_vk1 = new int[64];
+        internal readonly int[] _fbt_limTable = new int[100], _fbt_patchBorders = new int[64];
+        private readonly float[,,] _X = new float[Constants.MAX_NTSR, 64, 2];
+        private float[,,] _XLeft, _XRight; // allocated with the PS decoder
+        private readonly int[] _saved_t_E = new int[6], _saved_t_Q = new int[3];
+
         public int _numTimeSlotsRate;
         public int _numTimeSlots;
         public int _tHFGen;
@@ -147,6 +160,15 @@ namespace SharpJaad.AAC.Sbr
         public int[] _bs_num_rel_1 = new int[2];
         public int[,] _bs_df_env = new int[2, 9];
         public int[,] _bs_df_noise = new int[2, 3];
+
+        private void CreatePS()
+        {
+            _ps = new PS(_sampleRate, _numTimeSlotsRate);
+            _XLeft = new float[38, 64, 2];
+            _XRight = new float[38, 64, 2];
+            // the synthesis filterbank of the right channel that PS creates
+            if (_qmfs[1] == null) _qmfs[1] = new SynthesisFilterbank(_downSampledSBR ? 32 : 64);
+        }
 
         public SBR(bool smallFrames, bool stereo, SampleFrequency sample_rate, bool downSampledSBR)
         {
@@ -207,12 +229,15 @@ namespace SharpJaad.AAC.Sbr
                 _qmfa[0] = new AnalysisFilterbank(32);
                 _qmfs[0] = new SynthesisFilterbank(downSampledSBR ? 32 : 64);
                 _qmfs[1] = null;
+                // PS (only in mono SBR) can start in any frame: its decoder is created up front, so that its start allocates
+                // nothing; it is untouched until the first PS data
+                CreatePS();
             }
         }
 
         private void SbrReset()
         {
-            int j = 5;
+            int j;
             if (_qmfa[0] != null) _qmfa[0].Reset();
             if (_qmfa[1] != null) _qmfa[1].Reset();
             if (_qmfs[0] != null) _qmfs[0].Reset();
@@ -225,10 +250,10 @@ namespace SharpJaad.AAC.Sbr
             {
                 for (int k = 0; k < 64; k++)
                 {
-                    _Xsbr[0, i, j, 0] = 0;
-                    _Xsbr[0, i, j, 1] = 0;
-                    _Xsbr[1, i, j, 0] = 0;
-                    _Xsbr[1, i, j, 1] = 0;
+                    _Xsbr[0, i, k, 0] = 0;
+                    _Xsbr[0, i, k, 1] = 0;
+                    _Xsbr[1, i, k, 0] = 0;
+                    _Xsbr[1, i, k, 1] = 0;
                 }
             }
 
@@ -388,7 +413,8 @@ namespace SharpJaad.AAC.Sbr
                     /* if an error occured with the new header values revert to the old ones */
                     if (rt > 0)
                     {
-                        CalcSbrTables(saved_start_freq, saved_stop_freq,
+                        // tables that cannot be calculated from the saved values either are unusable (as FAAD2)
+                        result += CalcSbrTables(saved_start_freq, saved_stop_freq,
                             saved_samplerate_mode, saved_freq_scale,
                             saved_alter_scale, saved_xover_band);
                     }
@@ -426,6 +452,10 @@ namespace SharpJaad.AAC.Sbr
             /* check if we read more bits then were available for sbr */
             if (bits < num_sbr_bits2)
             {
+                // nothing of this frame is used: no SBR processing, and no PS that garbage may have switched on
+                _ret = 1;
+                _ps_used = false;
+
                 throw new AACException("frame overread");
                 //faad_resetbits(ld, num_sbr_bits1+8*cnt);
                 //num_sbr_bits2 = 8*cnt;
@@ -445,6 +475,8 @@ namespace SharpJaad.AAC.Sbr
                 ld.SkipBits(num_align_bits);
             }
 
+            // the processing of this frame only upsamples if its SBR data has errors (as FAAD2)
+            _ret = result;
             return result;
         }
 
@@ -661,7 +693,9 @@ namespace SharpJaad.AAC.Sbr
             }
             else
             {
-                int[] saved_t_E = new int[6], saved_t_Q = new int[3];
+                int[] saved_t_E = _saved_t_E, saved_t_Q = _saved_t_Q;
+                Array.Clear(saved_t_E, 0, saved_t_E.Length);
+                Array.Clear(saved_t_Q, 0, saved_t_Q.Length);
                 int saved_L_E = _L_E[0];
                 int saved_L_Q = _L_Q[0];
                 int saved_frame_class = _bs_frame_class[0];
@@ -756,9 +790,11 @@ namespace SharpJaad.AAC.Sbr
         }
 
         /* integer log[2](x): input range [0,10) */
+        private static readonly int[] LOG2_TABLE = { 0, 0, 1, 2, 2, 3, 3, 3, 3, 4 };
+
         private int SbrLog2(int val)
         {
-            int[] log2tab = new int[] { 0, 0, 1, 2, 2, 3, 3, 3, 3, 4 };
+            int[] log2tab = LOG2_TABLE;
             if (val < 10 && val >= 0)
                 return log2tab[val];
             else
@@ -806,7 +842,7 @@ namespace SharpJaad.AAC.Sbr
                         _bs_rel_bord[ch, rel] = 2 * ld.ReadBits(2) + 2;
                     }
                     i = SbrLog2(bs_num_env + 1);
-                    _bs_pointer[ch] = ld.ReadBits(i);
+                    _bs_pointer[ch] = Math.Min(ld.ReadBits(i), bs_num_env); //as FAAD2: a pointer past the envelopes indexes past the borders
 
                     for (env = 0; env < bs_num_env; env++)
                     {
@@ -828,7 +864,7 @@ namespace SharpJaad.AAC.Sbr
                         _bs_rel_bord[ch, rel] = 2 * ld.ReadBits(2) + 2;
                     }
                     i = SbrLog2(bs_num_env + 1);
-                    _bs_pointer[ch] = ld.ReadBits(i);
+                    _bs_pointer[ch] = Math.Min(ld.ReadBits(i), bs_num_env); //as FAAD2: a pointer past the envelopes indexes past the borders
 
                     for (env = 0; env < bs_num_env; env++)
                     {
@@ -858,7 +894,7 @@ namespace SharpJaad.AAC.Sbr
                         _bs_rel_bord_1[ch, rel] = 2 * ld.ReadBits(2) + 2;
                     }
                     i = SbrLog2(_bs_num_rel_0[ch] + _bs_num_rel_1[ch] + 2);
-                    _bs_pointer[ch] = ld.ReadBits(i);
+                    _bs_pointer[ch] = Math.Min(ld.ReadBits(i), _bs_num_rel_0[ch] + _bs_num_rel_1[ch] + 1); //as FAAD2
 
                     for (env = 0; env < bs_num_env; env++)
                     {
@@ -934,7 +970,7 @@ namespace SharpJaad.AAC.Sbr
                 case Constants.EXTENSION_ID_PS:
                     if (_ps == null)
                     {
-                        _ps = new PS(_sampleRate, _numTimeSlotsRate);
+                        CreatePS();
                     }
                     if (_psResetFlag)
                     {
@@ -1271,7 +1307,8 @@ namespace SharpJaad.AAC.Sbr
         {
             bool dont_process = false;
             int ret = 0;
-            float[,,] X = new float[Constants.MAX_NTSR, 64, 2];
+            float[,,] X = _X;
+            Array.Clear(X, 0, X.Length);
 
             /* case can occur due to bit errors */
             if (!_stereo) return 21;
@@ -1340,7 +1377,8 @@ namespace SharpJaad.AAC.Sbr
         {
             bool dont_process = false;
             int ret = 0;
-            float[,,] X = new float[Constants.MAX_NTSR, 64, 2];
+            float[,,] X = _X;
+            Array.Clear(X, 0, X.Length);
 
             /* case can occur due to bit errors */
             if (_stereo) return 21;
@@ -1397,8 +1435,10 @@ namespace SharpJaad.AAC.Sbr
             int l, k;
             bool dont_process = false;
             int ret = 0;
-            float[,,] X_left = new float[38, 64, 2];
-            float[,,] X_right = new float[38, 64, 2];
+            float[,,] X_left = _XLeft;
+            float[,,] X_right = _XRight;
+            Array.Clear(X_left, 0, X_left.Length);
+            Array.Clear(X_right, 0, X_right.Length);
 
             /* case can occur due to bit errors */
             if (_stereo) return 21;
