@@ -1,4 +1,9 @@
 ﻿using SharpJaad.AAC;
+#if NET8_0_OR_GREATER
+using System;
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
+#endif
 
 namespace SharpJaad.AAC.Filterbank
 {
@@ -47,6 +52,19 @@ namespace SharpJaad.AAC.Filterbank
             //processing buffers
             _rev = new float[length, 2];
             if ((length & (length - 1)) != 0) InitMixedRadix();
+#if NET8_0_OR_GREATER
+            else
+            {
+                // the roots of every stage and direction made here, not of the first frame of each: a frame allocates nothing
+                _stageRoots = new float[64][];
+                int stage = 0;
+                for (int i = 4; i < length; i <<= 1, stage++)
+                {
+                    StageRoots(stage, i, length / (i << 1), false);
+                    StageRoots(stage, i, length / (i << 1), true);
+                }
+            }
+#endif
             _a = new float[2];
             _b = new float[2];
             _c = new float[2];
@@ -123,6 +141,13 @@ namespace SharpJaad.AAC.Filterbank
             //iterations from bottom to top
             int shift, m, km;
             float rootRe, rootIm, zRe, zIm;
+#if NET8_0_OR_GREATER
+            if (Vector128.IsHardwareAccelerated && scale == 1)
+            {
+                ProcessStages(input, forward);
+                return;
+            }
+#endif
             for (int i = 4; i < _length; i <<= 1)
             {
                 shift = i << 1;
@@ -145,6 +170,58 @@ namespace SharpJaad.AAC.Filterbank
                 }
             }
         }
+
+#if NET8_0_OR_GREATER
+        // Of each stage of the iterations from bottom to top and of each direction, its roots in the order the butterflies
+        // take them, each lane twice (of a complex value's two): of the real parts, then of the imaginary.
+        private float[][] _stageRoots;
+
+        private float[] StageRoots(int stage, int i, int m, bool forward)
+        {
+            int index = 2 * stage + (forward ? 1 : 0);
+            float[] t = _stageRoots[index];
+            if (t != null)
+                return t;
+            int imOff = forward ? 2 : 1;
+            t = new float[4 * i];
+            for (int k = 0; k < i; k++)
+            {
+                t[2 * k] = t[2 * k + 1] = _roots[k * m, 0];
+                t[2 * i + 2 * k] = t[2 * i + 2 * k + 1] = _roots[k * m, imOff];
+            }
+            return _stageRoots[index] = t;
+        }
+
+        // the iterations from bottom to top, two butterflies at a time: of each lane the operations of the loop of Process,
+        // so of the same results - z of input * root as there, its sum and difference of input of j + k
+        private void ProcessStages(float[,] input, bool forward)
+        {
+            Span<float> x = MemoryMarshal.CreateSpan(ref input[0, 0], _length * 2);
+            Vector128<int> swap = Vector128.Create(1, 0, 3, 2);
+            Vector128<float> sign = Vector128.Create(-1f, 1f, -1f, 1f);
+            int stage = 0;
+            for (int i = 4; i < _length; i <<= 1, stage++)
+            {
+                int shift = i << 1;
+                int m = _length / shift;
+                float[] roots = StageRoots(stage, i, m, forward);
+                for (int j = 0; j < _length; j += shift)
+                {
+                    for (int k = 0; k < i; k += 2)
+                    {
+                        Vector128<float> a = Vector128.Create((ReadOnlySpan<float>)x.Slice(2 * (i + j + k), 4));
+                        Vector128<float> rr = Vector128.Create((ReadOnlySpan<float>)roots.AsSpan(2 * k, 4));
+                        Vector128<float> ri = Vector128.Create((ReadOnlySpan<float>)roots.AsSpan(2 * i + 2 * k, 4));
+                        // (re * rootRe - im * rootIm, re * rootIm + im * rootRe): of the swapped, (im * rootIm, re * rootIm)
+                        Vector128<float> z = a * rr + Vector128.Shuffle(a.AsInt32(), swap).AsSingle() * ri * sign;
+                        Vector128<float> y = Vector128.Create((ReadOnlySpan<float>)x.Slice(2 * (j + k), 4));
+                        (y - z).CopyTo(x.Slice(2 * (i + j + k), 4));
+                        (y + z).CopyTo(x.Slice(2 * (j + k), 4));
+                    }
+                }
+            }
+        }
+#endif
 
         // lengths that are no power of 2 (60 and 480, for frames of 960 samples): a Stockham FFT over the prime
         // factors, with the roots of the table
