@@ -1,5 +1,9 @@
 ﻿using SharpJaad.AAC.Syntax;
 using static SharpJaad.AAC.Syntax.ICSInfo;
+#if NET8_0_OR_GREATER
+using System;
+using System.Runtime.Intrinsics;
+#endif
 
 namespace SharpJaad.AAC.Filterbank
 {
@@ -14,6 +18,10 @@ namespace SharpJaad.AAC.Filterbank
         private MDCT _mdctShort, _mdctLong;
         private float[] _buf;
         private float[][] _overlaps;
+#if NET8_0_OR_GREATER
+        // the long windows reversed, of the second half's windowing: read forward, as a vector reads
+        private float[][] _longWindowsReversed;
+#endif
 
         public FilterBank(bool smallFrames, int channels)
         {
@@ -44,6 +52,15 @@ namespace SharpJaad.AAC.Filterbank
             }
 
             _buf = new float[2 * _length];
+#if NET8_0_OR_GREATER
+            _longWindowsReversed = new float[_LONG_WINDOWS.Length][];
+            for (int w = 0; w < _LONG_WINDOWS.Length; w++)
+            {
+                _longWindowsReversed[w] = new float[_length];
+                for (int i = 0; i < _length; i++)
+                    _longWindowsReversed[w][i] = _LONG_WINDOWS[w][_length - 1 - i];
+            }
+#endif
         }
 
         /// <summary>
@@ -66,14 +83,29 @@ namespace SharpJaad.AAC.Filterbank
             {
                 case WindowSequence.ONLY_LONG_SEQUENCE:
                     _mdctLong.Process(input, 0, _buf, 0);
-                    //add second half output of previous frame to windowed output of current frame
-                    for (i = 0; i < _length; i++)
+                    i = 0;
+#if NET8_0_OR_GREATER
+                    if (Vector128.IsHardwareAccelerated)
                     {
-                        output[i] = overlap[i] + _buf[i] * _LONG_WINDOWS[windowShapePrev][i];
+                        // of each lane the operations of the loops below, so of the same results
+                        float[] previous = _LONG_WINDOWS[windowShapePrev], reversed = _longWindowsReversed[windowShape];
+                        for (; i + 4 <= _length; i += 4)
+                        {
+                            (Vector128.Create((ReadOnlySpan<float>)overlap.AsSpan(i, 4)) + Vector128.Create((ReadOnlySpan<float>)_buf.AsSpan(i, 4)) * Vector128.Create((ReadOnlySpan<float>)previous.AsSpan(i, 4))).CopyTo(output.AsSpan(i, 4));
+                            (Vector128.Create((ReadOnlySpan<float>)_buf.AsSpan(_length + i, 4)) * Vector128.Create((ReadOnlySpan<float>)reversed.AsSpan(i, 4))).CopyTo(overlap.AsSpan(i, 4));
+                        }
+                        if (i == _length)
+                            break;
+                    }
+#endif
+                    //add second half output of previous frame to windowed output of current frame
+                    for (int j = i; j < _length; j++)
+                    {
+                        output[j] = overlap[j] + _buf[j] * _LONG_WINDOWS[windowShapePrev][j];
                     }
 
                     //window the second half and save as overlap for next frame
-                    for (i = 0; i < _length; i++)
+                    for (; i < _length; i++)
                     {
                         overlap[i] = _buf[_length + i] * _LONG_WINDOWS[windowShape][_length - 1 - i];
                     }
