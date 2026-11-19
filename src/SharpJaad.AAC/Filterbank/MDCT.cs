@@ -1,4 +1,9 @@
 ﻿using SharpJaad.AAC;
+#if NET8_0_OR_GREATER
+using System;
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
+#endif
 
 namespace SharpJaad.AAC.Filterbank
 {
@@ -9,6 +14,10 @@ namespace SharpJaad.AAC.Filterbank
         private FFT _fft;
         private float[,] _buf;
         private float[] _tmp;
+#if NET8_0_OR_GREATER
+        // of the post-IFFT multiplication, _sincos of each k, each lane twice: the cosines, then the sines
+        private float[] _cosSin;
+#endif
 
         public MDCT(int length)
         {
@@ -36,6 +45,14 @@ namespace SharpJaad.AAC.Filterbank
             _fft = new FFT(_N4);
             _buf = new float[_N4, 2];
             _tmp = new float[2];
+#if NET8_0_OR_GREATER
+            _cosSin = new float[4 * _N4];
+            for (int k = 0; k < _N4; k++)
+            {
+                _cosSin[2 * k] = _cosSin[2 * k + 1] = _sincos[k][0];
+                _cosSin[2 * _N4 + 2 * k] = _cosSin[2 * _N4 + 2 * k + 1] = _sincos[k][1];
+            }
+#endif
         }
 
         public void Process(float[] input, int inOff, float[] output, int outOff)
@@ -53,7 +70,24 @@ namespace SharpJaad.AAC.Filterbank
             _fft.Process(_buf, false);
 
             //post-IFFT complex multiplication
-            for (k = 0; k < _N4; k++)
+            k = 0;
+#if NET8_0_OR_GREATER
+            if (Vector128.IsHardwareAccelerated)
+            {
+                // two of k at a time, of the operations of the loop below on each lane: (t0 c - t1 s, t1 c + t0 s)
+                Span<float> b = MemoryMarshal.CreateSpan(ref _buf[0, 0], _N4 * 2);
+                Vector128<int> swap = Vector128.Create(1, 0, 3, 2);
+                Vector128<float> sign = Vector128.Create(-1f, 1f, -1f, 1f);
+                for (; k + 2 <= _N4; k += 2)
+                {
+                    Vector128<float> t = Vector128.Create((ReadOnlySpan<float>)b.Slice(2 * k, 4));
+                    Vector128<float> c = Vector128.Create((ReadOnlySpan<float>)_cosSin.AsSpan(2 * k, 4));
+                    Vector128<float> s = Vector128.Create((ReadOnlySpan<float>)_cosSin.AsSpan(2 * _N4 + 2 * k, 4));
+                    (t * c + Vector128.Shuffle(t.AsInt32(), swap).AsSingle() * s * sign).CopyTo(b.Slice(2 * k, 4));
+                }
+            }
+#endif
+            for (; k < _N4; k++)
             {
                 _tmp[0] = _buf[k, 0];
                 _tmp[1] = _buf[k, 1];
