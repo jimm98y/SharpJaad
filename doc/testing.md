@@ -4,7 +4,7 @@
 dotnet test src/SharpJaad.sln
 ```
 
-runs `src/SharpJaad.Tests` on net481, net8.0 and net10.0:
+runs `src/SharpJaad.Tests` on net481, net10.0 and net11.0:
 
 - **DecoderTests** decode `src/SharpJaadMain/aac-sample.mp4` and compare the PCM with the recorded output, and check
   what does not show in a hash: big endian output, independent decoders, truncated frames, frames of changing size.
