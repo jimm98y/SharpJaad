@@ -2,6 +2,10 @@
 using SharpJaad.AAC.Sbr;
 using SharpJaad.AAC.Tools;
 using System;
+#if NET9_0_OR_GREATER
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
+#endif
 
 namespace SharpJaad.AAC.Syntax
 {
@@ -546,6 +550,25 @@ namespace SharpJaad.AAC.Syntax
             float[] cur;
             int i, j, off;
             short s;
+#if NET9_0_OR_GREATER
+            // Two channels of little endian, four samples at a time: each rounded and clamped as the loop below does,
+            // a sample of the left and of the right the two halves of an int - of mono, of the one channel both
+            if (chs == 2 && !be && BitConverter.IsLittleEndian && Vector128.IsHardwareAccelerated && (length & 3) == 0)
+            {
+                float[] left = data[0], right = data[data.Length > 1 ? 1 : 0];
+                Span<int> pairs = MemoryMarshal.Cast<byte, int>(b.AsSpan());
+                Vector128<float> min = Vector128.Create((float)short.MinValue), max = Vector128.Create((float)short.MaxValue);
+                Vector128<int> low = Vector128.Create(0xFFFF);
+                for (j = 0; j < length; j += 4)
+                {
+                    Vector128<int> l = Vector128.ConvertToInt32(Vector128.Max(Vector128.Min(Vector128.Round(Vector128.Create(left, j)), max), min));
+                    Vector128<int> r = left == right ? l : Vector128.ConvertToInt32(Vector128.Max(Vector128.Min(Vector128.Round(Vector128.Create(right, j)), max), min));
+                    ((l & low) | (r << 16)).CopyTo(pairs.Slice(j));
+                }
+                buffer.SetData(b, freq, chs, 16, bitsRead);
+                return;
+            }
+#endif
             for (i = 0; i < chs; i++)
             {
                 // duplicate possible mono channel
