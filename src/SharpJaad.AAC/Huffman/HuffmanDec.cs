@@ -9,8 +9,40 @@ namespace SharpJaad.AAC.Huffman
         private static readonly bool[] _UNSIGNED = { false, false, true, true, false, false, true, true, true, true, true };
         private static int _QUAD_LEN = 4, _PAIR_LEN = 2;
 
-        private static int FindOffset(BitStream input, int[][] table)
+        // Of each codebook, of the next 10 bits: the offset of the codeword they start with, or -1 of a longer one - the
+        // codewords of up to 10 bits are most of those read, found of one step rather than of a search of the table
+        private const int _FAST_BITS = 10;
+        private static readonly short[][] _FAST = BuildFast(Codebooks.CODEBOOKS);
+        private static readonly short[] _FAST_SF = BuildFast(new[] { Codebooks.HCB_SF })[0];
+
+        private static short[][] BuildFast(int[][][] tables)
         {
+            var fast = new short[tables.Length][];
+            for (int t = 0; t < tables.Length; t++)
+            {
+                fast[t] = new short[1 << _FAST_BITS];
+                for (int i = 0; i < fast[t].Length; i++) fast[t][i] = -1;
+                for (int off = 0; off < tables[t].Length && tables[t][off][0] <= _FAST_BITS; off++)
+                {
+                    int pad = _FAST_BITS - tables[t][off][0];
+                    for (int i = 0; i < 1 << pad; i++) fast[t][(tables[t][off][1] << pad) + i] = (short)off;
+                }
+            }
+            return fast;
+        }
+
+        private static int FindOffset(BitStream input, int[][] table, short[] fast)
+        {
+            // of the last bits of a frame, no 10 to peek at: searched
+            if (input.GetBitsLeft() >= _FAST_BITS + 32)
+            {
+                int found = fast[input.PeekBits(_FAST_BITS)];
+                if (found >= 0)
+                {
+                    input.SkipBits(table[found][0]);
+                    return found;
+                }
+            }
             int off = 0;
             int len = table[off][0];
             int cw = input.ReadBits(len);
@@ -54,7 +86,7 @@ namespace SharpJaad.AAC.Huffman
 
         public static int DecodeScaleFactor(BitStream input)
         {
-            int offset = FindOffset(input, Codebooks.HCB_SF);
+            int offset = FindOffset(input, Codebooks.HCB_SF, _FAST_SF);
             return Codebooks.HCB_SF[offset][2];
         }
 
@@ -63,7 +95,7 @@ namespace SharpJaad.AAC.Huffman
             int[][] HCB = Codebooks.CODEBOOKS[cb - 1];
 
             //find index
-            int offset = FindOffset(input, HCB);
+            int offset = FindOffset(input, HCB, _FAST[cb - 1]);
 
             //copy data
             data[off] = HCB[offset][2];
