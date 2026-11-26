@@ -60,11 +60,24 @@ namespace SharpJaad.AAC.Filterbank
             int k;
 
             //pre-IFFT complex multiplication
+#if NET8_0_OR_GREATER
+            // the buffer as a span of (re, im), the cosines and sines of their flat table: of the operations of the loops
+            Span<float> b = MemoryMarshal.CreateSpan(ref _buf[0, 0], _N4 * 2);
+            ReadOnlySpan<float> x = input.AsSpan(inOff, _N2);
+            for (k = 0; k < _N4; k++)
+            {
+                float c = _cosSin[2 * k], s = _cosSin[2 * _N4 + 2 * k];
+                float even = x[2 * k], odd = x[_N2 - 1 - 2 * k];
+                b[2 * k + 1] = even * c + odd * s;
+                b[2 * k] = odd * c - even * s;
+            }
+#else
             for (k = 0; k < _N4; k++)
             {
                 _buf[k, 1] = input[inOff + 2 * k] * _sincos[k][0] + input[inOff + _N2 - 1 - 2 * k] * _sincos[k][1];
                 _buf[k, 0] = input[inOff + _N2 - 1 - 2 * k] * _sincos[k][0] - input[inOff + 2 * k] * _sincos[k][1];
             }
+#endif
 
             //complex IFFT, non-scaling
             _fft.Process(_buf, false);
@@ -75,7 +88,6 @@ namespace SharpJaad.AAC.Filterbank
             if (Vector128.IsHardwareAccelerated)
             {
                 // two of k at a time, of the operations of the loop below on each lane: (t0 c - t1 s, t1 c + t0 s)
-                Span<float> b = MemoryMarshal.CreateSpan(ref _buf[0, 0], _N4 * 2);
                 Vector128<int> swap = Vector128.Create(1, 0, 3, 2);
                 Vector128<float> sign = Vector128.Create(-1f, 1f, -1f, 1f);
                 for (; k + 2 <= _N4; k += 2)

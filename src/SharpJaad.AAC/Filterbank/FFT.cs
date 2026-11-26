@@ -11,8 +11,7 @@ namespace SharpJaad.AAC.Filterbank
     {
         private int _length;
         private float[,] _roots;
-        private float[,] _rev;
-        private float[] _a, _b, _c, _d, _e1, _e2;
+        private int[] _swaps;
 
         public FFT(int length)
         {
@@ -50,7 +49,23 @@ namespace SharpJaad.AAC.Filterbank
             }
 
             //processing buffers
-            _rev = new float[length, 2];
+            var swaps = new System.Collections.Generic.List<int>();
+            for (int i = 0, ii = 0; i < length; i++)
+            {
+                if (i < ii)
+                {
+                    swaps.Add(i);
+                    swaps.Add(ii);
+                }
+                int k = length >> 1;
+                while (ii >= k && k > 0)
+                {
+                    ii -= k;
+                    k >>= 1;
+                }
+                ii += k;
+            }
+            _swaps = swaps.ToArray();
             if ((length & (length - 1)) != 0) InitMixedRadix();
 #if NET8_0_OR_GREATER
             else
@@ -65,12 +80,6 @@ namespace SharpJaad.AAC.Filterbank
                 }
             }
 #endif
-            _a = new float[2];
-            _b = new float[2];
-            _c = new float[2];
-            _d = new float[2];
-            _e1 = new float[2];
-            _e2 = new float[2];
         }
 
         public void Process(float[,] input, bool forward)
@@ -82,59 +91,50 @@ namespace SharpJaad.AAC.Filterbank
             }
             int imOff = forward ? 2 : 1;
             int scale = 1;
-            //bit-reversal
-            int ii = 0;
-            for (int i = 0; i < _length; i++)
+            //bit-reversal: its own inverse, so of the pairs it swaps, made once
+            for (int n = 0; n < _swaps.Length; n += 2)
             {
-                _rev[i, 0] = input[ii, 0];
-                _rev[i, 1] = input[ii, 1];
-                int k = _length >> 1;
-                while (ii >= k && k > 0)
-                {
-                    ii -= k;
-                    k >>= 1;
-                }
-                ii += k;
-            }
-            for (int i = 0; i < _length; i++)
-            {
-                input[i, 0] = _rev[i, 0];
-                input[i, 1] = _rev[i, 1];
+                int i = _swaps[n], j = _swaps[n + 1];
+                float re = input[i, 0], im = input[i, 1];
+                input[i, 0] = input[j, 0];
+                input[i, 1] = input[j, 1];
+                input[j, 0] = re;
+                input[j, 1] = im;
             }
 
             //bottom base-4 round
             for (int i = 0; i < _length; i += 4)
             {
-                _a[0] = input[i, 0] + input[i + 1, 0];
-                _a[1] = input[i, 1] + input[i + 1, 1];
-                _b[0] = input[i + 2, 0] + input[i + 3, 0];
-                _b[1] = input[i + 2, 1] + input[i + 3, 1];
-                _c[0] = input[i, 0] - input[i + 1, 0];
-                _c[1] = input[i, 1] - input[i + 1, 1];
-                _d[0] = input[i + 2, 0] - input[i + 3, 0];
-                _d[1] = input[i + 2, 1] - input[i + 3, 1];
-                input[i, 0] = _a[0] + _b[0];
-                input[i, 1] = _a[1] + _b[1];
-                input[i + 2, 0] = _a[0] - _b[0];
-                input[i + 2, 1] = _a[1] - _b[1];
+                float aRe = input[i, 0] + input[i + 1, 0];
+                float aIm = input[i, 1] + input[i + 1, 1];
+                float bRe = input[i + 2, 0] + input[i + 3, 0];
+                float bIm = input[i + 2, 1] + input[i + 3, 1];
+                float cRe = input[i, 0] - input[i + 1, 0];
+                float cIm = input[i, 1] - input[i + 1, 1];
+                float dRe = input[i + 2, 0] - input[i + 3, 0];
+                float dIm = input[i + 2, 1] - input[i + 3, 1];
+                input[i, 0] = aRe + bRe;
+                input[i, 1] = aIm + bIm;
+                input[i + 2, 0] = aRe - bRe;
+                input[i + 2, 1] = aIm - bIm;
 
-                _e1[0] = _c[0] - _d[1];
-                _e1[1] = _c[1] + _d[0];
-                _e2[0] = _c[0] + _d[1];
-                _e2[1] = _c[1] - _d[0];
+                float e1Re = cRe - dIm;
+                float e1Im = cIm + dRe;
+                float e2Re = cRe + dIm;
+                float e2Im = cIm - dRe;
                 if (forward)
                 {
-                    input[i + 1, 0] = _e2[0];
-                    input[i + 1, 1] = _e2[1];
-                    input[i + 3, 0] = _e1[0];
-                    input[i + 3, 1] = _e1[1];
+                    input[i + 1, 0] = e2Re;
+                    input[i + 1, 1] = e2Im;
+                    input[i + 3, 0] = e1Re;
+                    input[i + 3, 1] = e1Im;
                 }
                 else
                 {
-                    input[i + 1, 0] = _e1[0];
-                    input[i + 1, 1] = _e1[1];
-                    input[i + 3, 0] = _e2[0];
-                    input[i + 3, 1] = _e2[1];
+                    input[i + 1, 0] = e1Re;
+                    input[i + 1, 1] = e1Im;
+                    input[i + 3, 0] = e2Re;
+                    input[i + 3, 1] = e2Im;
                 }
             }
 
@@ -196,7 +196,8 @@ namespace SharpJaad.AAC.Filterbank
         // so of the same results - z of input * root as there, its sum and difference of input of j + k
         private void ProcessStages(float[,] input, bool forward)
         {
-            Span<float> x = MemoryMarshal.CreateSpan(ref input[0, 0], _length * 2);
+            // loaded and stored of the references, not sliced and bounds checked of each: the loops keep within
+            ref float x = ref input[0, 0];
             Vector128<int> swap = Vector128.Create(1, 0, 3, 2);
             Vector128<float> sign = Vector128.Create(-1f, 1f, -1f, 1f);
             int stage = 0;
@@ -204,19 +205,19 @@ namespace SharpJaad.AAC.Filterbank
             {
                 int shift = i << 1;
                 int m = _length / shift;
-                float[] roots = StageRoots(stage, i, m, forward);
+                ref float roots = ref StageRoots(stage, i, m, forward)[0];
                 for (int j = 0; j < _length; j += shift)
                 {
                     for (int k = 0; k < i; k += 2)
                     {
-                        Vector128<float> a = Vector128.Create((ReadOnlySpan<float>)x.Slice(2 * (i + j + k), 4));
-                        Vector128<float> rr = Vector128.Create((ReadOnlySpan<float>)roots.AsSpan(2 * k, 4));
-                        Vector128<float> ri = Vector128.Create((ReadOnlySpan<float>)roots.AsSpan(2 * i + 2 * k, 4));
+                        Vector128<float> a = Vector128.LoadUnsafe(ref x, (nuint)(2 * (i + j + k)));
+                        Vector128<float> rr = Vector128.LoadUnsafe(ref roots, (nuint)(2 * k));
+                        Vector128<float> ri = Vector128.LoadUnsafe(ref roots, (nuint)(2 * i + 2 * k));
                         // (re * rootRe - im * rootIm, re * rootIm + im * rootRe): of the swapped, (im * rootIm, re * rootIm)
                         Vector128<float> z = a * rr + Vector128.Shuffle(a.AsInt32(), swap).AsSingle() * ri * sign;
-                        Vector128<float> y = Vector128.Create((ReadOnlySpan<float>)x.Slice(2 * (j + k), 4));
-                        (y - z).CopyTo(x.Slice(2 * (i + j + k), 4));
-                        (y + z).CopyTo(x.Slice(2 * (j + k), 4));
+                        Vector128<float> y = Vector128.LoadUnsafe(ref x, (nuint)(2 * (j + k)));
+                        (y - z).StoreUnsafe(ref x, (nuint)(2 * (i + j + k)));
+                        (y + z).StoreUnsafe(ref x, (nuint)(2 * (j + k)));
                     }
                 }
             }
